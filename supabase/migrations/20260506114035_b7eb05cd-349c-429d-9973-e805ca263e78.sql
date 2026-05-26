@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS photo_visibility jsonb NOT NULL DEFAULT '{}'::jsonb;
