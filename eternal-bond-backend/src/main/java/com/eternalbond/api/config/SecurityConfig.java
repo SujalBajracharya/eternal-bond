@@ -1,6 +1,6 @@
 package com.eternalbond.api.config;
 
-import com.eternalbond.api.filter.SupabaseJwtFilter;
+import com.eternalbond.api.filter.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,10 +27,10 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final SupabaseJwtFilter jwtFilter;
+    private final JwtAuthFilter jwtFilter;
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(SupabaseJwtFilter jwtFilter, UserDetailsService userDetailsService) {
+    public SecurityConfig(JwtAuthFilter jwtFilter, UserDetailsService userDetailsService) {
         this.jwtFilter = jwtFilter;
         this.userDetailsService = userDetailsService;
     }
@@ -42,7 +42,8 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/public/**", "/ws/**", "/ws", "/auth/signup", "/auth/login").permitAll()
+                // Public auth endpoints — both /auth/signup and /auth/signin are open
+                .requestMatchers("/api/public/**", "/ws/**", "/ws", "/auth/signup", "/auth/signin").permitAll()
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())

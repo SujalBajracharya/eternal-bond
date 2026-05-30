@@ -6,6 +6,7 @@ import com.eternalbond.api.dto.SignupRequest;
 import com.eternalbond.api.dto.UserDto;
 import com.eternalbond.api.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +24,11 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest request) {
         AuthResponse response = userService.signup(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+    @PostMapping("/signin")
+    public ResponseEntity<AuthResponse> signin(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = userService.login(request);
         return ResponseEntity.ok(response);
     }
@@ -35,7 +36,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<UserDto> getMe(@AuthenticationPrincipal String userId) {
         if (userId == null) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         UserDto userDto = userService.getUserById(userId);
         return ResponseEntity.ok(userDto);

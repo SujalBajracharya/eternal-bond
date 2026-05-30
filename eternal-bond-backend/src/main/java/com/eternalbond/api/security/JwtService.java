@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -33,11 +32,13 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
+    /**
+     * Generates a JWT token.
+     * Subject is the userId (UUID) — protected endpoints receive userId as the principal.
+     */
     public String generateToken(String userId, String email) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("email", email);
-        // Supabase-like claims so that existing filters/services that parse custom keys can work
-        extraClaims.put("role", "authenticated"); 
         return generateToken(extraClaims, userId);
     }
 
@@ -52,8 +53,8 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, String expectedSubject) {
-        final String username = extractUsername(token);
-        return (username.equals(expectedSubject)) && !isTokenExpired(token);
+        final String subject = extractUsername(token);
+        return (subject.equals(expectedSubject)) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
@@ -74,7 +75,7 @@ public class JwtService {
 
     private Key getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
-        // Make sure key is at least 256 bits (32 bytes)
+        // Pad to 32 bytes if the secret is shorter
         if (keyBytes.length < 32) {
             byte[] paddedKeyBytes = new byte[32];
             System.arraycopy(keyBytes, 0, paddedKeyBytes, 0, keyBytes.length);
