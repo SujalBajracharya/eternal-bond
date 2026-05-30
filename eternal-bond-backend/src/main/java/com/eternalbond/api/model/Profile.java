@@ -8,6 +8,9 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 @Entity
 @Table(name = "profiles", schema = "public")
 @Getter
@@ -85,6 +88,7 @@ public class Profile {
     @Column(name = "photo_url")
     private List<String> photos;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "social_links", columnDefinition = "jsonb")
     private String socialLinks; // JSON serialized string mapping social media links
 

@@ -88,7 +88,7 @@ export async function signupUser(data: SignUpRequest): Promise<SignUpResponse> {
  * Authenticates a user with the Spring Boot backend and retrieves a JWT.
  */
 export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
-  const url = `${API_BASE_URL}/auth/login`;
+  const url = `${API_BASE_URL}/auth/signin`;
 
   try {
     const response = await fetch(url, {
