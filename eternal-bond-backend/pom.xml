@@ -47,6 +47,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Mail Driver -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- Lombok for boilerplates reduction -->
         <dependency>
             <groupId>org.projectlombok</groupId>

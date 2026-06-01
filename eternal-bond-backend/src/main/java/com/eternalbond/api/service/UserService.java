@@ -3,7 +3,9 @@ package com.eternalbond.api.service;
 import com.eternalbond.api.dto.AuthResponse;
 import com.eternalbond.api.dto.LoginRequest;
 import com.eternalbond.api.dto.SignupRequest;
+import com.eternalbond.api.dto.SignupResponse;
 import com.eternalbond.api.dto.UserDto;
+import com.eternalbond.api.exception.EmailNotVerifiedException;
 import com.eternalbond.api.model.Profile;
 import com.eternalbond.api.model.User;
 import com.eternalbond.api.repository.ProfileRepository;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -26,30 +29,35 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
 
     public UserService(UserRepository userRepository,
                        ProfileRepository profileRepository,
                        PasswordEncoder passwordEncoder,
                        JwtService jwtService,
-                       AuthenticationManager authenticationManager) {
+                       AuthenticationManager authenticationManager,
+                       EmailService emailService) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.emailService = emailService;
     }
 
     @Transactional
-    public AuthResponse signup(SignupRequest request) {
+    public SignupResponse signup(SignupRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("This email is already registered. Try signing in.");
         }
 
-        // 1. Create and save new User
+        // 1. Create and save new User (unverified with verification token)
         User user = User.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .verified(false)
+                .verificationToken(UUID.randomUUID().toString())
                 .build();
         User savedUser = userRepository.save(user);
 
@@ -67,13 +75,10 @@ public class UserService {
                 .build();
         profileRepository.save(profile);
 
-        // 3. Generate JWT Token and map response
-        String token = jwtService.generateToken(savedUser.getId(), savedUser.getEmail());
+        // 3. Send verification email (throws EmailSendingException on failure)
+        emailService.sendVerificationEmail(savedUser.getEmail(), savedUser.getVerificationToken());
         
-        return AuthResponse.builder()
-                .token(token)
-                .user(mapToDto(savedUser))
-                .build();
+        return new SignupResponse("Account created. Verification email sent.");
     }
 
     @Transactional(readOnly = true)
@@ -85,12 +90,29 @@ public class UserService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + request.getEmail()));
 
+        if (!user.isVerified()) {
+            throw new EmailNotVerifiedException("Please verify your email before signing in.");
+        }
+
         String token = jwtService.generateToken(user.getId(), user.getEmail());
 
         return AuthResponse.builder()
                 .token(token)
                 .user(mapToDto(user))
                 .build();
+    }
+
+    @Transactional
+    public void verifyEmail(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid or missing verification token.");
+        }
+        User user = userRepository.findByVerificationToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid or expired verification token."));
+
+        user.setVerified(true);
+        user.setVerificationToken(null);
+        userRepository.save(user);
     }
 
     @Transactional(readOnly = true)

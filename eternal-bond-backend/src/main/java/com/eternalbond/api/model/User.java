@@ -26,6 +26,13 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean verified = false;
+
+    @Column(name = "verification_token")
+    private String verificationToken;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

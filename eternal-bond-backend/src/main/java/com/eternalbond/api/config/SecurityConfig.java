@@ -42,8 +42,8 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Public auth endpoints — both /auth/signup and /auth/signin are open
-                .requestMatchers("/api/public/**", "/ws/**", "/ws", "/auth/signup", "/auth/signin").permitAll()
+                // Public auth endpoints — both /auth/signup, /auth/signin, and /auth/verify are open
+                .requestMatchers("/api/public/**", "/ws/**", "/ws", "/auth/signup", "/auth/signin", "/auth/verify").permitAll()
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())
