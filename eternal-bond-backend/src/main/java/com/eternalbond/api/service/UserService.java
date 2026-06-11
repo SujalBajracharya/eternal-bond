@@ -32,11 +32,11 @@ public class UserService {
     private final EmailService emailService;
 
     public UserService(UserRepository userRepository,
-                       ProfileRepository profileRepository,
-                       PasswordEncoder passwordEncoder,
-                       JwtService jwtService,
-                       AuthenticationManager authenticationManager,
-                       EmailService emailService) {
+            ProfileRepository profileRepository,
+            PasswordEncoder passwordEncoder,
+            JwtService jwtService,
+            AuthenticationManager authenticationManager,
+            EmailService emailService) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
@@ -61,7 +61,8 @@ public class UserService {
                 .build();
         User savedUser = userRepository.save(user);
 
-        // 2. Automatically create associated Profile to preserve foreign key mappings and allow onboarding
+        // 2. Automatically create associated Profile to preserve foreign key mappings
+        // and allow onboarding
         Profile profile = Profile.builder()
                 .id(savedUser.getId())
                 .fullName(savedUser.getFullName())
@@ -77,18 +78,24 @@ public class UserService {
 
         // 3. Send verification email (throws EmailSendingException on failure)
         emailService.sendVerificationEmail(savedUser.getEmail(), savedUser.getVerificationToken());
-        
+
         return new SignupResponse("Account created. Verification email sent.");
     }
 
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-
+        System.out.println("DEBUG: Login attempt for email: " + request.getEmail());
+        
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + request.getEmail()));
+                
+        System.out.println("DEBUG: Found user in DB. Hash: " + user.getPassword());
+        System.out.println("DEBUG: Does password match manually? " + passwordEncoder.matches(request.getPassword(), user.getPassword()));
+
+        // This will now invoke your explicit ProviderManager with BCrypt
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
 
         if (!user.isVerified()) {
             throw new EmailNotVerifiedException("Please verify your email before signing in.");

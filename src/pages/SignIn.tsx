@@ -33,7 +33,8 @@ type Mode = "email" | "phone";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  // signIn() from useAuth calls the Spring Boot backend (/auth/signin) and stores the JWT.
+  const { user, loading: authLoading, signIn } = useAuth();
   const [mode, setMode] = useState<Mode>("email");
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
@@ -45,8 +46,18 @@ const SignIn = () => {
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
 
-  // Redirect if already logged in
+  // Redirect if already logged in or process oauth token
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("jwt_token", token);
+      window.history.replaceState({}, document.title, window.location.pathname);
+      toast.success("Welcome back");
+      window.location.href = "/";
+      return;
+    }
+
     if (!authLoading && user) navigate("/", { replace: true });
   }, [user, authLoading, navigate]);
 
@@ -58,24 +69,28 @@ const SignIn = () => {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: parsed.data.email,
-      password: parsed.data.password,
-    });
-    setLoading(false);
-    if (error) {
-      const msg = error.message.toLowerCase();
-      if (msg.includes("invalid")) {
-        toast.error("Invalid email or password");
-      } else if (msg.includes("not confirmed") || msg.includes("confirm")) {
-        toast.error("Please confirm your email first. Check your inbox.");
+    try {
+      // FIX: Use signIn() from useAuth — this calls the Spring Boot backend at /auth/signin.
+      // The old code called supabase.auth.signInWithPassword() which checks Supabase's own
+      // auth.users table. But users are registered via Spring Boot into public.users — so
+      // Supabase Auth never knew about them and always returned "Invalid email or password".
+      await signIn(parsed.data.email, parsed.data.password);
+      toast.success("Welcome back");
+      navigate(await resolvePostAuthDestination(), { replace: true });
+    } catch (error: any) {
+      const msg: string = error?.message ?? "";
+      if (msg.toLowerCase().includes("verify your email")) {
+        toast.error("Please verify your email first. Check your inbox.");
+      } else if (msg.toLowerCase().includes("invalid") || msg.toLowerCase().includes("password")) {
+        toast.error("Invalid email or password.");
+      } else if (msg) {
+        toast.error(msg);
       } else {
-        toast.error(error.message);
+        toast.error("Sign in failed. Please try again.");
       }
-      return;
+    } finally {
+      setLoading(false);
     }
-    toast.success("Welcome back");
-    navigate(await resolvePostAuthDestination(), { replace: true });
   };
 
   const handleSendOtp = async (e: React.FormEvent) => {

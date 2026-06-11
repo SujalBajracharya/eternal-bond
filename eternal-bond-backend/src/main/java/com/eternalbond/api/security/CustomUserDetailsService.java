@@ -2,6 +2,7 @@ package com.eternalbond.api.security;
 
 import com.eternalbond.api.model.User;
 import com.eternalbond.api.repository.UserRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,24 +21,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getId(), // Set user ID as username so principal contains the user UUID
+                user.getEmail(),
                 user.getPassword(),
-                Collections.emptyList()
-        );
-    }
-
-    public UserDetails loadUserById(String id) throws UsernameNotFoundException {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + id));
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getId(),
-                user.getPassword(),
-                Collections.emptyList()
-        );
+                // Add default role to avoid empty authority authentication rejection
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 }

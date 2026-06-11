@@ -112,9 +112,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
         errorMessage = errorData.error;
       }
     } catch {
-      if (response.status === 401 || response.status === 403) {
-        errorMessage = "Invalid email or password.";
-      } else if (response.status >= 500) {
+      if (response.status >= 500) {
         errorMessage = "Internal server error. Please try again later.";
       }
     }
