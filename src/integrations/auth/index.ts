@@ -12,7 +12,7 @@ export const authService = {
   ) => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider,
+        provider: provider === "microsoft" ? "azure" : provider,
         options: {
           redirectTo: opts?.redirect_uri || window.location.origin,
           queryParams: opts?.extraParams,

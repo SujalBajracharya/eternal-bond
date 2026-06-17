@@ -9,7 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 export async function resolvePostAuthDestination(): Promise<string> {
   const { data: userRes } = await supabase.auth.getUser();
   const user = userRes.user;
-  if (!user) return "/signin";
+  if (!user) return "/onboarding";
+
 
   const isEmailUser = !!user.email && !user.phone;
   if (isEmailUser && !user.email_confirmed_at && !user.confirmed_at) {

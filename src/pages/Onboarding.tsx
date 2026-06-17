@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -32,6 +31,20 @@ import ProfileChecklist, {
 } from "@/components/onboarding/ProfileChecklist";
 import PhotoUploader from "@/components/onboarding/PhotoUploader";
 import PhotoPrivacy, { Visibility, getVisibility } from "@/components/onboarding/PhotoPrivacy";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 type Gender = "male" | "female" | "other";
 type LookingFor = Gender;
@@ -52,6 +65,35 @@ type Income =
   | "above_1cr"
   | "prefer_not_to_say";
 type FamilyType = "joint" | "nuclear" | "other";
+const RELIGIONS = [
+  "Hindu",
+  "Buddhist",
+  "Islam",
+  "Christianity",
+  "Kirat",
+  "Bon",
+  "Jain",
+  "Sikh",
+  "Other",
+];
+
+const MOTHER_TONGUES = [
+  "Nepali",
+  "Maithili",
+  "Bhojpuri",
+  "Tharu",
+  "Tamang",
+  "Newar",
+  "Magar",
+  "Rai",
+  "Limbu",
+  "Gurung",
+  "Sherpa",
+  "Doteli",
+  "Urdu",
+  "Hindi",
+  "English",
+];
 
 interface FormState {
   full_name: string;
@@ -59,7 +101,7 @@ interface FormState {
   date_of_birth: string;
   location: string;
   profession: string;
-  height_cm: string;
+  height: string;
   religion: string;
   mother_tongue: string;
   marital_status: Marital | "";
@@ -85,7 +127,7 @@ const initial: FormState = {
   date_of_birth: "",
   location: "",
   profession: "",
-  height_cm: "",
+  height: "",
   religion: "",
   mother_tongue: "",
   marital_status: "",
@@ -103,6 +145,9 @@ const initial: FormState = {
   social_website: "",
   kundali_name: "",
 };
+
+const [openReligion, setOpenReligion] = useState(false);
+const [openMT, setOpenMT] = useState(false);
 
 const stepSchemas = [
   // Step 1 — basics
@@ -125,14 +170,12 @@ const stepSchemas = [
   // Step 2 — background
   z.object({
     profession: z.string().trim().min(2, "Tell us your profession").max(120),
-    height_cm: z
+    height: z
       .string()
       .refine(
-        (v) => v === "" || (Number(v) >= 120 && Number(v) <= 230),
-        "Enter a realistic height in cm",
-      )
-      .optional()
-      .or(z.literal("")),
+        (v) => v === "" || /^([3-7])'(\d{1,2})$/.test(v),
+        "Use format like 5'8, 5'10",
+      ),
     religion: z.string().trim().max(60).optional().or(z.literal("")),
     mother_tongue: z.string().trim().max(60).optional().or(z.literal("")),
     marital_status: z.enum(
@@ -215,7 +258,7 @@ const Onboarding = () => {
             date_of_birth: data.date_of_birth ?? "",
             location: data.location ?? "",
             profession: data.profession ?? "",
-            height_cm: data.height_cm ? String(data.height_cm) : "",
+            height: data.height ? String(data.height) : "",
             religion: data.religion ?? "",
             mother_tongue: data.mother_tongue ?? "",
             marital_status: (data.marital_status as Marital) ?? "",
@@ -319,7 +362,15 @@ const Onboarding = () => {
       date_of_birth: form.date_of_birth || null,
       location: form.location.trim() || null,
       profession: form.profession.trim() || null,
-      height_cm: form.height_cm ? Number(form.height_cm) : null,
+      height_cm: form.height
+        ? (() => {
+          const match = form.height.match(/^(\d)'(\d{1,2})$/);
+          if (!match) return null;
+          const ft = parseInt(match[1]);
+          const inch = parseInt(match[2]);
+          return Math.round(ft * 30.48 + inch * 2.54);
+        })()
+        : null,
       religion: form.religion.trim() || null,
       mother_tongue: form.mother_tongue.trim() || null,
       marital_status: (form.marital_status || null) as Marital | null,
@@ -437,13 +488,12 @@ const Onboarding = () => {
                           type="button"
                           onClick={() => i < step && setStep(i)}
                           disabled={i > step}
-                          className={`grid place-items-center shrink-0 w-9 h-9 rounded-full text-xs font-semibold border transition-all duration-500 ${
-                            done
-                              ? "bg-gradient-sunset text-primary-foreground border-transparent shadow-soft"
-                              : active
-                                ? "bg-card text-primary border-primary scale-110 shadow-soft animate-pop-in"
-                                : "bg-card text-muted-foreground border-border"
-                          }`}
+                          className={`grid place-items-center shrink-0 w-9 h-9 rounded-full text-xs font-semibold border transition-all duration-500 ${done
+                            ? "bg-gradient-sunset text-primary-foreground border-transparent shadow-soft"
+                            : active
+                              ? "bg-card text-primary border-primary scale-110 shadow-soft animate-pop-in"
+                              : "bg-card text-muted-foreground border-border"
+                            }`}
                           aria-label={`Step ${i + 1}: ${s.chapter}`}
                         >
                           {done ? <Check className="w-4 h-4" strokeWidth={3} /> : i + 1}
@@ -494,378 +544,419 @@ const Onboarding = () => {
 
                 <div key={`s-${step}`} className="animate-fade-in-up">
 
-                {step === 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5 sm:col-span-2">
-                      <Label htmlFor="full_name">Full name</Label>
-                      <Input
-                        id="full_name"
-                        value={form.full_name}
-                        onChange={(e) => set("full_name", e.target.value)}
-                        placeholder="Aanya Sharma"
-                        className="h-11 rounded-xl"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>I am</Label>
-                      <Select value={form.gender} onValueChange={(v) => set("gender", v as Gender)}>
-                        <SelectTrigger className="h-11 rounded-xl">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="female">Woman</SelectItem>
-                          <SelectItem value="male">Man</SelectItem>
-                          <SelectItem value="other">Non-binary</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="dob">Date of birth</Label>
-                      <Input
-                        id="dob"
-                        type="date"
-                        value={form.date_of_birth}
-                        onChange={(e) => set("date_of_birth", e.target.value)}
-                        className="h-11 rounded-xl"
-                        max={new Date().toISOString().slice(0, 10)}
-                      />
-                    </div>
-                    <div className="space-y-1.5 sm:col-span-2">
-                      <Label htmlFor="location">Where you call home</Label>
-                      <Input
-                        id="location"
-                        value={form.location}
-                        onChange={(e) => set("location", e.target.value)}
-                        placeholder="Bengaluru, India"
-                        className="h-11 rounded-xl"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {step === 1 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5 sm:col-span-2">
-                      <Label htmlFor="profession">Profession</Label>
-                      <Input
-                        id="profession"
-                        value={form.profession}
-                        onChange={(e) => set("profession", e.target.value)}
-                        placeholder="Product Designer"
-                        className="h-11 rounded-xl"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="height">Height (cm)</Label>
-                      <Input
-                        id="height"
-                        type="number"
-                        value={form.height_cm}
-                        onChange={(e) => set("height_cm", e.target.value)}
-                        placeholder="165"
-                        min={120}
-                        max={230}
-                        className="h-11 rounded-xl"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Marital status</Label>
-                      <Select
-                        value={form.marital_status}
-                        onValueChange={(v) => set("marital_status", v as Marital)}
-                      >
-                        <SelectTrigger className="h-11 rounded-xl">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="never_married">Never married</SelectItem>
-                          <SelectItem value="divorced">Divorced</SelectItem>
-                          <SelectItem value="widowed">Widowed</SelectItem>
-                          <SelectItem value="separated">Separated</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="religion">Religion (optional)</Label>
-                      <Input
-                        id="religion"
-                        value={form.religion}
-                        onChange={(e) => set("religion", e.target.value)}
-                        placeholder="Hindu, Muslim, Christian..."
-                        className="h-11 rounded-xl"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="mt">Mother tongue (optional)</Label>
-                      <Input
-                        id="mt"
-                        value={form.mother_tongue}
-                        onChange={(e) => set("mother_tongue", e.target.value)}
-                        placeholder="Hindi, Tamil, English..."
-                        className="h-11 rounded-xl"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {step === 2 && (
-                  <div className="space-y-4">
-                    <div className="space-y-1.5">
-                      <Label>I'm seeking a</Label>
-                      <Select
-                        value={form.looking_for}
-                        onValueChange={(v) => set("looking_for", v as LookingFor)}
-                      >
-                        <SelectTrigger className="h-11 rounded-xl">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="female">Woman</SelectItem>
-                          <SelectItem value="male">Man</SelectItem>
-                          <SelectItem value="other">Non-binary</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="bio">Your story</Label>
-                      <Textarea
-                        id="bio"
-                        value={form.bio}
-                        onChange={(e) => set("bio", e.target.value)}
-                        placeholder="Share what makes your heart beat — your passions, your dreams, the rhythm of your days..."
-                        className="min-h-36 rounded-xl resize-none"
-                        maxLength={800}
-                      />
-                      <div className="flex justify-end">
-                        <span className="text-xs text-muted-foreground">
-                          {form.bio.length}/800
-                        </span>
+                  {step === 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1.5 sm:col-span-2">
+                        <Label htmlFor="full_name">Full name</Label>
+                        <Input
+                          id="full_name"
+                          value={form.full_name}
+                          onChange={(e) => set("full_name", e.target.value)}
+                          placeholder="Aanya Sharma"
+                          className="h-11 rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label>I am</Label>
+                        <Select value={form.gender} onValueChange={(v) => set("gender", v as Gender)}>
+                          <SelectTrigger className="h-11 rounded-xl">
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="female">Woman</SelectItem>
+                            <SelectItem value="male">Man</SelectItem>
+                            <SelectItem value="other">Non-binary</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="dob">Date of birth</Label>
+                        <Input
+                          id="dob"
+                          type="date"
+                          value={form.date_of_birth}
+                          onChange={(e) => set("date_of_birth", e.target.value)}
+                          className="h-11 rounded-xl"
+                          max={new Date().toISOString().slice(0, 10)}
+                        />
+                      </div>
+                      <div className="space-y-1.5 sm:col-span-2">
+                        <Label htmlFor="location">Where you call home</Label>
+                        <Input
+                          id="location"
+                          value={form.location}
+                          onChange={(e) => set("location", e.target.value)}
+                          placeholder="Bengaluru, India"
+                          className="h-11 rounded-xl"
+                        />
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {step === 3 && user && (
-                  <div className="space-y-7">
-                    {/* Photos */}
-                    <section>
-                      <div className="flex items-baseline justify-between mb-3">
-                        <Label className="text-base">Photos</Label>
-                        <span className="text-xs text-muted-foreground">
-                          3–5 recommended
-                        </span>
+                  {step === 1 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1.5 sm:col-span-2">
+                        <Label htmlFor="profession">Profession</Label>
+                        <Input
+                          id="profession"
+                          value={form.profession}
+                          onChange={(e) => set("profession", e.target.value)}
+                          placeholder="Product Designer"
+                          className="h-11 rounded-xl"
+                        />
                       </div>
-                      <PhotoUploader
-                        userId={user.id}
-                        photos={form.photos}
-                        onChange={(p) => set("photos", p)}
-                      />
-                    </section>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="height">Height (cm)</Label>
+                        <Label htmlFor="height">Height (feet)</Label>
+                        <Input
+                          id="height"
+                          value={form.height}
+                          onChange={(e) => set("height", e.target.value)}
+                          placeholder={`5'8`}
+                          className="h-11 rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label>Marital status</Label>
+                        <Select
+                          value={form.marital_status}
+                          onValueChange={(v) => set("marital_status", v as Marital)}
+                        >
+                          <SelectTrigger className="h-11 rounded-xl">
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="never_married">Never married</SelectItem>
+                            <SelectItem value="divorced">Divorced</SelectItem>
+                            <SelectItem value="widowed">Widowed</SelectItem>
+                            <SelectItem value="separated">Separated</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="religion">Religion (optional)</Label>
+                        <Popover open={openReligion} onOpenChange={setOpenReligion}>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="w-full justify-between h-11 rounded-xl">
+                              {form.religion || "Select religion"}
+                            </Button>
+                          </PopoverTrigger>
 
-                    {/* Photo privacy & visibility */}
-                    {form.photos.length > 0 && (
-                      <section className="space-y-3">
-                        <div className="flex items-baseline justify-between">
-                          <Label className="text-base">Photo privacy</Label>
+                          <PopoverContent className="p-0">
+                            <Command>
+                              <CommandInput placeholder="Search religion..." />
+                              <CommandList>
+                                <CommandEmpty>No result found</CommandEmpty>
+                                <CommandGroup>
+                                  {RELIGIONS.map((r) => (
+                                    <CommandItem
+                                      key={r}
+                                      onSelect={() => {
+                                        set("religion", r);
+                                        setOpenReligion(false);
+                                      }}
+                                    >
+                                      {r}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="mt">Mother tongue (optional)</Label>
+                        <Popover open={openMT} onOpenChange={setOpenMT}>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="w-full justify-between h-11 rounded-xl">
+                              {form.mother_tongue || "Select mother tongue"}
+                            </Button>
+                          </PopoverTrigger>
+
+                          <PopoverContent className="p-0">
+                            <Command>
+                              <CommandInput placeholder="Search language..." />
+                              <CommandList>
+                                <CommandEmpty>No result found</CommandEmpty>
+                                <CommandGroup>
+                                  {MOTHER_TONGUES.map((m) => (
+                                    <CommandItem
+                                      key={m}
+                                      onSelect={() => {
+                                        set("mother_tongue", m);
+                                        setOpenMT(false);
+                                      }}
+                                    >
+                                      {m}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+                  )}
+
+                  {step === 2 && (
+                    <div className="space-y-4">
+                      <div className="space-y-1.5">
+                        <Label>I'm seeking a</Label>
+                        <Select
+                          value={form.looking_for}
+                          onValueChange={(v) => set("looking_for", v as LookingFor)}
+                        >
+                          <SelectTrigger className="h-11 rounded-xl">
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="female">Woman</SelectItem>
+                            <SelectItem value="male">Man</SelectItem>
+                            <SelectItem value="other">Non-binary</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bio">Your story</Label>
+                        <Textarea
+                          id="bio"
+                          value={form.bio}
+                          onChange={(e) => set("bio", e.target.value)}
+                          placeholder="Share what makes your heart beat — your passions, your dreams, the rhythm of your days..."
+                          className="min-h-36 rounded-xl resize-none"
+                          maxLength={800}
+                        />
+                        <div className="flex justify-end">
                           <span className="text-xs text-muted-foreground">
-                            You're in control
+                            {form.bio.length}/800
                           </span>
                         </div>
-                        <PhotoPrivacy
+                      </div>
+                    </div>
+                  )}
+
+                  {step === 3 && user && (
+                    <div className="space-y-7">
+                      {/* Photos */}
+                      <section>
+                        <div className="flex items-baseline justify-between mb-3">
+                          <Label className="text-base">Photos</Label>
+                          <span className="text-xs text-muted-foreground">
+                            3–5 recommended
+                          </span>
+                        </div>
+                        <PhotoUploader
+                          userId={user.id}
                           photos={form.photos}
-                          visibility={Object.fromEntries(
-                            form.photos.map((url, i) => [
-                              url,
-                              getVisibility(url, i, photoVisibility),
-                            ]),
-                          )}
-                          onChange={setPhotoVisibility}
+                          onChange={(p) => set("photos", p)}
                         />
                       </section>
-                    )}
 
-                    {/* Education & Income */}
-                    <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <Label>Highest education</Label>
-                        <Select
-                          value={form.highest_education}
-                          onValueChange={(v) => set("highest_education", v as Education)}
-                        >
-                          <SelectTrigger className="h-11 rounded-xl">
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="high_school">High school</SelectItem>
-                            <SelectItem value="diploma">Diploma</SelectItem>
-                            <SelectItem value="bachelors">Bachelor's</SelectItem>
-                            <SelectItem value="masters">Master's</SelectItem>
-                            <SelectItem value="doctorate">Doctorate</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label>Annual income range</Label>
-                        <Select
-                          value={form.income_range}
-                          onValueChange={(v) => set("income_range", v as Income)}
-                        >
-                          <SelectTrigger className="h-11 rounded-xl">
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="under_5l">Under ₹5L</SelectItem>
-                            <SelectItem value="5l_10l">₹5L – ₹10L</SelectItem>
-                            <SelectItem value="10l_20l">₹10L – ₹20L</SelectItem>
-                            <SelectItem value="20l_50l">₹20L – ₹50L</SelectItem>
-                            <SelectItem value="50l_1cr">₹50L – ₹1Cr</SelectItem>
-                            <SelectItem value="above_1cr">Above ₹1Cr</SelectItem>
-                            <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </section>
+                      {/* Photo privacy & visibility */}
+                      {form.photos.length > 0 && (
+                        <section className="space-y-3">
+                          <div className="flex items-baseline justify-between">
+                            <Label className="text-base">Photo privacy</Label>
+                            <span className="text-xs text-muted-foreground">
+                              You're in control
+                            </span>
+                          </div>
+                          <PhotoPrivacy
+                            photos={form.photos}
+                            visibility={Object.fromEntries(
+                              form.photos.map((url, i) => [
+                                url,
+                                getVisibility(url, i, photoVisibility),
+                              ]),
+                            )}
+                            onChange={setPhotoVisibility}
+                          />
+                        </section>
+                      )}
 
-                    {/* Family */}
-                    <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="father">Father's occupation</Label>
+                      {/* Education & Income */}
+                      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <Label>Highest education</Label>
+                          <Select
+                            value={form.highest_education}
+                            onValueChange={(v) => set("highest_education", v as Education)}
+                          >
+                            <SelectTrigger className="h-11 rounded-xl">
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="high_school">High school</SelectItem>
+                              <SelectItem value="diploma">Diploma</SelectItem>
+                              <SelectItem value="bachelors">Bachelor's</SelectItem>
+                              <SelectItem value="masters">Master's</SelectItem>
+                              <SelectItem value="doctorate">Doctorate</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label>Annual income range</Label>
+                          <Select
+                            value={form.income_range}
+                            onValueChange={(v) => set("income_range", v as Income)}
+                          >
+                            <SelectTrigger className="h-11 rounded-xl">
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="under_5l">Under ₹5L</SelectItem>
+                              <SelectItem value="5l_10l">₹5L – ₹10L</SelectItem>
+                              <SelectItem value="10l_20l">₹10L – ₹20L</SelectItem>
+                              <SelectItem value="20l_50l">₹20L – ₹50L</SelectItem>
+                              <SelectItem value="50l_1cr">₹50L – ₹1Cr</SelectItem>
+                              <SelectItem value="above_1cr">Above ₹1Cr</SelectItem>
+                              <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </section>
+
+                      {/* Family */}
+                      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <Label htmlFor="father">Father's occupation</Label>
+                          <Input
+                            id="father"
+                            value={form.father_occupation}
+                            onChange={(e) => set("father_occupation", e.target.value)}
+                            placeholder="Engineer, Retired..."
+                            className="h-11 rounded-xl"
+                            maxLength={120}
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label htmlFor="mother">Mother's occupation</Label>
+                          <Input
+                            id="mother"
+                            value={form.mother_occupation}
+                            onChange={(e) => set("mother_occupation", e.target.value)}
+                            placeholder="Teacher, Homemaker..."
+                            className="h-11 rounded-xl"
+                            maxLength={120}
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label htmlFor="siblings">Siblings</Label>
+                          <Input
+                            id="siblings"
+                            value={form.siblings}
+                            onChange={(e) => set("siblings", e.target.value)}
+                            placeholder="1 elder sister, married"
+                            className="h-11 rounded-xl"
+                            maxLength={200}
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label>Family type</Label>
+                          <Select
+                            value={form.family_type}
+                            onValueChange={(v) => set("family_type", v as FamilyType)}
+                          >
+                            <SelectTrigger className="h-11 rounded-xl">
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="nuclear">Nuclear</SelectItem>
+                              <SelectItem value="joint">Joint</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </section>
+
+                      {/* Socials */}
+                      <section className="space-y-3">
+                        <Label className="text-base">Social links (optional)</Label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <Input
+                            value={form.social_instagram}
+                            onChange={(e) => set("social_instagram", e.target.value)}
+                            placeholder="instagram.com/you"
+                            className="h-11 rounded-xl"
+                            maxLength={200}
+                          />
+                          <Input
+                            value={form.social_linkedin}
+                            onChange={(e) => set("social_linkedin", e.target.value)}
+                            placeholder="linkedin.com/in/you"
+                            className="h-11 rounded-xl"
+                            maxLength={200}
+                          />
+                          <Input
+                            value={form.social_website}
+                            onChange={(e) => set("social_website", e.target.value)}
+                            placeholder="yourwebsite.com"
+                            className="h-11 rounded-xl"
+                            maxLength={200}
+                          />
+                        </div>
+                      </section>
+
+                      {/* Kundali */}
+                      <section className="space-y-1.5">
+                        <Label htmlFor="kundali">Kundali / horoscope name</Label>
                         <Input
-                          id="father"
-                          value={form.father_occupation}
-                          onChange={(e) => set("father_occupation", e.target.value)}
-                          placeholder="Engineer, Retired..."
-                          className="h-11 rounded-xl"
-                          maxLength={120}
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="mother">Mother's occupation</Label>
-                        <Input
-                          id="mother"
-                          value={form.mother_occupation}
-                          onChange={(e) => set("mother_occupation", e.target.value)}
-                          placeholder="Teacher, Homemaker..."
-                          className="h-11 rounded-xl"
-                          maxLength={120}
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="siblings">Siblings</Label>
-                        <Input
-                          id="siblings"
-                          value={form.siblings}
-                          onChange={(e) => set("siblings", e.target.value)}
-                          placeholder="1 elder sister, married"
+                          id="kundali"
+                          value={form.kundali_name}
+                          onChange={(e) => set("kundali_name", e.target.value)}
+                          placeholder="Birth star, rashi, or chart name"
                           className="h-11 rounded-xl"
                           maxLength={200}
                         />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label>Family type</Label>
-                        <Select
-                          value={form.family_type}
-                          onValueChange={(v) => set("family_type", v as FamilyType)}
-                        >
-                          <SelectTrigger className="h-11 rounded-xl">
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="nuclear">Nuclear</SelectItem>
-                            <SelectItem value="joint">Joint</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </section>
+                        <p className="text-xs text-muted-foreground">
+                          You can upload your kundali document later from settings.
+                        </p>
+                      </section>
 
-                    {/* Socials */}
-                    <section className="space-y-3">
-                      <Label className="text-base">Social links (optional)</Label>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <Input
-                          value={form.social_instagram}
-                          onChange={(e) => set("social_instagram", e.target.value)}
-                          placeholder="instagram.com/you"
-                          className="h-11 rounded-xl"
-                          maxLength={200}
-                        />
-                        <Input
-                          value={form.social_linkedin}
-                          onChange={(e) => set("social_linkedin", e.target.value)}
-                          placeholder="linkedin.com/in/you"
-                          className="h-11 rounded-xl"
-                          maxLength={200}
-                        />
-                        <Input
-                          value={form.social_website}
-                          onChange={(e) => set("social_website", e.target.value)}
-                          placeholder="yourwebsite.com"
-                          className="h-11 rounded-xl"
-                          maxLength={200}
-                        />
-                      </div>
-                    </section>
-
-                    {/* Kundali */}
-                    <section className="space-y-1.5">
-                      <Label htmlFor="kundali">Kundali / horoscope name</Label>
-                      <Input
-                        id="kundali"
-                        value={form.kundali_name}
-                        onChange={(e) => set("kundali_name", e.target.value)}
-                        placeholder="Birth star, rashi, or chart name"
-                        className="h-11 rounded-xl"
-                        maxLength={200}
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        You can upload your kundali document later from settings.
-                      </p>
-                    </section>
-
-                    {/* KYC */}
-                    <section className="rounded-2xl border border-border/60 bg-secondary/40 p-5 flex items-start gap-4">
-                      <div className="grid place-items-center w-10 h-10 rounded-full bg-gradient-sunset text-primary-foreground shrink-0 shadow-soft">
-                        <ShieldCheck className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h4 className="font-serif text-lg">KYC verification</h4>
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${
-                              kycStatus === "verified"
+                      {/* KYC */}
+                      <section className="rounded-2xl border border-border/60 bg-secondary/40 p-5 flex items-start gap-4">
+                        <div className="grid place-items-center w-10 h-10 rounded-full bg-gradient-sunset text-primary-foreground shrink-0 shadow-soft">
+                          <ShieldCheck className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h4 className="font-serif text-lg">KYC verification</h4>
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${kycStatus === "verified"
                                 ? "bg-primary text-primary-foreground"
                                 : kycStatus === "pending"
                                   ? "bg-accent text-accent-foreground"
                                   : "bg-muted text-muted-foreground"
-                            }`}
+                                }`}
+                            >
+                              {kycStatus.replace("_", " ")}
+                            </span>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Verified profiles get a trust badge and 3× more matches.
+                          </p>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="mt-3 rounded-full"
+                            onClick={handleStartKyc}
+                            disabled={kycStatus === "verified" || kycStatus === "pending"}
                           >
-                            {kycStatus.replace("_", " ")}
-                          </span>
+                            <Star className="w-3.5 h-3.5" />
+                            {kycStatus === "verified"
+                              ? "Verified"
+                              : kycStatus === "pending"
+                                ? "Under review"
+                                : "Start verification"}
+                          </Button>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Verified profiles get a trust badge and 3× more matches.
-                        </p>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          className="mt-3 rounded-full"
-                          onClick={handleStartKyc}
-                          disabled={kycStatus === "verified" || kycStatus === "pending"}
-                        >
-                          <Star className="w-3.5 h-3.5" />
-                          {kycStatus === "verified"
-                            ? "Verified"
-                            : kycStatus === "pending"
-                              ? "Under review"
-                              : "Start verification"}
-                        </Button>
-                      </div>
-                    </section>
-                  </div>
-                )}
+                      </section>
+                    </div>
+                  )}
                 </div>
 
                 {/* Navigation */}
@@ -889,14 +980,12 @@ const Onboarding = () => {
                         type="button"
                         onClick={onClick}
                         disabled={saving}
-                        className={`group relative h-12 rounded-full bg-gradient-sunset text-primary-foreground hover:shadow-glow shadow-soft font-semibold overflow-hidden transition-all duration-500 ease-out ${
-                          isLast ? "px-8" : "px-7"
-                        } ${saving ? "w-12 px-0" : ""}`}
+                        className={`group relative h-12 rounded-full bg-gradient-sunset text-primary-foreground hover:shadow-glow shadow-soft font-semibold overflow-hidden transition-all duration-500 ease-out ${isLast ? "px-8" : "px-7"
+                          } ${saving ? "w-12 px-0" : ""}`}
                       >
                         <span
-                          className={`flex items-center gap-2 transition-all duration-300 ${
-                            saving ? "opacity-0 scale-75" : "opacity-100"
-                          }`}
+                          className={`flex items-center gap-2 transition-all duration-300 ${saving ? "opacity-0 scale-75" : "opacity-100"
+                            }`}
                         >
                           {isLast ? (
                             <>
