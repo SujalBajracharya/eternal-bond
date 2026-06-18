@@ -146,8 +146,7 @@ const initial: FormState = {
   kundali_name: "",
 };
 
-const [openReligion, setOpenReligion] = useState(false);
-const [openMT, setOpenMT] = useState(false);
+
 
 const stepSchemas = [
   // Step 1 — basics
@@ -232,6 +231,8 @@ const Onboarding = () => {
     "unverified" | "pending" | "verified" | "rejected"
   >("unverified");
   const [photoVisibility, setPhotoVisibility] = useState<Record<string, Visibility>>({});
+  const [openReligion, setOpenReligion] = useState(false);
+  const [openMT, setOpenMT] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -244,46 +245,70 @@ const Onboarding = () => {
       navigate("/verify-email", { replace: true });
       return;
     }
-    supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data) {
-          const links = (data.social_links as Record<string, string>) ?? {};
-          setForm({
-            full_name: data.full_name ?? "",
-            gender: (data.gender as Gender) ?? "",
-            date_of_birth: data.date_of_birth ?? "",
-            location: data.location ?? "",
-            profession: data.profession ?? "",
-            height: data.height ? String(data.height) : "",
-            religion: data.religion ?? "",
-            mother_tongue: data.mother_tongue ?? "",
-            marital_status: (data.marital_status as Marital) ?? "",
-            looking_for: (data.looking_for as LookingFor) ?? "",
-            bio: data.bio ?? "",
-            highest_education: (data.highest_education as Education) ?? "",
-            income_range: (data.income_range as Income) ?? "",
-            father_occupation: data.father_occupation ?? "",
-            mother_occupation: data.mother_occupation ?? "",
-            siblings: data.siblings ?? "",
-            family_type: (data.family_type as FamilyType) ?? "",
-            photos: Array.isArray(data.photos) ? data.photos : [],
-            social_instagram: links.instagram ?? "",
-            social_linkedin: links.linkedin ?? "",
-            social_website: links.website ?? "",
-            kundali_name: data.kundali_name ?? "",
-          });
-          setKycStatus(
-            (data.kyc_status as typeof kycStatus) ?? "unverified",
-          );
-          const pv = (data as { photo_visibility?: Record<string, Visibility> }).photo_visibility;
-          if (pv && typeof pv === "object") setPhotoVisibility(pv);
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      // Fetch photos from the separate mapping table
+      const { data: photoRows } = await supabase
+        .from("profile_photos_mapping")
+        .select("photo_url")
+        .eq("profile_id", user.id);
+      const photoUrls = (photoRows ?? []).map((r) => r.photo_url);
+
+      if (data) {
+        const links = (data.social_links as Record<string, string>) ?? {};
+        setForm({
+          full_name: data.full_name ?? "",
+          gender: (data.gender as Gender) ?? "",
+          date_of_birth: data.date_of_birth ?? "",
+          location: data.location ?? "",
+          profession: data.profession ?? "",
+          height: data.height_cm
+            ? (() => {
+              const totalInches = data.height_cm / 2.54;
+              let feet = Math.floor(totalInches / 12);
+              let inches = Math.round(totalInches % 12);
+              if (inches === 12) {
+                feet += 1;
+                inches = 0;
+              }
+              return `${feet}'${inches}`;
+            })()
+            : "",
+          religion: data.religion ?? "",
+          mother_tongue: data.mother_tongue ?? "",
+          marital_status: (data.marital_status as Marital) ?? "",
+          looking_for: (data.looking_for as LookingFor) ?? "",
+          bio: data.bio ?? "",
+          highest_education: (data.highest_education as Education) ?? "",
+          income_range: (data.income_range as Income) ?? "",
+          father_occupation: data.father_occupation ?? "",
+          mother_occupation: data.mother_occupation ?? "",
+          siblings: data.siblings ?? "",
+          family_type: (data.family_type as FamilyType) ?? "",
+          photos: photoUrls,
+          social_instagram: links.instagram ?? "",
+          social_linkedin: links.linkedin ?? "",
+          social_website: links.website ?? "",
+          kundali_name: data.kundali_name ?? "",
+        });
+        setKycStatus(
+          (data.kyc_status as typeof kycStatus) ?? "unverified",
+        );
+        const pv = (data as { photo_visibility?: Record<string, Visibility> }).photo_visibility;
+        if (pv && typeof pv === "object") setPhotoVisibility(pv);
+      } else {
+        // No profile yet — still populate photos if any exist
+        if (photoUrls.length > 0) {
+          setForm((f) => ({ ...f, photos: photoUrls }));
         }
-        setHydrating(false);
-      });
+      }
+      setHydrating(false);
+    })();
   }, [user, authLoading, navigate]);
 
   const progress = useMemo(() => ((step + 1) / steps.length) * 100, [step]);
@@ -340,8 +365,11 @@ const Onboarding = () => {
 
   const persist = async (markComplete: boolean) => {
     if (!user) return false;
+
+    console.log("🚀 PERSIST STARTED");
+
     if (markComplete && !validateCurrent()) return false;
-    // Always require the core required items before marking complete
+
     if (markComplete) {
       const missingRequired = checklist.filter((c) => c.required && !c.done);
       if (missingRequired.length > 0) {
@@ -349,7 +377,9 @@ const Onboarding = () => {
         return false;
       }
     }
+
     setSaving(true);
+
     const social_links: Record<string, string> = {};
     if (form.social_instagram.trim()) social_links.instagram = form.social_instagram.trim();
     if (form.social_linkedin.trim()) social_links.linkedin = form.social_linkedin.trim();
@@ -357,11 +387,14 @@ const Onboarding = () => {
 
     const payload = {
       id: user.id,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       full_name: form.full_name.trim(),
       gender: (form.gender || null) as Gender | null,
       date_of_birth: form.date_of_birth || null,
       location: form.location.trim() || null,
       profession: form.profession.trim() || null,
+
       height_cm: form.height
         ? (() => {
           const match = form.height.match(/^(\d)'(\d{1,2})$/);
@@ -371,33 +404,105 @@ const Onboarding = () => {
           return Math.round(ft * 30.48 + inch * 2.54);
         })()
         : null,
+
       religion: form.religion.trim() || null,
       mother_tongue: form.mother_tongue.trim() || null,
       marital_status: (form.marital_status || null) as Marital | null,
       looking_for: (form.looking_for || null) as LookingFor | null,
+
       bio: form.bio.trim() || null,
+
       highest_education: (form.highest_education || null) as Education | null,
       income_range: (form.income_range || null) as Income | null,
+
       father_occupation: form.father_occupation.trim() || null,
       mother_occupation: form.mother_occupation.trim() || null,
       siblings: form.siblings.trim() || null,
       family_type: (form.family_type || null) as FamilyType | null,
-      photos: form.photos,
+
       photo_visibility: photoVisibility as unknown as Record<string, string>,
       social_links,
+
       kundali_name: form.kundali_name.trim() || null,
+
       email: user.email ?? null,
       phone: user.phone ?? null,
+
       ...(markComplete ? { profile_completed: true } : {}),
     };
+
+    // =========================
+    // 🔥 DEBUG BLOCK (IMPORTANT)
+    // =========================
+
+    console.log("📦 FINAL PAYLOAD:");
+    console.log(JSON.stringify(payload, null, 2));
+
+    console.log("📏 STRING LENGTH CHECK:");
+    Object.entries(payload).forEach(([key, value]) => {
+      if (typeof value === "string") {
+        console.log(`${key}: ${value.length}`);
+      }
+    });
+
+    console.log("🚨 FIELDS > 255 CHARS:");
+    Object.entries(payload).forEach(([key, value]) => {
+      if (typeof value === "string" && value.length > 255) {
+        console.error(`❌ TOO LONG -> ${key}: ${value.length}`);
+      }
+    });
+
+    // =========================
+    // SUPABASE INSERT
+    // =========================
+
     const { error } = await supabase
       .from("profiles")
-      .upsert(payload as never, { onConflict: "id" });
-    setSaving(false);
+      .update({
+        kyc_status: "pending",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", user.id);
+
     if (error) {
+      console.error("❌ SUPABASE ERROR:", error);
+      setSaving(false);
       toast.error(error.message);
       return false;
     }
+
+    // =========================
+    // PHOTO SYNC
+    // =========================
+
+    try {
+      await supabase
+        .from("profile_photos_mapping")
+        .delete()
+        .eq("profile_id", user.id);
+
+      if (form.photos.length > 0) {
+        const photoRows = form.photos.map((url) => ({
+          profile_id: user.id,
+          photo_url: url,
+        }));
+
+        const { error: photoError } = await supabase
+          .from("profile_photos_mapping")
+          .insert(photoRows as never[]);
+
+        if (photoError) {
+          console.error("❌ PHOTO ERROR:", photoError);
+          toast.error(`Photos: ${photoError.message}`);
+          setSaving(false);
+          return false;
+        }
+      }
+    } catch (err) {
+      console.error("❌ PHOTO SYNC FAILED:", err);
+    }
+
+    setSaving(false);
     return true;
   };
 
@@ -606,8 +711,7 @@ const Onboarding = () => {
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <Label htmlFor="height">Height (cm)</Label>
-                        <Label htmlFor="height">Height (feet)</Label>
+                        <Label htmlFor="height">Height (feet & inches)</Label>
                         <Input
                           id="height"
                           value={form.height}

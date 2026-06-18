@@ -43,7 +43,7 @@ export type Database = {
           mother_tongue: string | null
           phone: string | null
           photo_visibility: Json
-          photos: string[]
+
           profession: string | null
           profile_completed: boolean
           religion: string | null
@@ -79,7 +79,7 @@ export type Database = {
           mother_tongue?: string | null
           phone?: string | null
           photo_visibility?: Json
-          photos?: string[]
+
           profession?: string | null
           profile_completed?: boolean
           religion?: string | null
@@ -115,13 +115,28 @@ export type Database = {
           mother_tongue?: string | null
           phone?: string | null
           photo_visibility?: Json
-          photos?: string[]
+
           profession?: string | null
           profile_completed?: boolean
           religion?: string | null
           siblings?: string | null
           social_links?: Json
           updated_at?: string
+        }
+        Relationships: []
+      }
+      profile_photos_mapping: {
+        Row: {
+          profile_id: string
+          photo_url: string
+        }
+        Insert: {
+          profile_id: string
+          photo_url: string
+        }
+        Update: {
+          profile_id?: string
+          photo_url?: string
         }
         Relationships: []
       }
