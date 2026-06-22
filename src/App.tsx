@@ -16,6 +16,7 @@ import Settings from "./pages/Settings.tsx";
 import Premium from "./pages/Premium.tsx";
 import Receipts from "./pages/Receipts.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import ProfilePage from "./pages/Profile.tsx";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/settings" element={<Settings />} />
             <Route path="/premium" element={<Premium />} />
             <Route path="/receipts" element={<Receipts />} />
+            <Route path="/profile" element={<ProfilePage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
