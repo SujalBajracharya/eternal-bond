@@ -127,16 +127,19 @@ export type Database = {
       }
       profile_photos_mapping: {
         Row: {
-          profile_id: string
           photo_url: string
+          profile_id: string
+          visibility: "visible" | "blurred"
         }
         Insert: {
-          profile_id: string
           photo_url: string
+          profile_id: string
+          visibility?: "visible" | "blurred"
         }
         Update: {
-          profile_id?: string
           photo_url?: string
+          profile_id?: string
+          visibility?: "visible" | "blurred"
         }
         Relationships: []
       }

@@ -30,7 +30,7 @@ import ProfileChecklist, {
   ChecklistItem,
 } from "@/components/onboarding/ProfileChecklist";
 import PhotoUploader from "@/components/onboarding/PhotoUploader";
-import PhotoPrivacy, { Visibility, getVisibility } from "@/components/onboarding/PhotoPrivacy";
+import PhotoPrivacy from "@/components/onboarding/PhotoPrivacy";
 import {
   Popover,
   PopoverContent,
@@ -230,7 +230,9 @@ const Onboarding = () => {
   const [kycStatus, setKycStatus] = useState<
     "unverified" | "pending" | "verified" | "rejected"
   >("unverified");
-  const [photoVisibility, setPhotoVisibility] = useState<Record<string, Visibility>>({});
+  const [photoVisibility, setPhotoVisibility] = useState<
+    Record<string, "visible" | "blurred">
+  >({});
   const [openReligion, setOpenReligion] = useState(false);
   const [openMT, setOpenMT] = useState(false);
 
@@ -255,9 +257,14 @@ const Onboarding = () => {
       // Fetch photos from the separate mapping table
       const { data: photoRows } = await supabase
         .from("profile_photos_mapping")
-        .select("photo_url")
+        .select("photo_url, visibility")
         .eq("profile_id", user.id);
       const photoUrls = (photoRows ?? []).map((r) => r.photo_url);
+      const initialVisibility: Record<string, "visible" | "blurred"> = {};
+      (photoRows ?? []).forEach((r) => {
+        initialVisibility[r.photo_url] = r.visibility || "visible";
+      });
+      setPhotoVisibility(initialVisibility);
 
       if (data) {
         const links = (data.social_links as Record<string, string>) ?? {};
@@ -299,8 +306,6 @@ const Onboarding = () => {
         setKycStatus(
           (data.kyc_status as typeof kycStatus) ?? "unverified",
         );
-        const pv = (data as { photo_visibility?: Record<string, Visibility> }).photo_visibility;
-        if (pv && typeof pv === "object") setPhotoVisibility(pv);
       } else {
         // No profile yet — still populate photos if any exist
         if (photoUrls.length > 0) {
@@ -420,7 +425,6 @@ const Onboarding = () => {
       siblings: form.siblings.trim() || null,
       family_type: (form.family_type || null) as FamilyType | null,
 
-      photo_visibility: photoVisibility as unknown as Record<string, string>,
       social_links,
 
       kundali_name: form.kundali_name.trim() || null,
@@ -456,18 +460,78 @@ const Onboarding = () => {
     // SUPABASE INSERT
     // =========================
 
+    // const { error } = await supabase
+    //   .from("profiles")
+    //   .update({
+    //     kyc_status: "pending",
+    //     updated_at: new Date().toISOString(),
+    //   })
+    //   .eq("id", user.id);
+
+    // if (error) {
+    //   console.error("❌ SUPABASE ERROR:", error);
+    //   setSaving(false);
+    //   toast.error(error.message);
+    //   return false;
+    // }
     const { error } = await supabase
       .from("profiles")
-      .update({
-        kyc_status: "pending",
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", user.id);
+      .upsert(
+        {
+          id: user.id,
+
+          // REQUIRED FIELDS (must exist in DB)
+          full_name: form.full_name.trim(),
+          gender: form.gender || null,
+          date_of_birth: form.date_of_birth || null,
+          location: form.location.trim() || null,
+          profession: form.profession.trim() || null,
+
+          height_cm: form.height
+            ? (() => {
+              const match = form.height.match(/^(\d)'(\d{1,2})$/);
+              if (!match) return null;
+              const ft = parseInt(match[1]);
+              const inch = parseInt(match[2]);
+              return Math.round(ft * 30.48 + inch * 2.54);
+            })()
+            : null,
+
+          religion: form.religion.trim() || null,
+          mother_tongue: form.mother_tongue.trim() || null,
+          marital_status: form.marital_status || null,
+          looking_for: form.looking_for || null,
+          bio: form.bio.trim() || null,
+
+          highest_education: form.highest_education || null,
+          income_range: form.income_range || null,
+
+          father_occupation: form.father_occupation.trim() || null,
+          mother_occupation: form.mother_occupation.trim() || null,
+          siblings: form.siblings.trim() || null,
+          family_type: form.family_type || null,
+
+          social_links,
+
+          kundali_name: form.kundali_name.trim() || null,
+
+          email: user.email ?? null,
+          phone: user.phone ?? null,
+
+          // 🔥 CRITICAL FIXES
+          kyc_status: kycStatus ?? "unverified",
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+
+          ...(markComplete ? { profile_completed: true } : {}),
+        },
+        { onConflict: "id" }
+      );
 
     if (error) {
       console.error("❌ SUPABASE ERROR:", error);
-      setSaving(false);
       toast.error(error.message);
+      setSaving(false);
       return false;
     }
 
@@ -485,11 +549,12 @@ const Onboarding = () => {
         const photoRows = form.photos.map((url) => ({
           profile_id: user.id,
           photo_url: url,
+          visibility: photoVisibility[url] ?? "visible",
         }));
 
         const { error: photoError } = await supabase
           .from("profile_photos_mapping")
-          .insert(photoRows as never[]);
+          .insert(photoRows);
 
         if (photoError) {
           console.error("❌ PHOTO ERROR:", photoError);
@@ -869,12 +934,7 @@ const Onboarding = () => {
                           </div>
                           <PhotoPrivacy
                             photos={form.photos}
-                            visibility={Object.fromEntries(
-                              form.photos.map((url, i) => [
-                                url,
-                                getVisibility(url, i, photoVisibility),
-                              ]),
-                            )}
+                            value={photoVisibility}
                             onChange={setPhotoVisibility}
                           />
                         </section>
