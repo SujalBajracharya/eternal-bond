@@ -59,6 +59,8 @@ public class ProfileService {
         profile.setSocialLinks(dto.getSocialLinks());
         profile.setKundaliName(dto.getKundaliName());
         profile.setKundaliUrl(dto.getKundaliUrl());
+        profile.setCitizenshipFrontUrl(dto.getCitizenshipFrontUrl());
+        profile.setCitizenshipBackUrl(dto.getCitizenshipBackUrl());
 
         if (dto.getPhotoVisibility() != null) {
             profile.setPhotoVisibility(dto.getPhotoVisibility());
@@ -121,6 +123,8 @@ public class ProfileService {
                 .socialLinks(profile.getSocialLinks())
                 .kundaliName(profile.getKundaliName())
                 .kundaliUrl(profile.getKundaliUrl())
+                .citizenshipFrontUrl(profile.getCitizenshipFrontUrl())
+                .citizenshipBackUrl(profile.getCitizenshipBackUrl())
                 .kycStatus(profile.getKycStatus())
                 .photoVisibility(profile.getPhotoVisibility())
                 .profileVisibility(profile.getProfileVisibility())

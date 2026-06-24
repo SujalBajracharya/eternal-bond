@@ -98,6 +98,12 @@ public class Profile {
     @Column(name = "kundali_url")
     private String kundaliUrl;
 
+    @Column(name = "citizenship_front_url")
+    private String citizenshipFrontUrl;
+
+    @Column(name = "citizenship_back_url")
+    private String citizenshipBackUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "kyc_status", nullable = false)
     private KycStatus kycStatus = KycStatus.unverified;

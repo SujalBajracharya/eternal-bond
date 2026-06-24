@@ -18,6 +18,8 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          citizenship_back_url: string | null
+          citizenship_front_url: string | null
           created_at: string
           date_of_birth: string | null
           email: string | null
@@ -43,7 +45,6 @@ export type Database = {
           mother_tongue: string | null
           phone: string | null
           photo_visibility: Json
-
           profession: string | null
           profile_completed: boolean
           religion: string | null
@@ -54,6 +55,8 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          citizenship_back_url?: string | null
+          citizenship_front_url?: string | null
           created_at?: string
           date_of_birth?: string | null
           email?: string | null
@@ -79,7 +82,6 @@ export type Database = {
           mother_tongue?: string | null
           phone?: string | null
           photo_visibility?: Json
-
           profession?: string | null
           profile_completed?: boolean
           religion?: string | null
@@ -90,6 +92,8 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          citizenship_back_url?: string | null
+          citizenship_front_url?: string | null
           created_at?: string
           date_of_birth?: string | null
           email?: string | null
@@ -115,7 +119,6 @@ export type Database = {
           mother_tongue?: string | null
           phone?: string | null
           photo_visibility?: Json
-
           profession?: string | null
           profile_completed?: boolean
           religion?: string | null

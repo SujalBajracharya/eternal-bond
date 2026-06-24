@@ -79,6 +79,10 @@ public class ProfileDto {
 
     private String kundaliUrl;
 
+    private String citizenshipFrontUrl;
+
+    private String citizenshipBackUrl;
+
     private Profile.KycStatus kycStatus;
 
     private Profile.PrivacyLevel photoVisibility;

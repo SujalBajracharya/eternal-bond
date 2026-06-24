@@ -11,6 +11,8 @@ import {
   LogOut,
   ShieldCheck,
   Star,
+  ImagePlus,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -119,6 +121,8 @@ interface FormState {
   social_linkedin: string;
   social_website: string;
   kundali_name: string;
+  citizenship_front_url: string;
+  citizenship_back_url: string;
 }
 
 const initial: FormState = {
@@ -144,6 +148,8 @@ const initial: FormState = {
   social_linkedin: "",
   social_website: "",
   kundali_name: "",
+  citizenship_front_url: "",
+  citizenship_back_url: "",
 };
 
 
@@ -302,6 +308,8 @@ const Onboarding = () => {
           social_linkedin: links.linkedin ?? "",
           social_website: links.website ?? "",
           kundali_name: data.kundali_name ?? "",
+          citizenship_front_url: data.citizenship_front_url ?? "",
+          citizenship_back_url: data.citizenship_back_url ?? "",
         });
         setKycStatus(
           (data.kyc_status as typeof kycStatus) ?? "unverified",
@@ -368,7 +376,7 @@ const Onboarding = () => {
     setStep((s) => Math.min(s + 1, steps.length - 1));
   };
 
-  const persist = async (markComplete: boolean) => {
+  const persist = async (markComplete: boolean, kycStatusOverride?: typeof kycStatus) => {
     if (!user) return false;
 
     console.log("🚀 PERSIST STARTED");
@@ -428,6 +436,8 @@ const Onboarding = () => {
       social_links,
 
       kundali_name: form.kundali_name.trim() || null,
+      citizenship_front_url: form.citizenship_front_url || null,
+      citizenship_back_url: form.citizenship_back_url || null,
 
       email: user.email ?? null,
       phone: user.phone ?? null,
@@ -514,12 +524,14 @@ const Onboarding = () => {
           social_links,
 
           kundali_name: form.kundali_name.trim() || null,
+          citizenship_front_url: form.citizenship_front_url || null,
+          citizenship_back_url: form.citizenship_back_url || null,
 
           email: user.email ?? null,
           phone: user.phone ?? null,
 
           // 🔥 CRITICAL FIXES
-          kyc_status: kycStatus ?? "unverified",
+          kyc_status: kycStatusOverride ?? kycStatus ?? "unverified",
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
 
@@ -583,15 +595,57 @@ const Onboarding = () => {
     if (ok) toast.success("Progress saved");
   };
 
+  const [uploadingFront, setUploadingFront] = useState(false);
+  const [uploadingBack, setUploadingBack] = useState(false);
+
+  const handleDocumentUpload = async (file: File, side: "front" | "back") => {
+    if (!user) return;
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only JPG, PNG or WebP images are allowed");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size must be under 5 MB");
+      return;
+    }
+
+    if (side === "front") setUploadingFront(true);
+    else setUploadingBack(true);
+
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+      const path = `${user.id}/kyc-${side}-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("profile-photos")
+        .upload(path, file, { upsert: false, contentType: file.type });
+
+      if (error) {
+        toast.error(`Upload failed: ${error.message}`);
+        return;
+      }
+
+      const { data } = supabase.storage.from("profile-photos").getPublicUrl(path);
+      set(side === "front" ? "citizenship_front_url" : "citizenship_back_url", data.publicUrl);
+      toast.success(`${side === "front" ? "Front" : "Back"} image uploaded successfully!`);
+    } catch (err: any) {
+      toast.error(`Upload error: ${err.message}`);
+    } finally {
+      if (side === "front") setUploadingFront(false);
+      else setUploadingBack(false);
+    }
+  };
+
   const handleStartKyc = async () => {
     if (kycStatus === "verified" || kycStatus === "pending") return;
     if (!user) return;
+    if (!form.citizenship_front_url || !form.citizenship_back_url) {
+      toast.error("Please upload both front and back images of your citizenship.");
+      return;
+    }
     setKycStatus("pending");
-    const { error } = await supabase
-      .from("profiles")
-      .upsert({ id: user.id, kyc_status: "pending" }, { onConflict: "id" });
-    if (error) {
-      toast.error(error.message);
+    const ok = await persist(false, "pending");
+    if (!ok) {
       setKycStatus("unverified");
       return;
     }
@@ -1102,6 +1156,125 @@ const Onboarding = () => {
                           <p className="text-sm text-muted-foreground mt-1">
                             Verified profiles get a trust badge and 3× more matches.
                           </p>
+                          <p className="text-xs text-muted-foreground/85 mt-1.5 italic">
+                            Note: If verified, your profile will receive a verified tick badge.
+                          </p>
+
+                          {/* Citizenship Front & Back upload fields */}
+                          {(kycStatus === "unverified" || kycStatus === "rejected") && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-3">
+                              <div className="space-y-1.5">
+                                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                  Citizenship Front
+                                </Label>
+                                {form.citizenship_front_url ? (
+                                  <div className="relative aspect-video rounded-xl overflow-hidden border border-border bg-secondary/20 group">
+                                    <img
+                                      src={form.citizenship_front_url}
+                                      alt="Citizenship Front"
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() => set("citizenship_front_url", "")}
+                                      className="absolute top-1.5 right-1.5 grid place-items-center w-6 h-6 rounded-full bg-background/90 text-foreground shadow-soft hover:bg-destructive hover:text-destructive-foreground transition-all"
+                                      title="Remove front image"
+                                    >
+                                      <X className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <label className="flex flex-col items-center justify-center aspect-video rounded-xl border border-dashed border-border/80 hover:border-primary/50 bg-secondary/20 hover:bg-secondary/30 transition-all cursor-pointer">
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      className="hidden"
+                                      onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) handleDocumentUpload(file, "front");
+                                      }}
+                                      disabled={uploadingFront}
+                                    />
+                                    {uploadingFront ? (
+                                      <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                                    ) : (
+                                      <ImagePlus className="w-5 h-5 text-muted-foreground mb-1" />
+                                    )}
+                                    <span className="text-[11px] font-medium text-muted-foreground mt-1">
+                                      {uploadingFront ? "Uploading..." : "Upload Front Image"}
+                                    </span>
+                                  </label>
+                                )}
+                              </div>
+
+                              <div className="space-y-1.5">
+                                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                  Citizenship Back
+                                </Label>
+                                {form.citizenship_back_url ? (
+                                  <div className="relative aspect-video rounded-xl overflow-hidden border border-border bg-secondary/20 group">
+                                    <img
+                                      src={form.citizenship_back_url}
+                                      alt="Citizenship Back"
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() => set("citizenship_back_url", "")}
+                                      className="absolute top-1.5 right-1.5 grid place-items-center w-6 h-6 rounded-full bg-background/90 text-foreground shadow-soft hover:bg-destructive hover:text-destructive-foreground transition-all"
+                                      title="Remove back image"
+                                    >
+                                      <X className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <label className="flex flex-col items-center justify-center aspect-video rounded-xl border border-dashed border-border/80 hover:border-primary/50 bg-secondary/20 hover:bg-secondary/30 transition-all cursor-pointer">
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      className="hidden"
+                                      onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) handleDocumentUpload(file, "back");
+                                      }}
+                                      disabled={uploadingBack}
+                                    />
+                                    {uploadingBack ? (
+                                      <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                                    ) : (
+                                      <ImagePlus className="w-5 h-5 text-muted-foreground mb-1" />
+                                    )}
+                                    <span className="text-[11px] font-medium text-muted-foreground mt-1">
+                                      {uploadingBack ? "Uploading..." : "Upload Back Image"}
+                                    </span>
+                                  </label>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Previews in pending / verified states */}
+                          {(kycStatus === "pending" || kycStatus === "verified") && (form.citizenship_front_url || form.citizenship_back_url) && (
+                            <div className="grid grid-cols-2 gap-4 mt-4 mb-3 opacity-90">
+                              {form.citizenship_front_url && (
+                                <div className="space-y-1">
+                                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold font-sans">Front Document</span>
+                                  <div className="aspect-video rounded-xl overflow-hidden border border-border bg-secondary/20">
+                                    <img src={form.citizenship_front_url} alt="Front Document" className="w-full h-full object-cover" />
+                                  </div>
+                                </div>
+                              )}
+                              {form.citizenship_back_url && (
+                                <div className="space-y-1">
+                                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold font-sans">Back Document</span>
+                                  <div className="aspect-video rounded-xl overflow-hidden border border-border bg-secondary/20">
+                                    <img src={form.citizenship_back_url} alt="Back Document" className="w-full h-full object-cover" />
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
                           <Button
                             type="button"
                             size="sm"
