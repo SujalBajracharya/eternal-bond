@@ -20,6 +20,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import InterestsPicker from "@/components/profile/InterestsPicker";
 
 /* ---------------------------------------------------------------------
    DESIGN SYSTEM NOTES (kept here for future maintainers)
@@ -418,7 +419,7 @@ export default function ProfilePage() {
                     <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto w-full justify-start gap-6 flex-wrap">
                         {[
                             ["about", "About"], ["background", "Background"], ["family", "Family"],
-                            ["photos", "Photos"], ["account", "Account"],
+                            ["interests", "Interests"], ["photos", "Photos"], ["account", "Account"],
                         ].map(([v, label]) => (
                             <TabsTrigger
                                 key={v}
@@ -589,6 +590,21 @@ export default function ProfilePage() {
                                     </div>
                                 </div>
                             )}
+                        </Surface>
+                    </TabsContent>
+
+                    {/* INTERESTS */}
+                    <TabsContent value="interests" className="mt-6">
+                        <Surface className="p-6">
+                            <div className="flex items-start justify-between mb-6">
+                                <div>
+                                    <h3 className="font-serif text-[15px] text-foreground">Interests &amp; passions</h3>
+                                    <p className="text-[12.5px] text-muted-foreground mt-1 max-w-sm">
+                                        Used for match recommendations, compatibility scoring, and search. The more you add, the better your matches.
+                                    </p>
+                                </div>
+                            </div>
+                            <InterestsPicker profileId={profile.id} />
                         </Surface>
                     </TabsContent>
 
