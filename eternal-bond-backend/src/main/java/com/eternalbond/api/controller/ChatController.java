@@ -2,7 +2,6 @@ package com.eternalbond.api.controller;
 
 import com.eternalbond.api.dto.MessageDto;
 import com.eternalbond.api.service.ChatService;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -28,8 +27,7 @@ public class ChatController {
     @GetMapping("/api/chats/{matchId}/history")
     public ResponseEntity<List<MessageDto>> getChatHistory(
             @PathVariable String matchId,
-            @AuthenticationPrincipal String userId
-    ) {
+            @AuthenticationPrincipal String userId) {
         return ResponseEntity.ok(chatService.getMessageHistory(matchId, userId));
     }
 

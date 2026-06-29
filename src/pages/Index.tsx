@@ -9,8 +9,11 @@ import CTASection from "@/components/landing/CTASection";
 import Footer from "@/components/landing/Footer";
 import { useRevealAll } from "@/hooks/use-reveal";
 import { useEffect } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import Home from "./Home";
 
 const Index = () => {
+  const { user, loading } = useAuth();
   useRevealAll();
 
   useEffect(() => {
@@ -24,6 +27,8 @@ const Index = () => {
     }
     m.setAttribute("content", desc);
   }, []);
+
+  if (!loading && user) return <Home />;
 
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">
