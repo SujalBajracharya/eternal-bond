@@ -88,4 +88,8 @@ public class ProfileDto {
     private Profile.PrivacyLevel photoVisibility;
 
     private Profile.PrivacyLevel profileVisibility;
+
+    private String marriageIntention;
+
+    private Boolean openToRelocate;
 }

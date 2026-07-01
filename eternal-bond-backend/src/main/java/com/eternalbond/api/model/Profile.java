@@ -5,6 +5,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -21,7 +22,7 @@ import org.hibernate.type.SqlTypes;
 public class Profile {
 
     @Id
-    private String id; // Matches the Supabase Auth User UUID (String format)
+    private String id;
 
     @Column(name = "full_name")
     private String fullName;
@@ -115,6 +116,12 @@ public class Profile {
     @Enumerated(EnumType.STRING)
     @Column(name = "profile_visibility", nullable = false)
     private PrivacyLevel profileVisibility = PrivacyLevel.everyone;
+
+    @Column(name = "marriage_intention")
+    private String marriageIntention;
+
+    @Column(name = "open_to_relocate")
+    private Boolean openToRelocate = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
