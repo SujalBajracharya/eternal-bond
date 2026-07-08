@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Lock, MapPin, ShieldCheck, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lock, MapPin, ShieldCheck, X, Flag } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
+import ReportPhotoDialog from "@/components/ReportPhotoDialog";
 
 export interface FullProfileData {
   id: string;
@@ -30,6 +32,8 @@ const FullProfileDialog = ({
   profile: FullProfileData | null;
 }) => {
   const [active, setActive] = useState(0);
+  const [reportPhotoUrl, setReportPhotoUrl] = useState<string | null>(null);
+  const { user } = useAuth();
 
   if (!profile) return null;
   const photos = profile.gallery;
@@ -56,6 +60,16 @@ const FullProfileDialog = ({
                 )}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 via-transparent to-transparent" />
+
+              {user?.id !== profile.id && (
+                <button
+                  onClick={() => setReportPhotoUrl(current.url)}
+                  className="absolute top-3 right-3 h-9 w-9 grid place-items-center rounded-full bg-background/85 hover:bg-background backdrop-blur transition-all z-10 text-rose-500 hover:text-rose-600 shadow-sm"
+                  title="Report Photo"
+                >
+                  <Flag className="h-4 w-4 fill-rose-500" />
+                </button>
+              )}
 
               {current.blurred && (
                 <div className="absolute inset-0 grid place-items-center">
@@ -182,6 +196,14 @@ const FullProfileDialog = ({
           </div>
         </div>
       </DialogContent>
+      {profile && (
+        <ReportPhotoDialog
+          open={!!reportPhotoUrl}
+          onOpenChange={(open) => !open && setReportPhotoUrl(null)}
+          photoUrl={reportPhotoUrl || ""}
+          reportedUserId={profile.id}
+        />
+      )}
     </Dialog>
   );
 };

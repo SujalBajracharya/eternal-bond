@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, ChevronRight, X, ChevronDown, ChevronUp, ShieldCheck, Sparkles, Sunrise, MapPin, Briefcase, GraduationCap, Users, Lock, Loader2, Landmark, Languages, BadgeCheck, Wallet, Tag } from "lucide-react";
+import { Heart, ChevronRight, X, ChevronDown, ChevronUp, ShieldCheck, Sparkles, Sunrise, MapPin, Briefcase, GraduationCap, Users, Lock, Loader2, Landmark, Languages, BadgeCheck, Wallet, Tag, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ import FullProfileDialog, { type FullProfileData } from "@/components/matches/Fu
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import ReportPhotoDialog from "@/components/ReportPhotoDialog";
 
 type GalleryItem = { url: string; blurred?: boolean };
 
@@ -101,6 +102,7 @@ const DailyMatches = () => {
   const [celebrate, setCelebrate] = useState<Match | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [galleryIdx, setGalleryIdx] = useState(0);
+  const [reportPhotoUrl, setReportPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Today's Matches — EternalBond";
@@ -430,6 +432,19 @@ const DailyMatches = () => {
                       )}
                     </div>
 
+                    {session?.user?.id !== current.id && (
+                      <div className="absolute top-5 right-5 z-10">
+                        <button
+                          type="button"
+                          onClick={() => setReportPhotoUrl(heroPhoto.url)}
+                          className="p-2 rounded-full bg-background/90 backdrop-blur hover:bg-background transition-colors text-rose-500 hover:text-rose-600 shadow-sm"
+                          title="Report Photo"
+                        >
+                          <Flag className="h-4 w-4 fill-rose-500" />
+                        </button>
+                      </div>
+                    )}
+
                     {heroPhoto.blurred && (
                       <div className="absolute inset-0 grid place-items-center pointer-events-none">
                         <div className="rounded-2xl bg-background/85 backdrop-blur px-4 py-2.5 text-xs flex items-center gap-2 shadow-soft">
@@ -705,6 +720,14 @@ const DailyMatches = () => {
       )}
 
       <FullProfileDialog open={profileOpen} onOpenChange={setProfileOpen} profile={fullProfile} />
+      {current && (
+        <ReportPhotoDialog
+          open={!!reportPhotoUrl}
+          onOpenChange={(open) => !open && setReportPhotoUrl(null)}
+          photoUrl={reportPhotoUrl || ""}
+          reportedUserId={current.id}
+        />
+      )}
     </main>
   );
 };

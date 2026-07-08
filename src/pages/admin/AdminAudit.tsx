@@ -31,7 +31,7 @@ const AdminAudit = () => {
       .from("admin_audit_logs")
       .select("*")
       .order("created_at", { ascending: false })
-      .limit(200)
+      .limit(50)
       .then(({ data }) => {
         setLogs((data as Log[]) ?? []);
         setLoading(false);

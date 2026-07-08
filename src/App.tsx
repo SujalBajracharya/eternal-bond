@@ -36,6 +36,7 @@ import AdminAnalytics from "./pages/admin/AdminAnalytics.tsx";
 import AdminAudit from "./pages/admin/AdminAudit.tsx";
 import ProfilePage from "./pages/Profile.tsx";
 import OthersProfilePageView from "./pages/Othersprofilepageview.tsx";
+import Notifications from "./pages/Notifications.tsx";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +63,7 @@ const App = () => (
             <Route path="/filters" element={<Filters />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/:id" element={<OthersProfilePageView />} />
+            <Route path="/notifications" element={<Notifications />} />
             {/* <Route path="/gamenight" element={<GameNight />} /> */}
 
             {/* admin side routes */}

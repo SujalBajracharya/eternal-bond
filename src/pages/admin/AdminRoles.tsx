@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, Search, ShieldCheck, ShieldOff, Users } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { logAdminAction } from "@/lib/admin-audit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -72,6 +73,7 @@ const AdminRoles = () => {
     if (error) {
       toast.error(error.message);
     } else {
+      await logAdminAction("admin_role_granted", "user", userId);
       toast.success("Admin access granted");
       await load();
     }
@@ -88,6 +90,7 @@ const AdminRoles = () => {
     if (error) {
       toast.error(error.message);
     } else {
+      await logAdminAction("admin_role_revoked", "user", userId);
       toast.success("Admin access removed");
       await load();
     }

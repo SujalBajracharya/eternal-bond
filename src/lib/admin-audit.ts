@@ -20,12 +20,11 @@ export const logAdminAction = async (
     } = await supabase.auth.getUser();
 
     if (!user) {
-      console.warn("Could not log admin action: No authenticated admin user found.");
-      return;
+      console.warn("Could not find authenticated admin user. Logging as 'unauthenticated'.");
     }
 
     const { error } = await supabase.from("admin_audit_logs").insert({
-      admin_id: user.id,
+      admin_id: user?.id || "unauthenticated",
       action,
       target_type: targetType,
       target_id: targetId,

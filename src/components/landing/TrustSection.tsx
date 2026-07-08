@@ -13,7 +13,10 @@ const TrustSection = () => {
           {/* Left: Illustration in offset card */}
           <div className="lg:col-span-5 relative reveal-scale">
             <div className="relative">
-              <div className="absolute -inset-6 bg-gradient-warm rounded-5xl rotate-[-4deg]" aria-hidden />
+              <div
+                className="absolute -inset-6 bg-gradient-warm rounded-5xl rotate-[-4deg]"
+                aria-hidden
+              />
               <div className="relative bg-card rounded-5xl p-8 shadow-card rotate-[2deg] hover:rotate-0 transition-transform duration-700">
                 <img
                   src={trust}
@@ -38,17 +41,25 @@ const TrustSection = () => {
             </span>
             <h2 className="mt-3 font-serif text-5xl md:text-6xl leading-[1.05] font-medium">
               A safe space where{" "}
-              <span className="italic text-gradient-sunset">families feel seen</span>.
+              <span className="italic text-gradient-sunset">
+                families feel seen
+              </span>
+              .
             </h2>
             <p className="mt-6 text-lg text-muted-foreground max-w-xl">
-              Every profile is hand-verified. Every conversation is private. Built with the
-              gentle care of a family elder and the precision of modern technology.
+              Every profile is hand-verified. Every conversation is private.
+              Built with the gentle care of a family elder and the precision of
+              modern technology.
             </p>
 
             <div className="mt-10 grid sm:grid-cols-3 gap-4">
               {[
                 { icon: ShieldCheck, t: "ID verified", d: "Govt. checks" },
-                { icon: BadgeCheck, t: "Family screened", d: "Real introductions" },
+                {
+                  icon: BadgeCheck,
+                  t: "Family screened",
+                  d: "Real introductions",
+                },
                 { icon: Eye, t: "Private mode", d: "You decide visibility" },
               ].map((c, i) => (
                 <div
@@ -60,7 +71,9 @@ const TrustSection = () => {
                     <c.icon className="w-5 h-5 text-primary-deep" />
                   </div>
                   <div className="font-semibold">{c.t}</div>
-                  <div className="text-sm text-muted-foreground mt-1">{c.d}</div>
+                  <div className="text-sm text-muted-foreground mt-1">
+                    {c.d}
+                  </div>
                 </div>
               ))}
             </div>

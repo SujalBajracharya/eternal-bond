@@ -28,10 +28,13 @@ import {
   Coffee,
   Crown,
   Sparkle,
+  Flag,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { pretty, ageFromDob, cmToFeet } from "@/pages/Profile";
+import { useAuth } from "@/hooks/use-auth";
+import ReportPhotoDialog from "@/components/ReportPhotoDialog";
 
 /* -----------------------------------------------------------------------
    Types
@@ -152,6 +155,7 @@ type TabKey = "detailed" | "community" | "saved";
 export default function OthersProfilePageView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [photos, setPhotos] = useState<string[]>([]);
@@ -160,6 +164,7 @@ export default function OthersProfilePageView() {
   const [notFound, setNotFound] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("detailed");
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [reportPhotoUrl, setReportPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) {
@@ -325,6 +330,19 @@ export default function OthersProfilePageView() {
                 <span className="text-4xl font-serif text-white grid place-items-center h-full">
                   {(profile.full_name ?? "·").trim().charAt(0).toUpperCase()}
                 </span>
+              )}
+              {profile.avatar_url && user?.id !== profile.id && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setReportPhotoUrl(profile.avatar_url);
+                  }}
+                  className="absolute top-1 right-1 bg-black/60 hover:bg-black/80 text-rose-500 hover:text-rose-400 p-1.5 rounded-full border border-white/20 transition-all z-10"
+                  title="Report Avatar Photo"
+                >
+                  <Flag className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                </button>
               )}
               <div className="absolute bottom-1 right-1 bg-black/40 text-white p-1 rounded-full border border-white/20">
                 <Camera className="w-3.5 h-3.5" />
@@ -626,18 +644,32 @@ export default function OthersProfilePageView() {
                 ) : (
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                     {photos.map((url, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setLightboxSrc(url)}
-                        className="group relative aspect-square overflow-hidden rounded-2xl border border-border focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      >
-                        <img
-                          src={url}
-                          alt={`Photo ${i + 1}`}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                      </button>
+                      <div key={i} className="relative group aspect-square rounded-2xl overflow-hidden border border-border">
+                        <button
+                          onClick={() => setLightboxSrc(url)}
+                          className="w-full h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        >
+                          <img
+                            src={url}
+                            alt={`Photo ${i + 1}`}
+                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                        </button>
+                        {user?.id !== profile.id && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setReportPhotoUrl(url);
+                            }}
+                            className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-black/80 text-rose-500 hover:text-rose-400 border border-white/20 hover:scale-105 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10"
+                            title="Report Photo"
+                          >
+                            <Flag className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                          </button>
+                        )}
+                      </div>
                     ))}
                   </div>
                 )}
@@ -684,6 +716,16 @@ export default function OthersProfilePageView() {
             ✕
           </button>
         </div>
+      )}
+
+      {/* Photo reporting modal */}
+      {profile && (
+        <ReportPhotoDialog
+          open={!!reportPhotoUrl}
+          onOpenChange={(open) => !open && setReportPhotoUrl(null)}
+          photoUrl={reportPhotoUrl || ""}
+          reportedUserId={profile.id}
+        />
       )}
     </div>
   );
