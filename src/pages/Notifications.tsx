@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import {
   ArrowLeft,
   Bell,
-  Loader2,
   RefreshCw,
   Search,
   MailOpen,
@@ -15,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
+import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 
 type Announcement = {
   id: string;
@@ -63,10 +64,7 @@ const Notifications = () => {
           .select("gender, created_at")
           .eq("id", user.id)
           .maybeSingle(),
-        supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", user.id),
+        supabase.from("user_roles").select("role").eq("user_id", user.id),
       ]);
 
       if (e1) throw e1;
@@ -84,7 +82,6 @@ const Notifications = () => {
         userRoles.includes("admin") ||
         userRoles.includes("moderator");
 
-      // A user is considered "new" if their account was created in the last 7 days
       const isNewUser =
         Date.now() - userCreatedAt.getTime() < 7 * 24 * 60 * 60 * 1000;
 
@@ -195,213 +192,226 @@ const Notifications = () => {
     items.length - items.filter((i) => readIds.has(i.id)).length;
 
   return (
-    <main
-      className="min-h-screen text-[hsl(40_30%_94%)]"
-      style={{
-        background:
-          "radial-gradient(ellipse at 50% 20%, hsl(230 55% 16%) 0%, hsl(232 60% 9%) 55%, hsl(235 70% 4%) 100%)",
-      }}
-    >
-      <div className="container max-w-3xl py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-[hsl(45_50%_80%)] hover:text-[hsl(45_75%_70%)] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back
-          </Link>
-          <button
-            onClick={refresh}
-            disabled={refreshing}
-            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border border-[hsl(45_40%_70%/0.25)] hover:bg-[hsl(45_60%_70%/0.08)] transition-all disabled:opacity-50"
-          >
-            <RefreshCw
-              className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`}
-            />
-            Refresh
-          </button>
-        </div>
-
-        <div className="flex items-center gap-3 mb-2">
-          <span
-            className="grid place-items-center w-11 h-11 rounded-full"
-            style={{
-              background:
-                "linear-gradient(135deg, hsl(45 80% 65%), hsl(38 70% 50%))",
-              boxShadow: "0 0 18px hsl(45 80% 60% / 0.45)",
-            }}
-          >
-            <Bell className="w-5 h-5 text-[hsl(232_60%_10%)]" />
-          </span>
-          <div>
-            <h1 className="font-serif text-3xl leading-none">Notifications</h1>
-            <p className="text-xs uppercase tracking-[0.3em] mt-1.5 text-[hsl(45_50%_75%)]">
-              {unreadCount > 0
-                ? `${unreadCount} unread`
-                : "You're all caught up"}
-            </p>
-          </div>
-        </div>
-
-        {/* Controls */}
-        <div className="mt-6 flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[hsl(45_40%_70%)]" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search notifications"
-              className="pl-9 bg-[hsl(232_40%_14%)] border-[hsl(45_40%_70%/0.2)] text-[hsl(45_30%_94%)] placeholder:text-[hsl(45_30%_70%/0.5)]"
-            />
-          </div>
-          <div className="flex gap-1 p-1 rounded-full border border-[hsl(45_40%_70%/0.2)] bg-[hsl(232_40%_14%)]">
-            {(["all", "unread", "read"] as Filter[]).map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-4 py-1.5 text-xs uppercase tracking-widest rounded-full transition-all capitalize ${
-                  filter === f
-                    ? "bg-[hsl(45_80%_65%)] text-[hsl(232_60%_10%)]"
-                    : "text-[hsl(45_50%_80%)] hover:text-[hsl(45_75%_70%)]"
-                }`}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {unreadCount > 0 && (
-          <div className="mt-3 flex justify-end">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={markAllRead}
-              className="text-xs text-[hsl(45_60%_75%)] hover:text-[hsl(45_80%_70%)] hover:bg-[hsl(45_60%_70%/0.08)]"
+    <>
+      <NavbarAuthenticated />
+      <main
+        className="min-h-screen text-foreground"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 30%, hsl(14 90% 97%) 0%, hsl(36 70% 97%) 50%, hsl(36 60% 94%) 100%)",
+        }}
+      >
+        <div className="container max-w-3xl py-8">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Mark all as read
-            </Button>
-          </div>
-        )}
-
-        {/* List */}
-        <div className="mt-6 space-y-3">
-          {loading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-24 rounded-2xl border border-[hsl(45_40%_70%/0.12)] bg-[hsl(232_40%_14%/0.5)] animate-pulse"
+              <ArrowLeft className="w-4 h-4" /> Back
+            </Link>
+            <button
+              onClick={refresh}
+              disabled={refreshing}
+              className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border border-border/80 text-muted-foreground hover:bg-secondary/60 hover:text-foreground transition-all disabled:opacity-50"
+            >
+              <RefreshCw
+                className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`}
               />
-            ))
-          ) : error ? (
-            <div className="p-8 text-center rounded-2xl border border-red-500/30 bg-red-500/5">
-              <p className="text-red-300 text-sm">
-                Couldn't load notifications.
-              </p>
-              <p className="text-xs text-red-300/70 mt-1">{error}</p>
-              <Button
-                onClick={refresh}
-                variant="outline"
-                size="sm"
-                className="mt-4"
-              >
-                Try again
-              </Button>
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="p-12 text-center rounded-2xl border border-[hsl(45_40%_70%/0.15)] bg-[hsl(232_40%_14%/0.4)]">
-              <Bell className="w-8 h-8 mx-auto text-[hsl(45_50%_75%/0.6)]" />
-              <p className="mt-3 font-serif text-lg">
-                {query || filter !== "all"
-                  ? "Nothing matches"
-                  : "No notifications yet"}
-              </p>
-              <p className="text-xs uppercase tracking-[0.3em] mt-2 text-[hsl(45_40%_70%/0.7)]">
-                {query || filter !== "all"
-                  ? "Try a different search or filter"
-                  : "We'll whisper here when something arrives"}
+              Refresh
+            </button>
+          </div>
+
+          {/* Title */}
+          <div className="flex items-center gap-3 mb-2">
+            <span
+              className="grid place-items-center w-11 h-11 rounded-full"
+              style={{
+                background:
+                  "linear-gradient(135deg, hsl(6 90% 70%), hsl(38 88% 65%))",
+                boxShadow: "0 0 16px hsl(6 90% 70% / 0.35)",
+              }}
+            >
+              <Bell className="w-5 h-5 text-white" />
+            </span>
+            <div>
+              <h1 className="font-serif text-3xl leading-none text-foreground">
+                Notifications
+              </h1>
+              <p className="text-xs uppercase tracking-[0.3em] mt-1.5 text-primary">
+                {unreadCount > 0
+                  ? `${unreadCount} unread`
+                  : "You're all caught up"}
               </p>
             </div>
-          ) : (
-            filtered.map((n) => {
-              const isRead = readIds.has(n.id);
-              return (
-                <article
-                  key={n.id}
-                  onClick={() => markRead(n.id)}
-                  className={`group cursor-pointer rounded-2xl border p-5 transition-all ${
-                    isRead
-                      ? "border-[hsl(45_40%_70%/0.12)] bg-[hsl(232_40%_14%/0.4)]"
-                      : "border-[hsl(45_75%_65%/0.4)] bg-[hsl(232_45%_18%/0.7)] shadow-[0_0_24px_hsl(45_80%_60%/0.08)]"
+          </div>
+
+          {/* Controls */}
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search notifications"
+                className="pl-9 bg-background border-border text-foreground placeholder:text-muted-foreground"
+              />
+            </div>
+            <div className="flex gap-1 p-1 rounded-full border border-border bg-secondary/40">
+              {(["all", "unread", "read"] as Filter[]).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={`px-4 py-1.5 text-xs uppercase tracking-widest rounded-full transition-all capitalize ${
+                    filter === f
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {!isRead && (
-                          <span
-                            className="w-2 h-2 rounded-full"
-                            style={{
-                              background: "hsl(45 85% 65%)",
-                              boxShadow: "0 0 8px hsl(45 80% 60%)",
-                            }}
-                          />
-                        )}
-                        <h3
-                          className={`font-serif text-lg leading-tight ${
+                  {f}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {unreadCount > 0 && (
+            <div className="mt-3 flex justify-end">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={markAllRead}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                Mark all as read
+              </Button>
+            </div>
+          )}
+
+          {/* List */}
+          <div className="mt-6 space-y-3">
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-24 rounded-2xl border border-border/60 bg-secondary/30 animate-pulse"
+                />
+              ))
+            ) : error ? (
+              <div className="p-8 text-center rounded-2xl border border-destructive/30 bg-destructive/5">
+                <p className="text-destructive text-sm">
+                  Couldn't load notifications.
+                </p>
+                <p className="text-xs text-destructive/70 mt-1">{error}</p>
+                <Button
+                  onClick={refresh}
+                  variant="outline"
+                  size="sm"
+                  className="mt-4"
+                >
+                  Try again
+                </Button>
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="p-12 text-center rounded-2xl border border-border/60 bg-secondary/20">
+                <Bell className="w-8 h-8 mx-auto text-muted-foreground/60" />
+                <p className="mt-3 font-serif text-lg text-foreground">
+                  {query || filter !== "all"
+                    ? "Nothing matches"
+                    : "No notifications yet"}
+                </p>
+                <p className="text-xs uppercase tracking-[0.3em] mt-2 text-muted-foreground">
+                  {query || filter !== "all"
+                    ? "Try a different search or filter"
+                    : "We'll whisper here when something arrives"}
+                </p>
+              </div>
+            ) : (
+              filtered.map((n) => {
+                const isRead = readIds.has(n.id);
+                return (
+                  <article
+                    key={n.id}
+                    onClick={() => markRead(n.id)}
+                    className={`group cursor-pointer rounded-2xl border p-5 transition-all ${
+                      isRead
+                        ? "border-border/60 bg-secondary/20"
+                        : "border-primary/30 bg-primary/5 shadow-[0_0_24px_hsl(6_86%_64%/0.08)]"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {!isRead && (
+                            <span
+                              className="w-2 h-2 rounded-full bg-primary"
+                              style={{
+                                boxShadow: "0 0 8px hsl(6 86% 64% / 0.6)",
+                              }}
+                            />
+                          )}
+                          <h3
+                            className={`font-serif text-lg leading-tight ${
+                              isRead
+                                ? "text-foreground/70 font-light"
+                                : "text-foreground font-semibold"
+                            }`}
+                          >
+                            {n.title}
+                          </h3>
+                          {!isRead && (
+                            <Badge
+                              className="text-[10px] uppercase tracking-widest"
+                              style={{
+                                background:
+                                  "linear-gradient(135deg, hsl(6 90% 70%), hsl(38 88% 65%))",
+                                color: "white",
+                              }}
+                            >
+                              New
+                            </Badge>
+                          )}
+                        </div>
+                        <p
+                          className={`mt-2 text-sm whitespace-pre-wrap ${
                             isRead
-                              ? "text-[hsl(45_30%_88%/0.8)] font-light"
-                              : "text-[hsl(45_30%_96%)] font-semibold"
+                              ? "text-muted-foreground/70"
+                              : "text-foreground/90"
                           }`}
                         >
-                          {n.title}
-                        </h3>
-                        {!isRead && (
-                          <Badge className="bg-[hsl(45_80%_65%)] text-[hsl(232_60%_10%)] hover:bg-[hsl(45_80%_65%)] text-[10px] uppercase tracking-widest">
-                            New
-                          </Badge>
-                        )}
+                          {n.body}
+                        </p>
+                        <div className="mt-3 flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-muted-foreground/80">
+                          <span>{new Date(n.sent_at).toLocaleString()}</span>
+                          <span className="opacity-40">·</span>
+                          <span>{n.audience}</span>
+                        </div>
                       </div>
-                      <p
-                        className={`mt-2 text-sm whitespace-pre-wrap ${
-                          isRead
-                            ? "text-[hsl(45_25%_80%/0.7)]"
-                            : "text-[hsl(45_30%_90%)]"
-                        }`}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isRead) markUnread(n.id);
+                          else markRead(n.id);
+                        }}
+                        className="shrink-0 p-2 rounded-full text-muted-foreground hover:bg-secondary/60 transition-colors opacity-0 group-hover:opacity-100"
+                        aria-label={isRead ? "Mark unread" : "Mark read"}
+                        title={isRead ? "Mark as unread" : "Mark as read"}
                       >
-                        {n.body}
-                      </p>
-                      <div className="mt-3 flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-[hsl(45_40%_70%/0.8)]">
-                        <span>{new Date(n.sent_at).toLocaleString()}</span>
-                        <span className="opacity-40">·</span>
-                        <span>{n.audience}</span>
-                      </div>
+                        {isRead ? (
+                          <Mail className="w-4 h-4" />
+                        ) : (
+                          <MailOpen className="w-4 h-4" />
+                        )}
+                      </button>
                     </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isRead) markUnread(n.id);
-                        else markRead(n.id);
-                      }}
-                      className="shrink-0 p-2 rounded-full text-[hsl(45_50%_75%)] hover:bg-[hsl(45_60%_70%/0.1)] transition-colors opacity-0 group-hover:opacity-100"
-                      aria-label={isRead ? "Mark unread" : "Mark read"}
-                      title={isRead ? "Mark as unread" : "Mark as read"}
-                    >
-                      {isRead ? (
-                        <Mail className="w-4 h-4" />
-                      ) : (
-                        <MailOpen className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
-                </article>
-              );
-            })
-          )}
+                  </article>
+                );
+              })
+            )}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+      <ScrollToTopButton />
+    </>
   );
 };
 

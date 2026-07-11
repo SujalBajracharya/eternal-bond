@@ -25,6 +25,8 @@ import match4 from "@/assets/match-4.jpg";
 import match5 from "@/assets/match-5.jpg";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
+import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
+import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 
 type Conversation = {
   id: string;
@@ -545,27 +547,7 @@ export default function Conversations() {
   return (
     <div className="min-h-screen bg-gradient-blush">
       {/* Header */}
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/60">
-        <div className="max-w-5xl mx-auto px-5 md:px-8 py-4 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-xl bg-gradient-sunset grid place-items-center shadow-soft">
-              <Heart className="h-4 w-4 text-white" fill="currentColor" />
-            </div>
-            <span className="font-serif text-lg">Conversations</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <Link to="/today">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="rounded-full text-xs"
-              >
-                <Sunrise className="h-3.5 w-3.5 mr-1.5" /> Today's matches
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <NavbarAuthenticated />
 
       <main className="max-w-5xl mx-auto px-5 md:px-8 pt-10 md:pt-14 pb-24">
         {/* Hero */}
@@ -712,6 +694,7 @@ export default function Conversations() {
           </div>
         </div>
       </main>
+      <ScrollToTopButton />
     </div>
   );
 }

@@ -22,6 +22,7 @@ import {
   Loader2,
   UserMinus,
   Pencil,
+  Flag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +36,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -44,6 +51,9 @@ import match1 from "@/assets/match-1.jpg";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import ReportMessageDialog from "@/components/ReportMessageDialog";
+import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
 
 type MsgStatus = "sent" | "delivered" | "read";
 
@@ -198,6 +208,7 @@ function Bubble({
   isHit,
   isActive,
   innerRef,
+  onReport,
 }: {
   m: Msg;
   theme: Theme;
@@ -205,40 +216,65 @@ function Bubble({
   isHit: boolean;
   isActive: boolean;
   innerRef?: (el: HTMLDivElement | null) => void;
+  onReport?: (m: Msg) => void;
 }) {
+  const bubbleContent = (
+    <div
+      className={cn(
+        "max-w-[78%] md:max-w-[60%] px-4 py-2.5 rounded-2xl text-[14.5px] leading-relaxed shadow-sm",
+        "animate-fade-in transition-all",
+        m.fromMe
+          ? cn(theme.me, "rounded-br-md")
+          : cn(theme.them, "rounded-bl-md"),
+        isActive &&
+          "ring-2 ring-primary/70 ring-offset-2 ring-offset-background",
+        isHit && !isActive && "ring-1 ring-primary/30",
+      )}
+    >
+      {m.attachment && <AttachmentView a={m.attachment} mine={m.fromMe} />}
+      {m.text && (
+        <p className="whitespace-pre-wrap">
+          {query ? highlight(m.text, query) : m.text}
+        </p>
+      )}
+      <div
+        className={cn(
+          "mt-1 flex items-center gap-1 text-[10.5px] opacity-70",
+          m.fromMe ? "justify-end" : "justify-start",
+        )}
+      >
+        <span>{m.at}</span>
+        {m.fromMe && <StatusTicks status={m.status} />}
+      </div>
+    </div>
+  );
+
+  // Wrap incoming (non-own) messages in a context menu for reporting
+  if (!m.fromMe && onReport) {
+    return (
+      <div ref={innerRef} className={cn("flex w-full", "justify-start")}>
+        <ContextMenu>
+          <ContextMenuTrigger asChild>{bubbleContent}</ContextMenuTrigger>
+          <ContextMenuContent className="w-48">
+            <ContextMenuItem
+              className="text-destructive focus:text-destructive focus:bg-destructive/10"
+              onClick={() => onReport(m)}
+            >
+              <Flag className="h-3.5 w-3.5 mr-2" />
+              Report message
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={innerRef}
       className={cn("flex w-full", m.fromMe ? "justify-end" : "justify-start")}
     >
-      <div
-        className={cn(
-          "max-w-[78%] md:max-w-[60%] px-4 py-2.5 rounded-2xl text-[14.5px] leading-relaxed shadow-sm",
-          "animate-fade-in transition-all",
-          m.fromMe
-            ? cn(theme.me, "rounded-br-md")
-            : cn(theme.them, "rounded-bl-md"),
-          isActive &&
-            "ring-2 ring-primary/70 ring-offset-2 ring-offset-background",
-          isHit && !isActive && "ring-1 ring-primary/30",
-        )}
-      >
-        {m.attachment && <AttachmentView a={m.attachment} mine={m.fromMe} />}
-        {m.text && (
-          <p className="whitespace-pre-wrap">
-            {query ? highlight(m.text, query) : m.text}
-          </p>
-        )}
-        <div
-          className={cn(
-            "mt-1 flex items-center gap-1 text-[10.5px] opacity-70",
-            m.fromMe ? "justify-end" : "justify-start",
-          )}
-        >
-          <span>{m.at}</span>
-          {m.fromMe && <StatusTicks status={m.status} />}
-        </div>
-      </div>
+      {bubbleContent}
     </div>
   );
 }
@@ -277,6 +313,7 @@ export default function Chat() {
   const [showNickname, setShowNickname] = useState(false);
   const [nicknameInput, setNicknameInput] = useState("");
   const [savingNickname, setSavingNickname] = useState(false);
+  const [reportingMessage, setReportingMessage] = useState<Msg | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const bubbleRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -539,14 +576,20 @@ export default function Chat() {
     });
   }, [activeHit, hits]);
 
-  const savePrefs = async (updates: { theme?: string; nickname?: string | null }) => {
+  const savePrefs = async (updates: {
+    theme?: string;
+    nickname?: string | null;
+  }) => {
     if (!matchId || !session?.user?.id) return;
-    await supabase
-      .from("match_preferences" as any)
-      .upsert(
-        { match_id: matchId, user_id: session.user.id, ...updates, updated_at: new Date().toISOString() },
-        { onConflict: "match_id,user_id" },
-      );
+    await supabase.from("match_preferences" as any).upsert(
+      {
+        match_id: matchId,
+        user_id: session.user.id,
+        ...updates,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "match_id,user_id" },
+    );
   };
 
   const changeTheme = (t: Theme) => {
@@ -703,6 +746,7 @@ export default function Chat() {
       )}
     >
       {/* Header */}
+      <NavbarAuthenticated />
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/75 border-b border-border/60">
         <div className="max-w-3xl mx-auto px-3 md:px-6 py-3 flex items-center gap-3">
           <Link to="/conversations">
@@ -801,19 +845,32 @@ export default function Chat() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full h-9 w-9">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full h-9 w-9"
+                >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuLabel className="text-xs">Options</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs">
+                  Options
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => { setNicknameInput(nickname || ""); setShowNickname(true); }}
+                  onClick={() => {
+                    setNicknameInput(nickname || "");
+                    setShowNickname(true);
+                  }}
                 >
                   <Pencil className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                   Set nickname
-                  {nickname && <span className="ml-auto text-[11px] text-muted-foreground truncate max-w-[80px]">{nickname}</span>}
+                  {nickname && (
+                    <span className="ml-auto text-[11px] text-muted-foreground truncate max-w-[80px]">
+                      {nickname}
+                    </span>
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -935,6 +992,7 @@ export default function Chat() {
                 isHit={hitIdx !== -1}
                 isActive={hitIdx !== -1 && hitIdx === activeHit}
                 innerRef={(el) => (bubbleRefs.current[m.id] = el)}
+                onReport={(msg) => setReportingMessage(msg)}
               />
             );
           })}
@@ -1042,14 +1100,29 @@ export default function Chat() {
             </div>
             <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
               This will permanently remove your match with{" "}
-              <strong>{nickname || partner.name}</strong> and delete all messages. This cannot be undone.
+              <strong>{nickname || partner.name}</strong> and delete all
+              messages. This cannot be undone.
             </p>
             <div className="flex justify-end gap-2">
-              <Button variant="ghost" className="rounded-full px-5" onClick={() => setShowUnmatch(false)} disabled={unmatching}>
+              <Button
+                variant="ghost"
+                className="rounded-full px-5"
+                onClick={() => setShowUnmatch(false)}
+                disabled={unmatching}
+              >
                 Cancel
               </Button>
-              <Button variant="destructive" className="rounded-full px-5" onClick={handleUnmatch} disabled={unmatching}>
-                {unmatching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Unmatch"}
+              <Button
+                variant="destructive"
+                className="rounded-full px-5"
+                onClick={handleUnmatch}
+                disabled={unmatching}
+              >
+                {unmatching ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Unmatch"
+                )}
               </Button>
             </div>
           </div>
@@ -1061,8 +1134,15 @@ export default function Chat() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-fade-in">
           <div className="bg-card w-full max-w-sm rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-serif text-lg leading-none">Set a nickname</h3>
-              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setShowNickname(false)}>
+              <h3 className="font-serif text-lg leading-none">
+                Set a nickname
+              </h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-full"
+                onClick={() => setShowNickname(false)}
+              >
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -1078,13 +1158,46 @@ export default function Chat() {
               className="w-full h-11 px-4 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 mb-5"
             />
             <div className="flex justify-end gap-2">
-              <Button variant="ghost" className="rounded-full px-5" onClick={() => setShowNickname(false)}>Cancel</Button>
-              <Button className="rounded-full px-6 bg-gradient-sunset text-white" onClick={handleSaveNickname} disabled={savingNickname}>
-                {savingNickname ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
+              <Button
+                variant="ghost"
+                className="rounded-full px-5"
+                onClick={() => setShowNickname(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="rounded-full px-6 bg-gradient-sunset text-white"
+                onClick={handleSaveNickname}
+                disabled={savingNickname}
+              >
+                {savingNickname ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Save"
+                )}
               </Button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Report message dialog */}
+      {partner && (
+        <ReportMessageDialog
+          open={!!reportingMessage}
+          onOpenChange={(open) => !open && setReportingMessage(null)}
+          messageContent={
+            reportingMessage?.text ||
+            reportingMessage?.attachment?.url ||
+            reportingMessage?.attachment?.name ||
+            ""
+          }
+          messageId={reportingMessage?.id || ""}
+          reportedUserId={partner.id}
+          onSuccess={() =>
+            toast.success("Report submitted. Our team will review it.")
+          }
+        />
       )}
 
       {/* Composer */}
