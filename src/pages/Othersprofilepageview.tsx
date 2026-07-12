@@ -35,6 +35,8 @@ import { cn } from "@/lib/utils";
 import { pretty, ageFromDob, cmToFeet } from "@/pages/Profile";
 import { useAuth } from "@/hooks/use-auth";
 import ReportPhotoDialog from "@/components/ReportPhotoDialog";
+import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
+import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 
 /* -----------------------------------------------------------------------
    Types
@@ -121,7 +123,12 @@ const DetailField = ({
   value: React.ReactNode;
   className?: string;
 }) => (
-  <div className={cn("flex flex-col py-3 border-b border-border/40 last:border-b-0", className)}>
+  <div
+    className={cn(
+      "flex flex-col py-3 border-b border-border/40 last:border-b-0",
+      className,
+    )}
+  >
     <span className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground font-medium">
       {label}
     </span>
@@ -140,7 +147,12 @@ const InlineField = ({
   value: React.ReactNode;
   className?: string;
 }) => (
-  <div className={cn("flex items-center justify-between py-3 border-b border-border/40 last:border-b-0", className)}>
+  <div
+    className={cn(
+      "flex items-center justify-between py-3 border-b border-border/40 last:border-b-0",
+      className,
+    )}
+  >
     <span className="text-[13px] text-muted-foreground font-medium">
       {label}
     </span>
@@ -150,7 +162,7 @@ const InlineField = ({
   </div>
 );
 
-type TabKey = "detailed" | "community" | "saved";
+type TabKey = "detailed" | "photos";
 
 export default function OthersProfilePageView() {
   const { id } = useParams<{ id: string }>();
@@ -228,7 +240,10 @@ export default function OthersProfilePageView() {
       <div className="min-h-screen grid place-items-center bg-background px-6 text-center">
         <div className="space-y-4">
           <div className="mx-auto w-16 h-16 rounded-full bg-muted grid place-items-center">
-            <UserX className="w-7 h-7 text-muted-foreground" strokeWidth={1.5} />
+            <UserX
+              className="w-7 h-7 text-muted-foreground"
+              strokeWidth={1.5}
+            />
           </div>
           <h1 className="font-serif text-2xl text-foreground">
             Profile not found
@@ -265,40 +280,10 @@ export default function OthersProfilePageView() {
 
   return (
     <div className="min-h-screen bg-[#f4f7f9] pb-24 selection:bg-primary/15 relative overflow-hidden">
-      {/* Navbar matching header bar in image */}
-      <header className="sticky top-0 z-30 bg-white border-b border-border/80 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-primary font-serif font-bold text-xl tracking-tight"
-            >
-              EternalBond
-            </button>
-            <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-              <a href="/matches" className="hover:text-foreground transition-colors">Matches</a>
-              <a href="/search" className="hover:text-foreground transition-colors">Search</a>
-              <a href="/interests" className="hover:text-foreground transition-colors">Interests</a>
-              <a href="/conversations" className="hover:text-foreground transition-colors">Messages</a>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted transition-colors flex items-center gap-1 text-sm font-medium"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back
-            </button>
-          </div>
-        </div>
-      </header>
-
       {/* Banner matching image background */}
       <div className="relative h-64 md:h-80 w-full overflow-hidden bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1200')]">
         <div className="absolute inset-0 bg-black/35" />
-        <div className="absolute top-4 right-4 bg-black/40 text-white rounded-full p-2 hover:bg-black/60 cursor-pointer">
-          <Camera className="w-5 h-5" />
-        </div>
+        <NavbarAuthenticated />
         <div className="absolute bottom-4 right-4 md:right-8 z-10">
           <button className="bg-[#b30843] hover:bg-[#910635] text-white font-medium text-xs md:text-sm px-6 py-2.5 rounded-full shadow-lg flex items-center gap-2 transition-all">
             <Sparkles className="w-4 h-4" /> POST A QUESTION/POLL
@@ -308,13 +293,10 @@ export default function OthersProfilePageView() {
 
       {/* Grid container matching the layout in image */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
         {/* Left Column: Overlapping sidebar card & side panels */}
         <div className="lg:col-span-4 space-y-6">
-          
           {/* Identity/Profile magenta/rose card */}
           <div className="rounded-[24px] bg-gradient-to-b from-[#b30843] to-[#80032e] text-white p-6 text-center shadow-lg relative overflow-hidden">
-            
             {/* Absolute decorative star */}
             <div className="absolute -top-12 -left-12 h-32 w-32 rounded-full bg-white/10 blur-2xl pointer-events-none" />
 
@@ -390,25 +372,33 @@ export default function OthersProfilePageView() {
                   <div className="h-10 w-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                     <Coffee className="w-4 h-4 text-yellow-300" />
                   </div>
-                  <span className="text-[9.5px] uppercase tracking-wider mt-2 font-bold text-white/90">COOKS</span>
+                  <span className="text-[9.5px] uppercase tracking-wider mt-2 font-bold text-white/90">
+                    COOKS
+                  </span>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="h-10 w-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                     <Sparkle className="w-4 h-4 text-yellow-300" />
                   </div>
-                  <span className="text-[9.5px] uppercase tracking-wider mt-2 font-bold text-white/90">MISS SPICE</span>
+                  <span className="text-[9.5px] uppercase tracking-wider mt-2 font-bold text-white/90">
+                    MISS SPICE
+                  </span>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="h-10 w-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                     <Crown className="w-4 h-4 text-yellow-300" />
                   </div>
-                  <span className="text-[9.5px] uppercase tracking-wider mt-2 font-bold text-white/90">GIRL BOSS</span>
+                  <span className="text-[9.5px] uppercase tracking-wider mt-2 font-bold text-white/90">
+                    GIRL BOSS
+                  </span>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="h-10 w-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                     <Heart className="w-4 h-4 text-yellow-300" />
                   </div>
-                  <span className="text-[9.5px] uppercase tracking-wider mt-2 font-bold text-white/90">STYLE SPA</span>
+                  <span className="text-[9.5px] uppercase tracking-wider mt-2 font-bold text-white/90">
+                    STYLE SPA
+                  </span>
                 </div>
               </div>
             </div>
@@ -472,34 +462,39 @@ export default function OthersProfilePageView() {
                 ))}
               </div>
             ) : (
-              <span className="text-xs text-muted-foreground italic">No interests selected.</span>
+              <span className="text-xs text-muted-foreground italic">
+                No interests selected.
+              </span>
             )}
           </CardWrapper>
 
           {/* Spotify Favorite Track Card */}
-          {profile.spotify_track && (
-            <CardWrapper className="p-5 bg-gradient-to-r from-emerald-50/60 to-teal-50/60 border-emerald-100">
-              <h4 className="text-[10px] uppercase tracking-[0.2em] font-bold text-emerald-800 mb-3 flex items-center gap-1.5">
-                <Music2 className="w-3.5 h-3.5 text-emerald-600" />
-                FAVORITE TRACK
-              </h4>
-              <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-emerald-100 shadow-sm">
-                <div className="h-10 w-10 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 shrink-0">
-                  <Music2 className="w-5 h-5" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">{profile.spotify_track}</p>
-                  <p className="text-xs text-muted-foreground truncate">Spotify Track</p>
-                </div>
-              </div>
-            </CardWrapper>
-          )}
+          {profile.spotify_track &&
+            (() => {
+              const trackId = profile.spotify_track.split(":")[2];
 
+              return (
+                <CardWrapper className="p-5 bg-gradient-to-r from-emerald-50/60 to-teal-50/60 border-emerald-100">
+                  <h4 className="text-[10px] uppercase tracking-[0.2em] font-bold text-emerald-800 mb-3 flex items-center gap-1.5">
+                    <Music2 className="w-3.5 h-3.5 text-emerald-600" />
+                    FAVORITE TRACK
+                  </h4>
+                  <iframe
+                    src={`https://open.spotify.com/embed/track/${trackId}?utm_source=generator`}
+                    width="100%"
+                    height="152"
+                    frameBorder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    className="rounded-xl"
+                  />
+                </CardWrapper>
+              );
+            })()}
         </div>
 
         {/* Right Column: Tabbed Detailed Content */}
         <div className="lg:col-span-8 space-y-6">
-          
           {/* Tabs bar */}
           <div className="flex gap-8 border-b border-border/80">
             <button
@@ -508,7 +503,7 @@ export default function OthersProfilePageView() {
                 "relative pb-4 text-sm font-serif font-bold transition-all",
                 activeTab === "detailed"
                   ? "text-[#b30843]"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               Detailed Profile
@@ -517,30 +512,16 @@ export default function OthersProfilePageView() {
               )}
             </button>
             <button
-              onClick={() => setActiveTab("community")}
+              onClick={() => setActiveTab("photos")}
               className={cn(
                 "relative pb-4 text-sm font-serif font-bold transition-all",
-                activeTab === "community"
+                activeTab === "photos"
                   ? "text-[#b30843]"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
-              Community Posts
-              {activeTab === "community" && (
-                <span className="absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-[#b30843]" />
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab("saved")}
-              className={cn(
-                "relative pb-4 text-sm font-serif font-bold transition-all",
-                activeTab === "saved"
-                  ? "text-[#b30843]"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Saved
-              {activeTab === "saved" && (
+              Photos
+              {activeTab === "photos" && (
                 <span className="absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-[#b30843]" />
               )}
             </button>
@@ -548,43 +529,75 @@ export default function OthersProfilePageView() {
 
           {activeTab === "detailed" && (
             <div className="space-y-6">
-              
               {/* About Me Section Card */}
               <CardWrapper>
                 <SectionTitle icon={Heart} title="About Me" />
                 <p className="text-[14.5px] text-foreground leading-relaxed whitespace-pre-wrap">
                   {profile.bio || "No bio shared yet."}
                 </p>
-                
+
                 {/* Stats Grid under About Me */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8 pt-6 border-t border-border/40">
                   <DetailField label="GENDER" value={pretty(profile.gender)} />
-                  <DetailField label="DATE OF BIRTH" value={profile.date_of_birth ? new Date(profile.date_of_birth).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"} />
-                  <DetailField label="HEIGHT" value={cmToFeet(profile.height_cm)} />
-                  <DetailField label="MARITAL STATUS" value={pretty(profile.marital_status)} />
+                  <DetailField
+                    label="DATE OF BIRTH"
+                    value={
+                      profile.date_of_birth
+                        ? new Date(profile.date_of_birth).toLocaleDateString(
+                            "en-US",
+                            { month: "short", day: "numeric", year: "numeric" },
+                          )
+                        : "—"
+                    }
+                  />
+                  <DetailField
+                    label="HEIGHT"
+                    value={cmToFeet(profile.height_cm)}
+                  />
+                  <DetailField
+                    label="MARITAL STATUS"
+                    value={pretty(profile.marital_status)}
+                  />
                 </div>
               </CardWrapper>
 
               {/* Professional & Education Section Card */}
               <CardWrapper>
-                <SectionTitle icon={Briefcase} title="Professional & Education" />
+                <SectionTitle
+                  icon={Briefcase}
+                  title="Professional & Education"
+                />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <DetailField label="HIGHEST EDUCATION" value={pretty(profile.highest_education)} />
+                  <DetailField
+                    label="HIGHEST EDUCATION"
+                    value={pretty(profile.highest_education)}
+                  />
                   <DetailField label="PROFESSION" value={profile.profession} />
-                  <DetailField label="INCOME RANGE" value={pretty(profile.income_range)} />
+                  <DetailField
+                    label="INCOME RANGE"
+                    value={pretty(profile.income_range)}
+                  />
                 </div>
               </CardWrapper>
 
               {/* Two Column Grid for Family & Religion */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
                 {/* Family Details Card */}
                 <CardWrapper>
                   <SectionTitle icon={Users2} title="Family Details" />
                   <div className="space-y-1">
-                    <InlineField label="Family Type" value={pretty(profile.family_type)} />
-                    <InlineField label="Father's Occupation" value={profile.father_occupation} />
-                    <InlineField label="Mother's Occupation" value={profile.mother_occupation} />
+                    <InlineField
+                      label="Family Type"
+                      value={pretty(profile.family_type)}
+                    />
+                    <InlineField
+                      label="Father's Occupation"
+                      value={profile.father_occupation}
+                    />
+                    <InlineField
+                      label="Mother's Occupation"
+                      value={profile.mother_occupation}
+                    />
                     <InlineField label="Siblings" value={profile.siblings} />
                   </div>
                 </CardWrapper>
@@ -594,7 +607,10 @@ export default function OthersProfilePageView() {
                   <SectionTitle icon={Landmark} title="Religion & Cultural" />
                   <div className="space-y-1">
                     <InlineField label="Religion" value={profile.religion} />
-                    <InlineField label="Mother Tongue" value={profile.mother_tongue} />
+                    <InlineField
+                      label="Mother Tongue"
+                      value={profile.mother_tongue}
+                    />
                     <div className="flex items-center justify-between py-3">
                       <span className="text-[13px] text-muted-foreground font-medium">
                         Kundali Details
@@ -616,84 +632,97 @@ export default function OthersProfilePageView() {
                     </div>
                   </div>
                 </CardWrapper>
-
               </div>
 
               {/* Lifestyle & Personality Card */}
               <CardWrapper>
                 <SectionTitle icon={Compass} title="Lifestyle & Personality" />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <DetailField label="PERSONALITY" value={profile.personality} />
-                  <DetailField label="LOVE LANGUAGE" value={profile.love_language} />
-                  <DetailField label="SOCIAL ENERGY" value={profile.social_energy} />
-                  <DetailField label="MARRIAGE INTENTION" value={profile.marriage_intention} />
-                  <DetailField label="OPEN TO RELOCATE" value={profile.open_to_relocate === null ? "—" : profile.open_to_relocate ? "Yes, worldwide" : "No"} />
+                  <DetailField
+                    label="PERSONALITY"
+                    value={profile.personality}
+                  />
+                  <DetailField
+                    label="LOVE LANGUAGE"
+                    value={profile.love_language}
+                  />
+                  <DetailField
+                    label="SOCIAL ENERGY"
+                    value={profile.social_energy}
+                  />
+                  <DetailField
+                    label="MARRIAGE INTENTION"
+                    value={profile.marriage_intention}
+                  />
+                  <DetailField
+                    label="OPEN TO RELOCATE"
+                    value={
+                      profile.open_to_relocate === null
+                        ? "—"
+                        : profile.open_to_relocate
+                          ? "Yes, worldwide"
+                          : "No"
+                    }
+                  />
                 </div>
               </CardWrapper>
-
-              {/* Gallery Photos Card at the bottom */}
-              <CardWrapper>
-                <SectionTitle icon={Camera} title={`Photos (${photos.length})`} />
-                {photos.length === 0 ? (
-                  <div className="flex flex-col items-center gap-3 py-10 text-center">
-                    <div className="w-12 h-12 rounded-full bg-muted grid place-items-center">
-                      <Camera className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
-                    </div>
-                    <p className="text-sm text-muted-foreground">No photos shared yet.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                    {photos.map((url, i) => (
-                      <div key={i} className="relative group aspect-square rounded-2xl overflow-hidden border border-border">
-                        <button
-                          onClick={() => setLightboxSrc(url)}
-                          className="w-full h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                        >
-                          <img
-                            src={url}
-                            alt={`Photo ${i + 1}`}
-                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                        </button>
-                        {user?.id !== profile.id && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setReportPhotoUrl(url);
-                            }}
-                            className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-black/80 text-rose-500 hover:text-rose-400 border border-white/20 hover:scale-105 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10"
-                            title="Report Photo"
-                          >
-                            <Flag className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardWrapper>
-
             </div>
           )}
 
-          {activeTab === "community" && (
-            <CardWrapper className="py-16 text-center">
-              <MessageSquare className="w-10 h-10 text-muted-foreground/60 mx-auto mb-3" />
-              <p className="text-sm text-muted-foreground italic">No community posts yet.</p>
+          {activeTab === "photos" && (
+            /* Gallery Photos Card at the bottom */
+            <CardWrapper>
+              <SectionTitle icon={Camera} title={`Photos (${photos.length})`} />
+              {photos.length === 0 ? (
+                <div className="flex flex-col items-center gap-3 py-10 text-center">
+                  <div className="w-12 h-12 rounded-full bg-muted grid place-items-center">
+                    <Camera
+                      className="w-5 h-5 text-muted-foreground"
+                      strokeWidth={1.5}
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    No photos shared yet.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                  {photos.map((url, i) => (
+                    <div
+                      key={i}
+                      className="relative group aspect-square rounded-2xl overflow-hidden border border-border"
+                    >
+                      <button
+                        onClick={() => setLightboxSrc(url)}
+                        className="w-full h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      >
+                        <img
+                          src={url}
+                          alt={`Photo ${i + 1}`}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                      </button>
+                      {user?.id !== profile.id && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setReportPhotoUrl(url);
+                          }}
+                          className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-black/80 text-rose-500 hover:text-rose-400 border border-white/20 hover:scale-105 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10"
+                          title="Report Photo"
+                        >
+                          <Flag className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardWrapper>
           )}
-
-          {activeTab === "saved" && (
-            <CardWrapper className="py-16 text-center">
-              <BookOpen className="w-10 h-10 text-muted-foreground/60 mx-auto mb-3" />
-              <p className="text-sm text-muted-foreground italic">No saved items yet.</p>
-            </CardWrapper>
-          )}
-
         </div>
-
       </main>
 
       {/* Lightbox for viewing gallery photos */}
@@ -727,6 +756,7 @@ export default function OthersProfilePageView() {
           reportedUserId={profile.id}
         />
       )}
+      <ScrollToTopButton />
     </div>
   );
 }

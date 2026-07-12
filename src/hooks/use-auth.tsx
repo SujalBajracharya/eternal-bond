@@ -23,6 +23,7 @@ type AuthCtx = {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  refreshAuth: () => Promise<void>;
 };
 
 const Ctx = createContext<AuthCtx>({
@@ -31,6 +32,7 @@ const Ctx = createContext<AuthCtx>({
   loading: true,
   signIn: async () => {},
   signOut: async () => {},
+  refreshAuth: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -64,9 +66,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.removeItem("jwt_token");
       setSession(null);
       setUser(null);
-    } finally {
       setLoading(false);
+      throw err; // re-throw so callers (e.g. refreshAuth) can handle failure
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -103,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <Ctx.Provider value={{ user, session, loading, signIn, signOut }}>
+    <Ctx.Provider value={{ user, session, loading, signIn, signOut, refreshAuth: initAuth }}>
       {children}
     </Ctx.Provider>
   );

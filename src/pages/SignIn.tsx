@@ -34,7 +34,7 @@ type Mode = "email" | "phone";
 const SignIn = () => {
   const navigate = useNavigate();
   // signIn() from useAuth calls the Spring Boot backend (/auth/signin) and stores the JWT.
-  const { user, loading: authLoading, signIn } = useAuth();
+  const { user, loading: authLoading, signIn, refreshAuth } = useAuth();
   const [mode, setMode] = useState<Mode>("email");
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
@@ -46,18 +46,32 @@ const SignIn = () => {
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
 
-  // Redirect if already logged in or process oauth token
+  // Handle OAuth token in URL (e.g. after Google login via Spring Boot)
+  // Runs only once on mount — separate from the redirect-if-authed effect below.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
-    if (token) {
-      localStorage.setItem("jwt_token", token);
-      window.history.replaceState({}, document.title, window.location.pathname);
-      toast.success("Welcome back");
-      window.location.href = "/";
-      return;
-    }
+    if (!token) return;
 
+    // 1. Persist the JWT
+    localStorage.setItem("jwt_token", token);
+    // 2. Remove token from URL so it isn't bookmarked / shared
+    window.history.replaceState({}, document.title, window.location.pathname);
+    // 3. Re-initialise auth state (calls /auth/me) — no full-page reload needed
+    refreshAuth()
+      .then(() => {
+        toast.success("Welcome back");
+        navigate("/", { replace: true });
+      })
+      .catch(() => {
+        // refreshAuth already cleared the bad token — stay on signin
+        toast.error("Google sign-in failed. Please try again.");
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally empty — run only once on mount
+
+  // Redirect already-authenticated users
+  useEffect(() => {
     if (!authLoading && user) navigate("/", { replace: true });
   }, [user, authLoading, navigate]);
 

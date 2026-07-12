@@ -36,7 +36,7 @@ const NavbarAuthenticated = () => {
   return (
     <header className="sticky top-0 z-50">
       <div className="container py-5">
-        <nav className="flex items-center justify-between rounded-full bg-card/70 backdrop-blur-xl border border-border/60 px-5 py-3 shadow-soft">
+        <nav className="flex items-center justify-between rounded-full backdrop-blur-xl border border-border/60 px-5 py-3 shadow-soft">
           {/* Logo */}
           <Link to="/today" className="flex items-center gap-2 group">
             <span className="relative grid place-items-center w-9 h-9 rounded-full bg-gradient-sunset text-primary-foreground shadow-soft transition-transform duration-500 group-hover:rotate-12">
