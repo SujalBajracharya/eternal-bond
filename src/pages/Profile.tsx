@@ -26,6 +26,7 @@ import {
   Trash2,
   Eye,
   EyeOff,
+  Compass,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -541,6 +542,20 @@ export default function ProfilePage() {
             <div className="flex items-center gap-2">
               {!editing ? (
                 <>
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-full text-muted-foreground hover:text-primary hover:bg-muted/60"
+                  >
+                    <Link to="/create-kundali-profile">
+                      <Compass
+                        className="w-3.5 h-3.5 mr-1.5 text-primary"
+                        strokeWidth={1.75}
+                      />{" "}
+                      Kundali
+                    </Link>
+                  </Button>
                   <Button
                     asChild
                     variant="ghost"

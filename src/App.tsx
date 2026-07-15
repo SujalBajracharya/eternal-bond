@@ -37,6 +37,7 @@ import AdminAudit from "./pages/admin/AdminAudit.tsx";
 import ProfilePage from "./pages/Profile.tsx";
 import OthersProfilePageView from "./pages/Othersprofilepageview.tsx";
 import Notifications from "./pages/Notifications.tsx";
+import CreateKundaliProfile from "./pages/CreateKundaliProfile.tsx";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,7 @@ const App = () => (
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/:id" element={<OthersProfilePageView />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/create-kundali-profile" element={<CreateKundaliProfile />} />
             {/* <Route path="/gamenight" element={<GameNight />} /> */}
 
             {/* admin side routes */}
