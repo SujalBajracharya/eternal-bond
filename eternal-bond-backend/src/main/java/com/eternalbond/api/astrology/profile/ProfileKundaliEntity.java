@@ -23,7 +23,7 @@ public class ProfileKundaliEntity {
     @UuidGenerator
     private UUID id;
 
-    @Column(name = "profile_id", nullable = false, unique = true)
+    @Column(name = "profile_id", nullable = false, unique = true, columnDefinition = "varchar")
     private String profileId;
 
     @Column(name = "birth_date", nullable = false)

@@ -20,7 +20,7 @@ public class ProfilePreferences {
     @UuidGenerator
     private UUID id;
 
-    @Column(name = "profile_id", nullable = false)
+    @Column(name = "profile_id", nullable = false, columnDefinition = "varchar")
     private String profileId;
 
     @Column(name = "preset_name", nullable = false)
