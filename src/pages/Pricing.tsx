@@ -102,6 +102,7 @@ export default function Pricing() {
 
       {selectedPlan && (
         <CheckoutDialog
+          productId={selectedPlan.id}
           open={!!selectedPlan}
           onOpenChange={(o) => !o && setSelectedPlan(null)}
           title={`Subscribe to ${selectedPlan.name}`}
@@ -120,6 +121,7 @@ export default function Pricing() {
 
       {selectedAction && (
         <CheckoutDialog
+          productId={selectedAction.id}
           open={!!selectedAction}
           onOpenChange={(o) => !o && setSelectedAction(null)}
           title={selectedAction.title}

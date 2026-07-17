@@ -7,10 +7,14 @@ import { toast } from "sonner";
 import { addPurchase } from "@/lib/purchase-history";
 import { fmt } from "@/lib/pricing";
 import { t, formatTimestamp } from "@/lib/i18n-receipts";
+import { useAuth } from "@/hooks/use-auth";
+import { useEntitlements } from "@/hooks/useEntitlements";
+import { initiateCheckout, simulatePayment } from "@/api/monetization";
 
 type Stage = "review" | "processing" | "success" | "failed";
 
 interface Props {
+  productId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
@@ -23,6 +27,7 @@ interface Props {
 }
 
 export function CheckoutDialog({
+  productId,
   open,
   onOpenChange,
   title,
@@ -34,37 +39,70 @@ export function CheckoutDialog({
   onSuccess,
 }: Props) {
   const [stage, setStage] = React.useState<Stage>("review");
+  const { session } = useAuth();
+  const { refresh } = useEntitlements();
 
   React.useEffect(() => {
     if (open) setStage("review");
   }, [open]);
 
-  const runPayment = () => {
+  const mapProductId = (id: string): string => {
+    switch (id) {
+      case "reveal-like": return "reveal_like";
+      case "extend-chat": return "extend_chat";
+      case "extra-likes": return "extra_like";
+      case "undo-skip": return "undo_skip";
+      case "profile-boost": return "profile_boost";
+      default: return id;
+    }
+  };
+
+  const runPayment = async () => {
+    if (!session?.access_token) {
+      toast.error("Please sign in to make a purchase");
+      return;
+    }
+
     setStage("processing");
-    // Mock a network round-trip. 10% chance of failure.
-    window.setTimeout(() => {
-      const failed = Math.random() < 0.1;
-      if (failed) {
-        setStage("failed");
-      } else {
-        setStage("success");
-        const record = addPurchase({
-          kind: receiptLabel,
-          label: receiptLabel,
-          appliesWhen,
-          price: cadence ? `${fmt(price)} / ${cadence}` : fmt(price),
-        });
-        onSuccess?.();
-        toast.success(receiptLabel, {
-          description: t.receiptSavedDescription(appliesWhen, fmt(price), formatTimestamp(record.timestamp)),
-          duration: 6000,
-          action: {
-            label: t.viewReceipt,
-            onClick: () => window.location.assign("/receipts"),
-          },
-        });
-      }
-    }, 1400);
+    try {
+      const resolvedProductId = mapProductId(productId);
+      const checkoutRes = await initiateCheckout(session.access_token, {
+        productId: resolvedProductId,
+      });
+
+      // Extract the PaymentIntent ID from clientSecret (format: pi_XXX_secret_YYY)
+      const paymentIntentId = checkoutRes.clientSecret.split("_secret_")[0];
+
+      // Simulate a successful Stripe payment completion (sandbox helper)
+      await simulatePayment(session.access_token, paymentIntentId);
+
+      // Record in purchase history for UI Receipts list
+      const record = addPurchase({
+        kind: receiptLabel,
+        label: receiptLabel,
+        appliesWhen,
+        price: cadence ? `${fmt(price)} / ${cadence}` : fmt(price),
+      });
+
+      // Refresh global backend entitlements
+      await refresh();
+
+      onSuccess?.();
+      setStage("success");
+
+      toast.success(receiptLabel, {
+        description: t.receiptSavedDescription(appliesWhen, fmt(price), formatTimestamp(record.timestamp)),
+        duration: 6000,
+        action: {
+          label: t.viewReceipt,
+          onClick: () => window.location.assign("/receipts"),
+        },
+      });
+    } catch (err: any) {
+      console.error("Payment flow failed:", err);
+      toast.error(err.message || "Payment failed");
+      setStage("failed");
+    }
   };
 
   return (

@@ -29,4 +29,14 @@ public class Match {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "expires_at")
+    private LocalDateTime expiresAt;
+
+    @Column(name = "is_game_night")
+    private Boolean isGameNight;
+
+    @Column(name = "status", length = 32)
+    @Builder.Default
+    private String status = "active";
 }

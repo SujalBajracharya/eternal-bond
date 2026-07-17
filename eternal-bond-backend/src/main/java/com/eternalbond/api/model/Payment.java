@@ -2,6 +2,8 @@ package com.eternalbond.api.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,6 +37,20 @@ public class Payment {
 
     @Column(length = 200)
     private String description;
+
+    /**
+     * Links this payment to the product in the catalog.
+     * Set when the payment is created via MonetizationController.
+     */
+    @Column(name = "product_id", length = 64)
+    private String productId;
+
+    /**
+     * Optional JSON metadata (e.g. { "conversation_id": "..." } for extend_chat).
+     */
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private String metadata;
 
     @Column(name = "refund_id")
     private String refundId;

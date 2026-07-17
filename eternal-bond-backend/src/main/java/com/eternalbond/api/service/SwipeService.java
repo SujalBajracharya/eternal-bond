@@ -19,11 +19,17 @@ public class SwipeService {
     private final SwipeRepository swipeRepository;
     private final MatchRepository matchRepository;
     private final ProfileRepository profileRepository;
+    private final EntitlementService entitlementService;
 
-    public SwipeService(SwipeRepository swipeRepository, MatchRepository matchRepository, ProfileRepository profileRepository) {
+    public SwipeService(
+            SwipeRepository swipeRepository,
+            MatchRepository matchRepository,
+            ProfileRepository profileRepository,
+            EntitlementService entitlementService) {
         this.swipeRepository = swipeRepository;
         this.matchRepository = matchRepository;
         this.profileRepository = profileRepository;
+        this.entitlementService = entitlementService;
     }
 
     @Transactional
@@ -46,6 +52,15 @@ public class SwipeService {
 
         // Check if there is a mutual "like" to declare a match
         if (action == Swipe.SwipeAction.like) {
+            // Check daily limit for the swiper
+            if (!entitlementService.canLike(swiperId)) {
+                throw new com.eternalbond.api.exception.LimitExceededException(
+                        "Daily like limit reached. Upgrade to Premium or buy an extra like.");
+            }
+
+            // Record the like usage
+            entitlementService.consumeLike(swiperId);
+
             boolean reciprocalLike = swipeRepository.existsBySwiperIdAndSwipedIdAndAction(
                     swipedId, swiperId, Swipe.SwipeAction.like);
 
@@ -56,10 +71,20 @@ public class SwipeService {
 
                 // Check if match already logged
                 if (matchRepository.findMutualMatch(userOne.getId(), userTwo.getId()).isEmpty()) {
+                    // Set 48-hour expiration unless at least one user is premium
+                    LocalDateTime expiresAt = null;
+                    boolean eitherPremium = entitlementService.hasActivePremium(swiperId)
+                            || entitlementService.hasActivePremium(swipedId);
+                    if (!eitherPremium) {
+                        expiresAt = LocalDateTime.now().plusHours(48);
+                    }
+
                     Match match = Match.builder()
                             .userOne(userOne)
                             .userTwo(userTwo)
                             .createdAt(LocalDateTime.now())
+                            .expiresAt(expiresAt)
+                            .status("active")
                             .build();
                     matchRepository.save(match);
                     return true; // Match celebrated!

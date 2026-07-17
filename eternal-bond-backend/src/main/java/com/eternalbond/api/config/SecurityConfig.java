@@ -53,7 +53,8 @@ public class SecurityConfig {
                                 "/auth/**",
                                 "/oauth2/**",
                                 "/login/**",
-                                "/api/payments/webhook"
+                                "/api/payments/webhook",
+                                "/api/monetize/webhook"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
