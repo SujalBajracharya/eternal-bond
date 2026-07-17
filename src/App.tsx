@@ -38,6 +38,9 @@ import ProfilePage from "./pages/Profile.tsx";
 import OthersProfilePageView from "./pages/Othersprofilepageview.tsx";
 import Notifications from "./pages/Notifications.tsx";
 import CreateKundaliProfile from "./pages/CreateKundaliProfile.tsx";
+import Pricing from "./pages/Pricing.tsx";
+import Billing from "./pages/Billing.tsx";
+import RevealLikes from "./pages/RevealLikes.tsx";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +69,9 @@ const App = () => (
             <Route path="/profile/:id" element={<OthersProfilePageView />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/create-kundali-profile" element={<CreateKundaliProfile />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/billing" element={<Billing />} />
+            <Route path="/reveal-likes" element={<RevealLikes />} />
             {/* <Route path="/gamenight" element={<GameNight />} /> */}
 
             {/* admin side routes */}

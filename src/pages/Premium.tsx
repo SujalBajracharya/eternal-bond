@@ -28,11 +28,15 @@ export default function Premium() {
         <Button asChild variant="ghost" size="icon" className="rounded-full">
           <Link to="/today"><ArrowLeft className="h-5 w-5" /></Link>
         </Button>
-        <div>
+        <div className="flex-1">
           <h1 className="font-[Fraunces] text-2xl text-foreground">Thoughtful upgrades</h1>
           <p className="text-sm text-muted-foreground">Optional, never required.</p>
         </div>
+        <Button asChild size="sm" className="rounded-full bg-gradient-sunset text-white hover:opacity-90">
+          <Link to="/pricing">See plans</Link>
+        </Button>
       </header>
+
 
       <main className="max-w-3xl mx-auto px-6 pb-20">
         <div className="grid gap-3 sm:grid-cols-2">
