@@ -34,4 +34,11 @@ public class SwipeController {
                 "message", isMatch ? "Mutual match created!" : "Swipe registered."
         ));
     }
+
+    @org.springframework.web.bind.annotation.GetMapping("/admirers")
+    public ResponseEntity<java.util.List<com.eternalbond.api.dto.ProfileDto>> getAdmirers(
+            @AuthenticationPrincipal String userId
+    ) {
+        return ResponseEntity.ok(swipeService.getAdmirers(userId));
+    }
 }

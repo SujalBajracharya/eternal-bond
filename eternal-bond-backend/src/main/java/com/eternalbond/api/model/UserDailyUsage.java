@@ -2,8 +2,10 @@ package com.eternalbond.api.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 /**
  * Tracks per-user, per-day usage counters.
@@ -24,8 +26,10 @@ import java.time.LocalDate;
 public class UserDailyUsage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue
+    @UuidGenerator
+    @Column(columnDefinition = "uuid")
+    private UUID id;
 
     @Column(name = "user_id", nullable = false, length = 64)
     private String userId;

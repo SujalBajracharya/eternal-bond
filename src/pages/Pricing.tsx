@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { PlanCard, ProductCard, CompareCell } from "@/components/premium/ProductCard";
 import { CheckoutDialog } from "@/components/premium/CheckoutDialog";
 import { PLANS, PAY_PER_ACTION, COMPARE_ROWS, type Plan, type PayPerAction } from "@/lib/pricing";
-import { getSubscription, activatePlan } from "@/lib/premium-state";
+import { useEntitlements } from "@/hooks/useEntitlements";
 
 export default function Pricing() {
-  const [sub, setSub] = useState(getSubscription());
+  const { entitlements } = useEntitlements();
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [selectedAction, setSelectedAction] = useState<PayPerAction | null>(null);
 
@@ -44,7 +44,7 @@ export default function Pricing() {
             <PlanCard
               key={plan.id}
               plan={plan}
-              current={sub.planId === plan.id}
+              current={plan.id === "free" ? !entitlements?.premium : entitlements?.premium && entitlements.tier === plan.id}
               highlight={plan.id === "premium_monthly"}
               onSelect={() => setSelectedPlan(plan)}
             />
@@ -115,7 +115,6 @@ export default function Pricing() {
               : "Renews monthly. Cancel anytime."
           }
           receiptLabel={`${selectedPlan.name} activated`}
-          onSuccess={() => setSub(activatePlan(selectedPlan.id))}
         />
       )}
 

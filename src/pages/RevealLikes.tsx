@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Eye, Lock, Heart } from "lucide-react";
+import { ArrowLeft, Eye, Lock, Heart, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CheckoutDialog } from "@/components/premium/CheckoutDialog";
-import { getSubscription, getUsage, setUsage } from "@/lib/premium-state";
-import { fmt } from "@/lib/pricing";
+import { useEntitlements } from "@/hooks/useEntitlements";
+import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -16,33 +16,83 @@ type Admirer = {
   avatar: string;
 };
 
-const MOCK: Admirer[] = [
-  { id: "1", name: "Ananya", age: 27, city: "Kathmandu", avatar: "https://i.pravatar.cc/300?img=47" },
-  { id: "2", name: "Meera", age: 29, city: "Pokhara", avatar: "https://i.pravatar.cc/300?img=48" },
-  { id: "3", name: "Sneha", age: 26, city: "Lalitpur", avatar: "https://i.pravatar.cc/300?img=49" },
-  { id: "4", name: "Kritika", age: 28, city: "Bhaktapur", avatar: "https://i.pravatar.cc/300?img=45" },
-  { id: "5", name: "Ritu", age: 30, city: "Chitwan", avatar: "https://i.pravatar.cc/300?img=44" },
-  { id: "6", name: "Prabha", age: 27, city: "Biratnagar", avatar: "https://i.pravatar.cc/300?img=41" },
-];
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
 
 export default function RevealLikes() {
-  const sub = getSubscription();
-  const isPremium = sub.planId !== "free";
-  const [revealed, setRevealed] = useState<Set<string>>(new Set(isPremium ? MOCK.map((m) => m.id) : []));
+  const { entitlements, refresh: refreshEntitlements } = useEntitlements();
+  const { session } = useAuth();
+  const isPremium = entitlements?.premium === true;
+
+  const [admirers, setAdmirers] = useState<Admirer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [revealed, setRevealed] = useState<Set<string>>(new Set());
   const [pending, setPending] = useState<Admirer | null>(null);
   const [subscribeOpen, setSubscribeOpen] = useState(false);
 
-  const doReveal = (a: Admirer) => {
+  useEffect(() => {
+    const fetchAdmirers = async () => {
+      if (!session?.access_token) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/swipes/admirers`, {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            Accept: "application/json",
+          },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const mapped: Admirer[] = data.map((item: any) => {
+            let age = 25;
+            if (item.dateOfBirth) {
+              const birthYear = new Date(item.dateOfBirth).getFullYear();
+              if (!isNaN(birthYear)) {
+                age = new Date().getFullYear() - birthYear;
+              }
+            }
+            return {
+              id: item.id,
+              name: item.fullName || "Admirer",
+              age,
+              city: item.location || "Nepal",
+              avatar:
+                item.avatarUrl ||
+                item.photos?.[0] ||
+                "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80",
+            };
+          });
+          setAdmirers(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch admirers:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdmirers();
+  }, [session?.access_token]);
+
+  useEffect(() => {
+    if (isPremium && admirers.length > 0) {
+      setRevealed(new Set(admirers.map((m) => m.id)));
+    }
+  }, [isPremium, admirers]);
+
+  const doReveal = async (a: Admirer) => {
     if (isPremium) {
       setRevealed((r) => new Set(r).add(a.id));
       return;
     }
-    const usage = getUsage();
-    if (usage.revealsUsedToday < usage.revealsLimitToday) {
-      // free daily reveal
-      setUsage({ revealsUsedToday: usage.revealsUsedToday + 1 });
+    if (entitlements?.canRevealFree) {
       setRevealed((r) => new Set(r).add(a.id));
-      toast.success(`Revealed ${a.name}`, { description: "You have used today's free reveal." });
+      await refreshEntitlements();
+      toast.success(`Revealed ${a.name}`, {
+        description: "You used today's free reveal.",
+      });
       return;
     }
     setPending(a);
@@ -52,15 +102,25 @@ export default function RevealLikes() {
     <div className="min-h-screen bg-gradient-blush">
       <header className="px-6 py-5 max-w-5xl mx-auto flex items-center gap-3">
         <Button asChild variant="ghost" size="icon" className="rounded-full">
-          <Link to="/"><ArrowLeft className="h-5 w-5" /></Link>
+          <Link to="/">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
         </Button>
         <div className="flex-1">
-          <div className="text-[11px] uppercase tracking-[0.22em] text-primary-deep">Admirers</div>
-          <h1 className="font-[Fraunces] text-2xl text-foreground">People who liked you</h1>
+          <div className="text-[11px] uppercase tracking-[0.22em] text-primary-deep">
+            Admirers
+          </div>
+          <h1 className="font-[Fraunces] text-2xl text-foreground">
+            People who liked you
+          </h1>
         </div>
         {!isPremium && (
-          <Button size="sm" className="rounded-full bg-gradient-sunset text-white hover:opacity-90" onClick={() => setSubscribeOpen(true)}>
-            Unlock all
+          <Button
+            size="sm"
+            className="rounded-full bg-gradient-sunset text-white hover:opacity-90 flex items-center gap-1.5"
+            onClick={() => setSubscribeOpen(true)}
+          >
+            <Sparkles className="h-3.5 w-3.5" /> Unlock all
           </Button>
         )}
       </header>
@@ -69,63 +129,99 @@ export default function RevealLikes() {
         <p className="text-sm text-muted-foreground text-center max-w-lg mx-auto mb-8">
           {isPremium
             ? "Everyone who has quietly noticed your profile."
-            : `${MOCK.length} people have liked your profile. Reveal them one at a time, or unlock all with Premium.`}
+            : `${admirers.length} ${admirers.length === 1 ? "person has" : "people have"} liked your profile. Reveal them one at a time, or unlock all with Premium.`}
         </p>
 
-        <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-          {MOCK.map((a) => {
-            const isRevealed = revealed.has(a.id);
-            return (
-              <button
-                key={a.id}
-                onClick={() => !isRevealed && doReveal(a)}
-                className={cn(
-                  "group relative aspect-[3/4] rounded-2xl overflow-hidden border border-border/60 bg-card/80 backdrop-blur text-left transition-all",
-                  !isRevealed && "hover:shadow-[var(--shadow-card)]",
-                )}
-              >
-                <img
-                  src={a.avatar}
-                  alt={isRevealed ? a.name : "Hidden admirer"}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
+            <Loader2 className="h-8 w-8 animate-spin text-primary mb-3" />
+            <p className="text-sm">Fetching admirers who liked you...</p>
+          </div>
+        ) : admirers.length === 0 ? (
+          <div className="rounded-3xl border border-border/60 bg-card/80 backdrop-blur p-12 text-center max-w-md mx-auto">
+            <Heart className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
+            <h3 className="font-[Fraunces] text-xl text-foreground">
+              No admirers yet
+            </h3>
+            <p className="text-sm text-muted-foreground mt-2">
+              Keep swiping in Daily Matches to discover people in your area.
+              When someone likes your profile, they will appear here!
+            </p>
+            <Button
+              asChild
+              className="mt-6 rounded-full bg-gradient-sunset text-white"
+            >
+              <Link to="/today">Start Swiping</Link>
+            </Button>
+          </div>
+        ) : (
+          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+            {admirers.map((a) => {
+              const isRevealed = revealed.has(a.id);
+              return (
+                <button
+                  key={a.id}
+                  onClick={() => !isRevealed && doReveal(a)}
                   className={cn(
-                    "absolute inset-0 h-full w-full object-cover transition-all",
-                    !isRevealed && "blur-2xl scale-110 brightness-90",
+                    "group relative aspect-[3/4] rounded-2xl overflow-hidden border border-border/60 bg-card/80 backdrop-blur text-left transition-all",
+                    !isRevealed &&
+                      "hover:shadow-[var(--shadow-card)] cursor-pointer",
                   )}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                {!isRevealed && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                    <div className="h-11 w-11 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
-                      <Lock className="h-5 w-5" />
+                >
+                  <img
+                    src={a.avatar}
+                    alt={isRevealed ? a.name : "Hidden admirer"}
+                    className={cn(
+                      "absolute inset-0 h-full w-full object-cover transition-all",
+                      !isRevealed && "blur-2xl scale-110 brightness-90",
+                    )}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                  {!isRevealed && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-3 text-center">
+                      <div className="h-11 w-11 rounded-full bg-white/20 backdrop-blur flex items-center justify-center mb-2">
+                        <Lock className="h-5 w-5" />
+                      </div>
+                      <div className="text-xs uppercase tracking-wider font-medium">
+                        Tap to reveal
+                      </div>
                     </div>
-                    <div className="mt-3 text-xs uppercase tracking-wider">Tap to reveal</div>
+                  )}
+                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                    {isRevealed ? (
+                      <>
+                        <div className="font-[Fraunces] text-lg leading-tight">
+                          {a.name}, {a.age}
+                        </div>
+                        <div className="text-xs opacity-80">{a.city}</div>
+                      </>
+                    ) : (
+                      <div className="text-xs opacity-80 flex items-center gap-1">
+                        <Heart className="h-3 w-3 fill-white" /> Liked your
+                        profile
+                      </div>
+                    )}
                   </div>
-                )}
-                <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                  {isRevealed ? (
-                    <>
-                      <div className="font-[Fraunces] text-lg leading-tight">{a.name}, {a.age}</div>
-                      <div className="text-xs opacity-80">{a.city}</div>
-                    </>
-                  ) : (
-                    <div className="text-xs opacity-80 flex items-center gap-1">
-                      <Heart className="h-3 w-3 fill-white" /> Liked your profile
-                    </div>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
-        {!isPremium && (
+        {!isPremium && admirers.length > 0 && (
           <div className="mt-12 rounded-3xl border border-border/60 bg-card/80 backdrop-blur p-8 text-center max-w-xl mx-auto">
             <Eye className="h-6 w-6 text-primary-deep mx-auto mb-3" />
-            <div className="font-[Fraunces] text-xl text-foreground">See everyone at once</div>
+            <div className="font-[Fraunces] text-xl text-foreground">
+              See everyone at once
+            </div>
             <p className="text-sm text-muted-foreground mt-2">
-              Premium reveals every admirer, past and future — without spending per person.
+              Premium reveals every admirer, past and future — without spending
+              per person.
             </p>
-            <Button asChild className="mt-5 rounded-full bg-gradient-sunset text-white hover:opacity-90">
+            <Button
+              asChild
+              className="mt-5 rounded-full bg-gradient-sunset text-white hover:opacity-90"
+            >
               <Link to="/pricing">Explore Premium</Link>
             </Button>
           </div>
@@ -141,7 +237,7 @@ export default function RevealLikes() {
           price={99}
           appliesWhen="Revealed immediately in your Likes tab."
           receiptLabel={`Revealed ${pending.name}`}
-          onSuccess={() => setRevealed((r) => new Set(r).add(pending.id))}
+          productId="reveal-like"
         />
       )}
 
@@ -155,10 +251,7 @@ export default function RevealLikes() {
           cadence="month"
           appliesWhen="Renews monthly. Cancel anytime."
           receiptLabel="Premium activated"
-          onSuccess={() => {
-            import("@/lib/premium-state").then(({ activatePlan }) => activatePlan("premium_monthly"));
-            setRevealed(new Set(MOCK.map((m) => m.id)));
-          }}
+          productId="premium_monthly"
         />
       )}
     </div>

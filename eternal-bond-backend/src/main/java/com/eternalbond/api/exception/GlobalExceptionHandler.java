@@ -109,6 +109,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PaymentProcessingException.class)
     public ResponseEntity<ErrorResponse> handlePaymentProcessingException(PaymentProcessingException ex) {
+        ex.printStackTrace();
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_GATEWAY.value(),
                 ex.getMessage(),
@@ -119,6 +120,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(StripePaymentException.class)
     public ResponseEntity<ErrorResponse> handleStripePaymentException(StripePaymentException ex) {
+        ex.printStackTrace();
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_GATEWAY.value(),
                 ex.getMessage(),
@@ -129,6 +131,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(StripeException.class)
     public ResponseEntity<ErrorResponse> handleStripeException(StripeException ex) {
+        ex.printStackTrace();
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_GATEWAY.value(),
                 "Stripe processing failed: " + ex.getMessage(),
@@ -139,6 +142,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
+        ex.printStackTrace();
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "An unexpected error occurred: " + ex.getMessage(),

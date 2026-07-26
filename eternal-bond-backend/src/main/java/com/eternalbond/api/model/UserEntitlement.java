@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Records a granted entitlement for a user.
@@ -24,7 +24,7 @@ public class UserEntitlement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column(name = "user_id", nullable = false, length = 64)
     private String userId;
@@ -34,7 +34,8 @@ public class UserEntitlement {
      * Stored as varchar in DB matching the entitlement_key PG enum.
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "entitlement_key", nullable = false, length = 32)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "entitlement_key", columnDefinition = "entitlement_key")
     private EntitlementKey entitlementKey;
 
     /**

@@ -19,7 +19,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
+import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.StripeObject;
+import com.stripe.model.checkout.Session;
 import com.stripe.net.RequestOptions;
 import com.stripe.net.Webhook;
 import com.stripe.param.PaymentIntentCreateParams;
@@ -167,6 +170,8 @@ public class MonetizationService {
         log.info("Processing Stripe webhook event: {}", event.getType());
 
         switch (event.getType()) {
+            case "checkout.session.completed"   -> handleCheckoutSessionCompleted(event);
+            case "checkout.session.async_payment_succeeded" -> handleCheckoutSessionCompleted(event);
             case "payment_intent.succeeded"       -> handlePaymentSucceeded(event);
             case "payment_intent.payment_failed"  -> handlePaymentFailed(event);
             default -> log.debug("Ignoring webhook event type: {}", event.getType());
@@ -313,6 +318,59 @@ public class MonetizationService {
                 granted.getEntitlementKey(), userId, payment.getId());
     }
 
+    /**
+     * Checkout Sessions retain the server-side user and product metadata. This
+     * handler is the source of truth for Checkout completion and is idempotent
+     * through the unique Stripe payment/session identifier and entitlement
+     * payment ID.
+     */
+    private void handleCheckoutSessionCompleted(Event event) {
+        Session checkoutSession = deserializeObject(event, Session.class);
+        if (checkoutSession == null) {
+            log.error("[WEBHOOK] Could not deserialize Checkout Session from event {}. " +
+                    "SDK/API version mismatch? Raw data: {}", event.getId(), event.getData().toJson());
+            return;
+        }
+
+        if (!"paid".equalsIgnoreCase(checkoutSession.getPaymentStatus())) {
+            log.info("Checkout Session {} completed without a paid status; awaiting payment confirmation",
+                    checkoutSession.getId());
+            return;
+        }
+
+        Map<String, String> metadata = checkoutSession.getMetadata();
+        String userId = metadata.get("userId");
+        String productId = metadata.get("productId");
+        if (!StringUtils.hasText(userId) || !StringUtils.hasText(productId)) {
+            log.error("Checkout Session {} is missing userId or productId metadata", checkoutSession.getId());
+            return;
+        }
+
+        String stripePaymentId = StringUtils.hasText(checkoutSession.getPaymentIntent())
+                ? checkoutSession.getPaymentIntent()
+                : "checkout_" + checkoutSession.getId();
+        Payment payment = paymentRepository.findByStripePaymentIntentId(stripePaymentId)
+                .orElseGet(() -> Payment.builder()
+                        .userId(userId)
+                        .stripePaymentIntentId(stripePaymentId)
+                        .amount(checkoutSession.getAmountTotal())
+                        .currency(checkoutSession.getCurrency().toUpperCase())
+                        .status(PaymentStatus.PENDING)
+                        .productId(productId)
+                        .build());
+
+        payment.setStatus(PaymentStatus.SUCCEEDED);
+        payment = paymentRepository.save(payment);
+        entitlementService.grantEntitlement(
+                userId,
+                productId,
+                payment.getId(),
+                resolveEntitlementExpiry(productId),
+                new HashMap<>()
+        );
+        log.info("Checkout Session {} completed; entitlement granted for user {}", checkoutSession.getId(), userId);
+    }
+
     private void handlePaymentFailed(Event event) {
         PaymentIntent paymentIntent = deserializePaymentIntent(event);
         paymentRepository.findByStripePaymentIntentId(paymentIntent.getId())
@@ -373,10 +431,37 @@ public class MonetizationService {
     }
 
     private PaymentIntent deserializePaymentIntent(Event event) {
-        return (PaymentIntent) event.getDataObjectDeserializer()
-                .getObject()
-                .orElseThrow(() -> new PaymentProcessingException(
-                        "Failed to deserialize PaymentIntent from event " + event.getId()));
+        PaymentIntent intent = deserializeObject(event, PaymentIntent.class);
+        if (intent == null) {
+            log.error("[WEBHOOK] Could not deserialize PaymentIntent from event {}. " +
+                    "SDK/API version mismatch? Raw data: {}", event.getId(), event.getData().toJson());
+            throw new PaymentProcessingException(
+                    "Failed to deserialize PaymentIntent from event " + event.getId());
+        }
+        return intent;
+    }
+
+    /**
+     * Deserializes a Stripe event's data object using the typed SDK deserializer first,
+     * then falls back to raw JSON parsing via Gson (bundled with stripe-java).
+     * This makes the code resilient to minor SDK/API version skew.
+     */
+    @SuppressWarnings("unchecked")
+    private <T extends StripeObject> T deserializeObject(Event event, Class<T> type) {
+        EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
+        if (deserializer.getObject().isPresent()) {
+            return type.cast(deserializer.getObject().get());
+        }
+        // Fallback: use Gson (bundled with stripe-java) to parse the raw JSON
+        try {
+            com.google.gson.Gson gson = new com.google.gson.Gson();
+            String rawJson = event.getData().toJson();
+            return gson.fromJson(rawJson, type);
+        } catch (Exception ex) {
+            log.warn("Raw JSON fallback deserialization also failed for event {}: {}",
+                    event.getId(), ex.getMessage());
+            return null;
+        }
     }
 
     private String serializeContext(Map<String, String> context) {

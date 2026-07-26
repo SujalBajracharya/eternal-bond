@@ -31,11 +31,8 @@ export interface CheckoutRequest {
   context?: Record<string, string>;
 }
 
-export interface CheckoutResponse {
-  clientSecret: string;
-  paymentId: string;
-  amountNpr: number;
-  productName: string;
+export interface CheckoutSessionResponse {
+  checkoutUrl: string;
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
@@ -85,12 +82,9 @@ export async function consumeEntitlement(token: string, entitlementKey: string):
   return response.json();
 }
 
-/**
- * Initiates a Stripe checkout by creating a PaymentIntent.
- * Returns the clientSecret to configure Stripe.js or custom checkout flows.
- */
-export async function initiateCheckout(token: string, request: CheckoutRequest): Promise<CheckoutResponse> {
-  const url = `${API_BASE_URL}/api/monetize/checkout`;
+/** Creates a server-owned Stripe Checkout Session and returns its hosted URL. */
+export async function createCheckoutSession(token: string, request: CheckoutRequest): Promise<CheckoutSessionResponse> {
+  const url = `${API_BASE_URL}/create-checkout-session`;
   const response = await fetch(url, {
     method: "POST",
     headers: getHeaders(token),
@@ -99,9 +93,17 @@ export async function initiateCheckout(token: string, request: CheckoutRequest):
 
   if (!response.ok) {
     const errData = await response.json().catch(() => ({}));
-    throw new Error(errData.message || "Failed to initiate checkout");
+    if (response.status === 401 || response.status === 403) {
+      throw new Error("Your session has expired. Please sign in and try again.");
+    }
+    throw new Error(errData.message || "Unable to start secure checkout. Please try again.");
   }
-  return response.json();
+  const data = await response.json();
+  const checkoutUrl = data.checkoutUrl ?? data.url;
+  if (typeof checkoutUrl !== "string" || !checkoutUrl) {
+    throw new Error("Checkout is temporarily unavailable. Please try again.");
+  }
+  return { checkoutUrl };
 }
 
 /**
@@ -118,24 +120,6 @@ export async function extendChat(token: string, matchId: string): Promise<{ succ
   if (!response.ok) {
     const errData = await response.json().catch(() => ({}));
     throw new Error(errData.message || "Failed to extend chat");
-  }
-  return response.json();
-}
-
-/**
- * Development/Sandbox helper to simulate a successful payment.
- */
-export async function simulatePayment(token: string, paymentIntentId: string): Promise<{ success: boolean; message: string }> {
-  const url = `${API_BASE_URL}/api/monetize/simulate-payment`;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: getHeaders(token),
-    body: JSON.stringify({ paymentIntentId }),
-  });
-
-  if (!response.ok) {
-    const errData = await response.json().catch(() => ({}));
-    throw new Error(errData.message || "Failed to simulate payment");
   }
   return response.json();
 }

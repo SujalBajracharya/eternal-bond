@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface UserDailyUsageRepository extends JpaRepository<UserDailyUsage, String> {
+public interface UserDailyUsageRepository extends JpaRepository<UserDailyUsage, UUID> {
 
     Optional<UserDailyUsage> findByUserIdAndUsageDate(String userId, LocalDate date);
 

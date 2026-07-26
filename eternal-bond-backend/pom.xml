@@ -81,7 +81,14 @@
         <dependency>
             <groupId>com.stripe</groupId>
             <artifactId>stripe-java</artifactId>
-            <version>30.0.0</version>
+            <version>33.1.0</version>
+        </dependency>
+
+        <!-- Gson (required for Stripe raw JSON fallback deserialization) -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
         </dependency>
 
         <dependency>

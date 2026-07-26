@@ -1,5 +1,6 @@
 package com.eternalbond.api.service;
 
+import com.eternalbond.api.dto.ProfileDto;
 import com.eternalbond.api.dto.SwipeRequest;
 import com.eternalbond.api.exception.ResourceNotFoundException;
 import com.eternalbond.api.model.Match;
@@ -92,5 +93,23 @@ public class SwipeService {
             }
         }
         return false; // Swipe recorded but no mutual match
+    }
+
+    @Transactional(readOnly = true)
+    public java.util.List<com.eternalbond.api.dto.ProfileDto> getAdmirers(String userId) {
+        return swipeRepository.findProfilesWhoLikedUser(userId)
+                .stream()
+                .map(p -> ProfileDto.builder()
+                        .id(p.getId())
+                        .fullName(p.getFullName())
+                        .gender(p.getGender())
+                        .dateOfBirth(p.getDateOfBirth())
+                        .location(p.getLocation())
+                        .bio(p.getBio())
+                        .profession(p.getProfession())
+                        .avatarUrl(p.getAvatarUrl())
+                        .photos(p.getPhotos())
+                        .build())
+                .collect(java.util.stream.Collectors.toList());
     }
 }

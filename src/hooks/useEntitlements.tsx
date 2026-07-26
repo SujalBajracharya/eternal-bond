@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState, ReactNode } from "react";
 import { useAuth } from "./use-auth";
 import { getEntitlements, consumeEntitlement, EntitlementResponse } from "@/api/monetization";
 
@@ -24,7 +24,7 @@ export const EntitlementsProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchEntitlements = async () => {
+  const fetchEntitlements = useCallback(async () => {
     if (!session?.access_token) {
       setEntitlements(null);
       setLoading(false);
@@ -42,7 +42,7 @@ export const EntitlementsProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [session?.access_token]);
 
   useEffect(() => {
     if (session?.access_token) {
@@ -50,13 +50,13 @@ export const EntitlementsProvider = ({ children }: { children: ReactNode }) => {
     } else {
       setEntitlements(null);
     }
-  }, [session?.access_token]);
+  }, [session?.access_token, fetchEntitlements]);
 
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     await fetchEntitlements();
-  };
+  }, [fetchEntitlements]);
 
-  const consume = async (key: string) => {
+  const consume = useCallback(async (key: string) => {
     if (!session?.access_token) return;
     try {
       await consumeEntitlement(session.access_token, key);
@@ -65,7 +65,7 @@ export const EntitlementsProvider = ({ children }: { children: ReactNode }) => {
       console.error(`Error consuming entitlement ${key}:`, err);
       throw err;
     }
-  };
+  }, [session?.access_token, fetchEntitlements]);
 
   return (
     <EntitlementsContext.Provider value={{ entitlements, loading, error, refresh, consume }}>

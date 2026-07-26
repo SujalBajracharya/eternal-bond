@@ -42,6 +42,8 @@ import CreateKundaliProfile from "./pages/CreateKundaliProfile.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import Billing from "./pages/Billing.tsx";
 import RevealLikes from "./pages/RevealLikes.tsx";
+import PaymentSuccess from "./pages/PaymentSuccess.tsx";
+import PaymentCancelled from "./pages/PaymentCancelled.tsx";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +76,8 @@ const App = () => (
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/billing" element={<Billing />} />
             <Route path="/reveal-likes" element={<RevealLikes />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/cancelled" element={<PaymentCancelled />} />
             {/* <Route path="/gamenight" element={<GameNight />} /> */}
 
             {/* admin side routes */}
