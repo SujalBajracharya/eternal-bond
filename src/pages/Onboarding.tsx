@@ -152,8 +152,6 @@ const initial: FormState = {
   citizenship_back_url: "",
 };
 
-
-
 const stepSchemas = [
   // Step 1 — basics
   z.object({
@@ -167,7 +165,8 @@ const stepSchemas = [
       .refine((d) => {
         const dob = new Date(d);
         if (isNaN(dob.getTime())) return false;
-        const age = (Date.now() - dob.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+        const age =
+          (Date.now() - dob.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
         return age >= 18 && age <= 100;
       }, "You must be at least 18 years old"),
     location: z.string().trim().min(2, "Where do you live?").max(120),
@@ -282,15 +281,15 @@ const Onboarding = () => {
           profession: data.profession ?? "",
           height: data.height_cm
             ? (() => {
-              const totalInches = data.height_cm / 2.54;
-              let feet = Math.floor(totalInches / 12);
-              let inches = Math.round(totalInches % 12);
-              if (inches === 12) {
-                feet += 1;
-                inches = 0;
-              }
-              return `${feet}'${inches}`;
-            })()
+                const totalInches = data.height_cm / 2.54;
+                let feet = Math.floor(totalInches / 12);
+                let inches = Math.round(totalInches % 12);
+                if (inches === 12) {
+                  feet += 1;
+                  inches = 0;
+                }
+                return `${feet}'${inches}`;
+              })()
             : "",
           religion: data.religion ?? "",
           mother_tongue: data.mother_tongue ?? "",
@@ -311,9 +310,7 @@ const Onboarding = () => {
           citizenship_front_url: data.citizenship_front_url ?? "",
           citizenship_back_url: data.citizenship_back_url ?? "",
         });
-        setKycStatus(
-          (data.kyc_status as typeof kycStatus) ?? "unverified",
-        );
+        setKycStatus((data.kyc_status as typeof kycStatus) ?? "unverified");
       } else {
         // No profile yet — still populate photos if any exist
         if (photoUrls.length > 0) {
@@ -332,32 +329,109 @@ const Onboarding = () => {
   // Build the live checklist from current form state
   const checklist: ChecklistItem[] = useMemo(
     () => [
-      { key: "name", label: "Full name", done: form.full_name.trim().length >= 2, required: true },
-      { key: "gender", label: "Gender & date of birth", done: !!form.gender && !!form.date_of_birth, required: true },
-      { key: "location", label: "Location", done: form.location.trim().length >= 2, required: true },
-      { key: "profession", label: "Profession", done: form.profession.trim().length >= 2, required: true },
-      { key: "marital", label: "Marital status", done: !!form.marital_status, required: true },
-      { key: "seeking", label: "Looking for", done: !!form.looking_for, required: true },
-      { key: "bio", label: "Your story (bio)", done: form.bio.trim().length >= 20, required: true },
-      { key: "education", label: "Highest education", done: !!form.highest_education, hint: "Helps refine matches" },
-      { key: "income", label: "Income range", done: !!form.income_range, hint: "Optional but builds trust" },
-      { key: "father", label: "Father's occupation", done: form.father_occupation.trim().length > 0 },
-      { key: "mother", label: "Mother's occupation", done: form.mother_occupation.trim().length > 0 },
-      { key: "siblings", label: "Siblings", done: form.siblings.trim().length > 0 },
-      { key: "family_type", label: "Family type (joint / nuclear)", done: !!form.family_type },
+      {
+        key: "name",
+        label: "Full name",
+        done: form.full_name.trim().length >= 2,
+        required: true,
+      },
+      {
+        key: "gender",
+        label: "Gender & date of birth",
+        done: !!form.gender && !!form.date_of_birth,
+        required: true,
+      },
+      {
+        key: "location",
+        label: "Location",
+        done: form.location.trim().length >= 2,
+        required: true,
+      },
+      {
+        key: "profession",
+        label: "Profession",
+        done: form.profession.trim().length >= 2,
+        required: true,
+      },
+      {
+        key: "marital",
+        label: "Marital status",
+        done: !!form.marital_status,
+        required: true,
+      },
+      {
+        key: "seeking",
+        label: "Looking for",
+        done: !!form.looking_for,
+        required: true,
+      },
+      {
+        key: "bio",
+        label: "Your story (bio)",
+        done: form.bio.trim().length >= 20,
+        required: true,
+      },
+      {
+        key: "education",
+        label: "Highest education",
+        done: !!form.highest_education,
+        hint: "Helps refine matches",
+      },
+      {
+        key: "income",
+        label: "Income range",
+        done: !!form.income_range,
+        hint: "Optional but builds trust",
+      },
+      {
+        key: "father",
+        label: "Father's occupation",
+        done: form.father_occupation.trim().length > 0,
+      },
+      {
+        key: "mother",
+        label: "Mother's occupation",
+        done: form.mother_occupation.trim().length > 0,
+      },
+      {
+        key: "siblings",
+        label: "Siblings",
+        done: form.siblings.trim().length > 0,
+      },
+      {
+        key: "family_type",
+        label: "Family type (joint / nuclear)",
+        done: !!form.family_type,
+      },
       {
         key: "photos",
         label: "Add 3–5 photos",
         done: form.photos.length >= 3,
-        hint: form.photos.length === 0 ? "Profiles with photos get 8× more interest" : `${form.photos.length}/3 minimum`,
+        hint:
+          form.photos.length === 0
+            ? "Profiles with photos get 8× more interest"
+            : `${form.photos.length}/3 minimum`,
       },
       {
         key: "socials",
         label: "Add social links",
-        done: !!(form.social_instagram || form.social_linkedin || form.social_website),
+        done: !!(
+          form.social_instagram ||
+          form.social_linkedin ||
+          form.social_website
+        ),
       },
-      { key: "kundali", label: "Kundali name / details", done: form.kundali_name.trim().length > 0 },
-      { key: "kyc", label: "KYC verification", done: kycStatus === "verified", hint: "Get a verified badge" },
+      {
+        key: "kundali",
+        label: "Kundali name / details",
+        done: form.kundali_name.trim().length > 0,
+      },
+      {
+        key: "kyc",
+        label: "KYC verification",
+        done: kycStatus === "verified",
+        hint: "Get a verified badge",
+      },
     ],
     [form, kycStatus],
   );
@@ -376,7 +450,10 @@ const Onboarding = () => {
     setStep((s) => Math.min(s + 1, steps.length - 1));
   };
 
-  const persist = async (markComplete: boolean, kycStatusOverride?: typeof kycStatus) => {
+  const persist = async (
+    markComplete: boolean,
+    kycStatusOverride?: typeof kycStatus,
+  ) => {
     if (!user) return false;
 
     console.log("🚀 PERSIST STARTED");
@@ -394,9 +471,12 @@ const Onboarding = () => {
     setSaving(true);
 
     const social_links: Record<string, string> = {};
-    if (form.social_instagram.trim()) social_links.instagram = form.social_instagram.trim();
-    if (form.social_linkedin.trim()) social_links.linkedin = form.social_linkedin.trim();
-    if (form.social_website.trim()) social_links.website = form.social_website.trim();
+    if (form.social_instagram.trim())
+      social_links.instagram = form.social_instagram.trim();
+    if (form.social_linkedin.trim())
+      social_links.linkedin = form.social_linkedin.trim();
+    if (form.social_website.trim())
+      social_links.website = form.social_website.trim();
 
     const payload = {
       id: user.id,
@@ -410,12 +490,12 @@ const Onboarding = () => {
 
       height_cm: form.height
         ? (() => {
-          const match = form.height.match(/^(\d)'(\d{1,2})$/);
-          if (!match) return null;
-          const ft = parseInt(match[1]);
-          const inch = parseInt(match[2]);
-          return Math.round(ft * 30.48 + inch * 2.54);
-        })()
+            const match = form.height.match(/^(\d)'(\d{1,2})$/);
+            if (!match) return null;
+            const ft = parseInt(match[1]);
+            const inch = parseInt(match[2]);
+            return Math.round(ft * 30.48 + inch * 2.54);
+          })()
         : null,
 
       religion: form.religion.trim() || null,
@@ -484,61 +564,61 @@ const Onboarding = () => {
     //   toast.error(error.message);
     //   return false;
     // }
-    const { error } = await supabase
-      .from("profiles")
-      .upsert(
-        {
-          id: user.id,
+    const { error } = await supabase.from("profiles").upsert(
+      {
+        id: user.id,
 
-          // REQUIRED FIELDS (must exist in DB)
-          full_name: form.full_name.trim(),
-          gender: form.gender || null,
-          date_of_birth: form.date_of_birth || null,
-          location: form.location.trim() || null,
-          profession: form.profession.trim() || null,
+        // REQUIRED FIELDS (must exist in DB)
+        full_name: form.full_name.trim(),
+        gender: form.gender || null,
+        date_of_birth: form.date_of_birth || null,
+        location: form.location.trim() || null,
+        profession: form.profession.trim() || null,
 
-          height_cm: form.height
-            ? (() => {
+        height_cm: form.height
+          ? (() => {
               const match = form.height.match(/^(\d)'(\d{1,2})$/);
               if (!match) return null;
               const ft = parseInt(match[1]);
               const inch = parseInt(match[2]);
               return Math.round(ft * 30.48 + inch * 2.54);
             })()
-            : null,
+          : null,
 
-          religion: form.religion.trim() || null,
-          mother_tongue: form.mother_tongue.trim() || null,
-          marital_status: form.marital_status || null,
-          looking_for: form.looking_for || null,
-          bio: form.bio.trim() || null,
+        religion: form.religion.trim() || null,
+        mother_tongue: form.mother_tongue.trim() || null,
+        marital_status: form.marital_status || null,
+        looking_for: form.looking_for || null,
+        bio: form.bio.trim() || null,
 
-          highest_education: form.highest_education || null,
-          income_range: form.income_range || null,
+        highest_education: form.highest_education || null,
+        income_range: form.income_range || null,
 
-          father_occupation: form.father_occupation.trim() || null,
-          mother_occupation: form.mother_occupation.trim() || null,
-          siblings: form.siblings.trim() || null,
-          family_type: form.family_type || null,
+        father_occupation: form.father_occupation.trim() || null,
+        mother_occupation: form.mother_occupation.trim() || null,
+        siblings: form.siblings.trim() || null,
+        family_type: form.family_type || null,
 
-          social_links,
+        social_links,
 
-          kundali_name: form.kundali_name.trim() || null,
-          citizenship_front_url: form.citizenship_front_url || null,
-          citizenship_back_url: form.citizenship_back_url || null,
+        kundali_name: form.kundali_name.trim() || null,
+        citizenship_front_url: form.citizenship_front_url || null,
+        citizenship_back_url: form.citizenship_back_url || null,
 
-          email: user.email ?? null,
-          phone: user.phone ?? null,
+        email: user.email ?? null,
+        phone: user.phone ?? null,
 
-          // 🔥 CRITICAL FIXES
-          kyc_status: kycStatusOverride ?? kycStatus ?? "unverified",
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+        // 🔥 CRITICAL FIXES
+        kyc_status: kycStatusOverride ?? kycStatus ?? "unverified",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
 
-          ...(markComplete ? { profile_completed: true } : {}),
-        },
-        { onConflict: "id" }
-      );
+        ...(markComplete ? { profile_completed: true } : {}),
+        photo_visibility: "everyone",
+        profile_visibility: "everyone",
+      },
+      { onConflict: "id" },
+    );
 
     if (error) {
       console.error("❌ SUPABASE ERROR:", error);
@@ -625,9 +705,16 @@ const Onboarding = () => {
         return;
       }
 
-      const { data } = supabase.storage.from("profile-photos").getPublicUrl(path);
-      set(side === "front" ? "citizenship_front_url" : "citizenship_back_url", data.publicUrl);
-      toast.success(`${side === "front" ? "Front" : "Back"} image uploaded successfully!`);
+      const { data } = supabase.storage
+        .from("profile-photos")
+        .getPublicUrl(path);
+      set(
+        side === "front" ? "citizenship_front_url" : "citizenship_back_url",
+        data.publicUrl,
+      );
+      toast.success(
+        `${side === "front" ? "Front" : "Back"} image uploaded successfully!`,
+      );
     } catch (err: any) {
       toast.error(`Upload error: ${err.message}`);
     } finally {
@@ -640,7 +727,9 @@ const Onboarding = () => {
     if (kycStatus === "verified" || kycStatus === "pending") return;
     if (!user) return;
     if (!form.citizenship_front_url || !form.citizenship_back_url) {
-      toast.error("Please upload both front and back images of your citizenship.");
+      toast.error(
+        "Please upload both front and back images of your citizenship.",
+      );
       return;
     }
     setKycStatus("pending");
@@ -707,26 +796,38 @@ const Onboarding = () => {
                     const active = i === step;
                     const done = i < step;
                     return (
-                      <li key={s.chapter} className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 last:flex-none">
+                      <li
+                        key={s.chapter}
+                        className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 last:flex-none"
+                      >
                         <button
                           type="button"
                           onClick={() => i < step && setStep(i)}
                           disabled={i > step}
-                          className={`grid place-items-center shrink-0 w-9 h-9 rounded-full text-xs font-semibold border transition-all duration-500 ${done
-                            ? "bg-gradient-sunset text-primary-foreground border-transparent shadow-soft"
-                            : active
-                              ? "bg-card text-primary border-primary scale-110 shadow-soft animate-pop-in"
-                              : "bg-card text-muted-foreground border-border"
-                            }`}
+                          className={`grid place-items-center shrink-0 w-9 h-9 rounded-full text-xs font-semibold border transition-all duration-500 ${
+                            done
+                              ? "bg-gradient-sunset text-primary-foreground border-transparent shadow-soft"
+                              : active
+                                ? "bg-card text-primary border-primary scale-110 shadow-soft animate-pop-in"
+                                : "bg-card text-muted-foreground border-border"
+                          }`}
                           aria-label={`Step ${i + 1}: ${s.chapter}`}
                         >
-                          {done ? <Check className="w-4 h-4" strokeWidth={3} /> : i + 1}
+                          {done ? (
+                            <Check className="w-4 h-4" strokeWidth={3} />
+                          ) : (
+                            i + 1
+                          )}
                         </button>
                         <div className="hidden md:flex flex-col min-w-0">
-                          <span className={`text-[10px] uppercase tracking-[0.15em] transition-colors ${active ? "text-primary" : "text-muted-foreground"}`}>
+                          <span
+                            className={`text-[10px] uppercase tracking-[0.15em] transition-colors ${active ? "text-primary" : "text-muted-foreground"}`}
+                          >
                             Chapter {i + 1}
                           </span>
-                          <span className={`text-xs font-medium truncate transition-colors ${active || done ? "text-foreground" : "text-muted-foreground"}`}>
+                          <span
+                            className={`text-xs font-medium truncate transition-colors ${active || done ? "text-foreground" : "text-muted-foreground"}`}
+                          >
                             {s.chapter}
                           </span>
                         </div>
@@ -753,7 +854,10 @@ const Onboarding = () => {
               </div>
 
               <div className="rounded-3xl bg-card/85 backdrop-blur-xl border border-border/60 shadow-soft p-7 sm:p-10 relative overflow-hidden">
-                <header key={`h-${step}`} className="mb-7 animate-slide-in-right">
+                <header
+                  key={`h-${step}`}
+                  className="mb-7 animate-slide-in-right"
+                >
                   <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] text-primary font-semibold mb-2">
                     <Sparkles className="w-3 h-3" />
                     {steps[step].chapter}
@@ -767,7 +871,6 @@ const Onboarding = () => {
                 </header>
 
                 <div key={`s-${step}`} className="animate-fade-in-up">
-
                   {step === 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5 sm:col-span-2">
@@ -782,7 +885,10 @@ const Onboarding = () => {
                       </div>
                       <div className="space-y-1.5">
                         <Label>I am</Label>
-                        <Select value={form.gender} onValueChange={(v) => set("gender", v as Gender)}>
+                        <Select
+                          value={form.gender}
+                          onValueChange={(v) => set("gender", v as Gender)}
+                        >
                           <SelectTrigger className="h-11 rounded-xl">
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
@@ -843,13 +949,17 @@ const Onboarding = () => {
                         <Label>Marital status</Label>
                         <Select
                           value={form.marital_status}
-                          onValueChange={(v) => set("marital_status", v as Marital)}
+                          onValueChange={(v) =>
+                            set("marital_status", v as Marital)
+                          }
                         >
                           <SelectTrigger className="h-11 rounded-xl">
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="never_married">Never married</SelectItem>
+                            <SelectItem value="never_married">
+                              Never married
+                            </SelectItem>
                             <SelectItem value="divorced">Divorced</SelectItem>
                             <SelectItem value="widowed">Widowed</SelectItem>
                             <SelectItem value="separated">Separated</SelectItem>
@@ -858,9 +968,15 @@ const Onboarding = () => {
                       </div>
                       <div className="space-y-1.5">
                         <Label htmlFor="religion">Religion (optional)</Label>
-                        <Popover open={openReligion} onOpenChange={setOpenReligion}>
+                        <Popover
+                          open={openReligion}
+                          onOpenChange={setOpenReligion}
+                        >
                           <PopoverTrigger asChild>
-                            <Button variant="outline" className="w-full justify-between h-11 rounded-xl">
+                            <Button
+                              variant="outline"
+                              className="w-full justify-between h-11 rounded-xl"
+                            >
                               {form.religion || "Select religion"}
                             </Button>
                           </PopoverTrigger>
@@ -892,7 +1008,10 @@ const Onboarding = () => {
                         <Label htmlFor="mt">Mother tongue (optional)</Label>
                         <Popover open={openMT} onOpenChange={setOpenMT}>
                           <PopoverTrigger asChild>
-                            <Button variant="outline" className="w-full justify-between h-11 rounded-xl">
+                            <Button
+                              variant="outline"
+                              className="w-full justify-between h-11 rounded-xl"
+                            >
                               {form.mother_tongue || "Select mother tongue"}
                             </Button>
                           </PopoverTrigger>
@@ -929,7 +1048,9 @@ const Onboarding = () => {
                         <Label>I'm seeking a</Label>
                         <Select
                           value={form.looking_for}
-                          onValueChange={(v) => set("looking_for", v as LookingFor)}
+                          onValueChange={(v) =>
+                            set("looking_for", v as LookingFor)
+                          }
                         >
                           <SelectTrigger className="h-11 rounded-xl">
                             <SelectValue placeholder="Select" />
@@ -1000,17 +1121,25 @@ const Onboarding = () => {
                           <Label>Highest education</Label>
                           <Select
                             value={form.highest_education}
-                            onValueChange={(v) => set("highest_education", v as Education)}
+                            onValueChange={(v) =>
+                              set("highest_education", v as Education)
+                            }
                           >
                             <SelectTrigger className="h-11 rounded-xl">
                               <SelectValue placeholder="Select" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="high_school">High school</SelectItem>
+                              <SelectItem value="high_school">
+                                High school
+                              </SelectItem>
                               <SelectItem value="diploma">Diploma</SelectItem>
-                              <SelectItem value="bachelors">Bachelor's</SelectItem>
+                              <SelectItem value="bachelors">
+                                Bachelor's
+                              </SelectItem>
                               <SelectItem value="masters">Master's</SelectItem>
-                              <SelectItem value="doctorate">Doctorate</SelectItem>
+                              <SelectItem value="doctorate">
+                                Doctorate
+                              </SelectItem>
                               <SelectItem value="other">Other</SelectItem>
                             </SelectContent>
                           </Select>
@@ -1019,19 +1148,33 @@ const Onboarding = () => {
                           <Label>Annual income range</Label>
                           <Select
                             value={form.income_range}
-                            onValueChange={(v) => set("income_range", v as Income)}
+                            onValueChange={(v) =>
+                              set("income_range", v as Income)
+                            }
                           >
                             <SelectTrigger className="h-11 rounded-xl">
                               <SelectValue placeholder="Select" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="under_5l">Under ₹5L</SelectItem>
+                              <SelectItem value="under_5l">
+                                Under ₹5L
+                              </SelectItem>
                               <SelectItem value="5l_10l">₹5L – ₹10L</SelectItem>
-                              <SelectItem value="10l_20l">₹10L – ₹20L</SelectItem>
-                              <SelectItem value="20l_50l">₹20L – ₹50L</SelectItem>
-                              <SelectItem value="50l_1cr">₹50L – ₹1Cr</SelectItem>
-                              <SelectItem value="above_1cr">Above ₹1Cr</SelectItem>
-                              <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
+                              <SelectItem value="10l_20l">
+                                ₹10L – ₹20L
+                              </SelectItem>
+                              <SelectItem value="20l_50l">
+                                ₹20L – ₹50L
+                              </SelectItem>
+                              <SelectItem value="50l_1cr">
+                                ₹50L – ₹1Cr
+                              </SelectItem>
+                              <SelectItem value="above_1cr">
+                                Above ₹1Cr
+                              </SelectItem>
+                              <SelectItem value="prefer_not_to_say">
+                                Prefer not to say
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -1044,7 +1187,9 @@ const Onboarding = () => {
                           <Input
                             id="father"
                             value={form.father_occupation}
-                            onChange={(e) => set("father_occupation", e.target.value)}
+                            onChange={(e) =>
+                              set("father_occupation", e.target.value)
+                            }
                             placeholder="Engineer, Retired..."
                             className="h-11 rounded-xl"
                             maxLength={120}
@@ -1055,7 +1200,9 @@ const Onboarding = () => {
                           <Input
                             id="mother"
                             value={form.mother_occupation}
-                            onChange={(e) => set("mother_occupation", e.target.value)}
+                            onChange={(e) =>
+                              set("mother_occupation", e.target.value)
+                            }
                             placeholder="Teacher, Homemaker..."
                             className="h-11 rounded-xl"
                             maxLength={120}
@@ -1076,7 +1223,9 @@ const Onboarding = () => {
                           <Label>Family type</Label>
                           <Select
                             value={form.family_type}
-                            onValueChange={(v) => set("family_type", v as FamilyType)}
+                            onValueChange={(v) =>
+                              set("family_type", v as FamilyType)
+                            }
                           >
                             <SelectTrigger className="h-11 rounded-xl">
                               <SelectValue placeholder="Select" />
@@ -1092,25 +1241,33 @@ const Onboarding = () => {
 
                       {/* Socials */}
                       <section className="space-y-3">
-                        <Label className="text-base">Social links (optional)</Label>
+                        <Label className="text-base">
+                          Social links (optional)
+                        </Label>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           <Input
                             value={form.social_instagram}
-                            onChange={(e) => set("social_instagram", e.target.value)}
+                            onChange={(e) =>
+                              set("social_instagram", e.target.value)
+                            }
                             placeholder="instagram.com/you"
                             className="h-11 rounded-xl"
                             maxLength={200}
                           />
                           <Input
                             value={form.social_linkedin}
-                            onChange={(e) => set("social_linkedin", e.target.value)}
+                            onChange={(e) =>
+                              set("social_linkedin", e.target.value)
+                            }
                             placeholder="linkedin.com/in/you"
                             className="h-11 rounded-xl"
                             maxLength={200}
                           />
                           <Input
                             value={form.social_website}
-                            onChange={(e) => set("social_website", e.target.value)}
+                            onChange={(e) =>
+                              set("social_website", e.target.value)
+                            }
                             placeholder="yourwebsite.com"
                             className="h-11 rounded-xl"
                             maxLength={200}
@@ -1120,7 +1277,9 @@ const Onboarding = () => {
 
                       {/* Kundali */}
                       <section className="space-y-1.5">
-                        <Label htmlFor="kundali">Kundali / horoscope name</Label>
+                        <Label htmlFor="kundali">
+                          Kundali / horoscope name
+                        </Label>
                         <Input
                           id="kundali"
                           value={form.kundali_name}
@@ -1130,7 +1289,8 @@ const Onboarding = () => {
                           maxLength={200}
                         />
                         <p className="text-xs text-muted-foreground">
-                          You can upload your kundali document later from settings.
+                          You can upload your kundali document later from
+                          settings.
                         </p>
                       </section>
 
@@ -1141,27 +1301,33 @@ const Onboarding = () => {
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h4 className="font-serif text-lg">KYC verification</h4>
+                            <h4 className="font-serif text-lg">
+                              KYC verification
+                            </h4>
                             <span
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${kycStatus === "verified"
-                                ? "bg-primary text-primary-foreground"
-                                : kycStatus === "pending"
-                                  ? "bg-accent text-accent-foreground"
-                                  : "bg-muted text-muted-foreground"
-                                }`}
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${
+                                kycStatus === "verified"
+                                  ? "bg-primary text-primary-foreground"
+                                  : kycStatus === "pending"
+                                    ? "bg-accent text-accent-foreground"
+                                    : "bg-muted text-muted-foreground"
+                              }`}
                             >
                               {kycStatus.replace("_", " ")}
                             </span>
                           </div>
                           <p className="text-sm text-muted-foreground mt-1">
-                            Verified profiles get a trust badge and 3× more matches.
+                            Verified profiles get a trust badge and 3× more
+                            matches.
                           </p>
                           <p className="text-xs text-muted-foreground/85 mt-1.5 italic">
-                            Note: If verified, your profile will receive a verified tick badge.
+                            Note: If verified, your profile will receive a
+                            verified tick badge.
                           </p>
 
                           {/* Citizenship Front & Back upload fields */}
-                          {(kycStatus === "unverified" || kycStatus === "rejected") && (
+                          {(kycStatus === "unverified" ||
+                            kycStatus === "rejected") && (
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-3">
                               <div className="space-y-1.5">
                                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -1176,7 +1342,9 @@ const Onboarding = () => {
                                     />
                                     <button
                                       type="button"
-                                      onClick={() => set("citizenship_front_url", "")}
+                                      onClick={() =>
+                                        set("citizenship_front_url", "")
+                                      }
                                       className="absolute top-1.5 right-1.5 grid place-items-center w-6 h-6 rounded-full bg-background/90 text-foreground shadow-soft hover:bg-destructive hover:text-destructive-foreground transition-all"
                                       title="Remove front image"
                                     >
@@ -1191,7 +1359,8 @@ const Onboarding = () => {
                                       className="hidden"
                                       onChange={(e) => {
                                         const file = e.target.files?.[0];
-                                        if (file) handleDocumentUpload(file, "front");
+                                        if (file)
+                                          handleDocumentUpload(file, "front");
                                       }}
                                       disabled={uploadingFront}
                                     />
@@ -1201,7 +1370,9 @@ const Onboarding = () => {
                                       <ImagePlus className="w-5 h-5 text-muted-foreground mb-1" />
                                     )}
                                     <span className="text-[11px] font-medium text-muted-foreground mt-1">
-                                      {uploadingFront ? "Uploading..." : "Upload Front Image"}
+                                      {uploadingFront
+                                        ? "Uploading..."
+                                        : "Upload Front Image"}
                                     </span>
                                   </label>
                                 )}
@@ -1220,7 +1391,9 @@ const Onboarding = () => {
                                     />
                                     <button
                                       type="button"
-                                      onClick={() => set("citizenship_back_url", "")}
+                                      onClick={() =>
+                                        set("citizenship_back_url", "")
+                                      }
                                       className="absolute top-1.5 right-1.5 grid place-items-center w-6 h-6 rounded-full bg-background/90 text-foreground shadow-soft hover:bg-destructive hover:text-destructive-foreground transition-all"
                                       title="Remove back image"
                                     >
@@ -1235,7 +1408,8 @@ const Onboarding = () => {
                                       className="hidden"
                                       onChange={(e) => {
                                         const file = e.target.files?.[0];
-                                        if (file) handleDocumentUpload(file, "back");
+                                        if (file)
+                                          handleDocumentUpload(file, "back");
                                       }}
                                       disabled={uploadingBack}
                                     />
@@ -1245,7 +1419,9 @@ const Onboarding = () => {
                                       <ImagePlus className="w-5 h-5 text-muted-foreground mb-1" />
                                     )}
                                     <span className="text-[11px] font-medium text-muted-foreground mt-1">
-                                      {uploadingBack ? "Uploading..." : "Upload Back Image"}
+                                      {uploadingBack
+                                        ? "Uploading..."
+                                        : "Upload Back Image"}
                                     </span>
                                   </label>
                                 )}
@@ -1254,26 +1430,41 @@ const Onboarding = () => {
                           )}
 
                           {/* Previews in pending / verified states */}
-                          {(kycStatus === "pending" || kycStatus === "verified") && (form.citizenship_front_url || form.citizenship_back_url) && (
-                            <div className="grid grid-cols-2 gap-4 mt-4 mb-3 opacity-90">
-                              {form.citizenship_front_url && (
-                                <div className="space-y-1">
-                                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold font-sans">Front Document</span>
-                                  <div className="aspect-video rounded-xl overflow-hidden border border-border bg-secondary/20">
-                                    <img src={form.citizenship_front_url} alt="Front Document" className="w-full h-full object-cover" />
+                          {(kycStatus === "pending" ||
+                            kycStatus === "verified") &&
+                            (form.citizenship_front_url ||
+                              form.citizenship_back_url) && (
+                              <div className="grid grid-cols-2 gap-4 mt-4 mb-3 opacity-90">
+                                {form.citizenship_front_url && (
+                                  <div className="space-y-1">
+                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold font-sans">
+                                      Front Document
+                                    </span>
+                                    <div className="aspect-video rounded-xl overflow-hidden border border-border bg-secondary/20">
+                                      <img
+                                        src={form.citizenship_front_url}
+                                        alt="Front Document"
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                              )}
-                              {form.citizenship_back_url && (
-                                <div className="space-y-1">
-                                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold font-sans">Back Document</span>
-                                  <div className="aspect-video rounded-xl overflow-hidden border border-border bg-secondary/20">
-                                    <img src={form.citizenship_back_url} alt="Back Document" className="w-full h-full object-cover" />
+                                )}
+                                {form.citizenship_back_url && (
+                                  <div className="space-y-1">
+                                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold font-sans">
+                                      Back Document
+                                    </span>
+                                    <div className="aspect-video rounded-xl overflow-hidden border border-border bg-secondary/20">
+                                      <img
+                                        src={form.citizenship_back_url}
+                                        alt="Back Document"
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                              )}
-                            </div>
-                          )}
+                                )}
+                              </div>
+                            )}
 
                           <Button
                             type="button"
@@ -1281,7 +1472,10 @@ const Onboarding = () => {
                             variant="outline"
                             className="mt-3 rounded-full"
                             onClick={handleStartKyc}
-                            disabled={kycStatus === "verified" || kycStatus === "pending"}
+                            disabled={
+                              kycStatus === "verified" ||
+                              kycStatus === "pending"
+                            }
                           >
                             <Star className="w-3.5 h-3.5" />
                             {kycStatus === "verified"
@@ -1317,12 +1511,14 @@ const Onboarding = () => {
                         type="button"
                         onClick={onClick}
                         disabled={saving}
-                        className={`group relative h-12 rounded-full bg-gradient-sunset text-primary-foreground hover:shadow-glow shadow-soft font-semibold overflow-hidden transition-all duration-500 ease-out ${isLast ? "px-8" : "px-7"
-                          } ${saving ? "w-12 px-0" : ""}`}
+                        className={`group relative h-12 rounded-full bg-gradient-sunset text-primary-foreground hover:shadow-glow shadow-soft font-semibold overflow-hidden transition-all duration-500 ease-out ${
+                          isLast ? "px-8" : "px-7"
+                        } ${saving ? "w-12 px-0" : ""}`}
                       >
                         <span
-                          className={`flex items-center gap-2 transition-all duration-300 ${saving ? "opacity-0 scale-75" : "opacity-100"
-                            }`}
+                          className={`flex items-center gap-2 transition-all duration-300 ${
+                            saving ? "opacity-0 scale-75" : "opacity-100"
+                          }`}
                         >
                           {isLast ? (
                             <>
@@ -1331,7 +1527,11 @@ const Onboarding = () => {
                             </>
                           ) : (
                             <>
-                              {step === 0 ? "Nice to meet you" : step === 1 ? "Keep going" : "Almost there"}
+                              {step === 0
+                                ? "Nice to meet you"
+                                : step === 1
+                                  ? "Keep going"
+                                  : "Almost there"}
                               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                             </>
                           )}

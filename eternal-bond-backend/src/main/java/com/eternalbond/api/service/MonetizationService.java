@@ -11,9 +11,11 @@ import com.eternalbond.api.model.Payment;
 import com.eternalbond.api.model.PaymentStatus;
 import com.eternalbond.api.model.ProductCatalog;
 import com.eternalbond.api.model.UserEntitlement;
+import com.eternalbond.api.model.UserNotification;
 import com.eternalbond.api.repository.MatchRepository;
 import com.eternalbond.api.repository.PaymentRepository;
 import com.eternalbond.api.repository.ProductCatalogRepository;
+import com.eternalbond.api.repository.UserNotificationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.exception.SignatureVerificationException;
@@ -54,25 +56,28 @@ public class MonetizationService {
 
     private static final Logger log = LoggerFactory.getLogger(MonetizationService.class);
 
-    private final ProductCatalogRepository productCatalogRepo;
-    private final PaymentRepository        paymentRepository;
-    private final EntitlementService       entitlementService;
-    private final MatchRepository          matchRepository;
-    private final ObjectMapper             objectMapper;
-    private final String                   webhookSigningSecret;
+    private final ProductCatalogRepository  productCatalogRepo;
+    private final PaymentRepository         paymentRepository;
+    private final EntitlementService        entitlementService;
+    private final MatchRepository           matchRepository;
+    private final UserNotificationRepository notificationRepository;
+    private final ObjectMapper              objectMapper;
+    private final String                    webhookSigningSecret;
 
     public MonetizationService(
             ProductCatalogRepository productCatalogRepo,
             PaymentRepository paymentRepository,
             EntitlementService entitlementService,
             MatchRepository matchRepository,
+            UserNotificationRepository notificationRepository,
             ObjectMapper objectMapper,
             @Value("${stripe.webhook-secret:}") String webhookSigningSecret) {
-        this.productCatalogRepo  = productCatalogRepo;
-        this.paymentRepository   = paymentRepository;
-        this.entitlementService  = entitlementService;
-        this.matchRepository     = matchRepository;
-        this.objectMapper        = objectMapper;
+        this.productCatalogRepo   = productCatalogRepo;
+        this.paymentRepository    = paymentRepository;
+        this.entitlementService   = entitlementService;
+        this.matchRepository      = matchRepository;
+        this.notificationRepository = notificationRepository;
+        this.objectMapper         = objectMapper;
         this.webhookSigningSecret = webhookSigningSecret;
     }
 
@@ -258,6 +263,8 @@ public class MonetizationService {
                 new HashMap<>()
         );
         log.info("Simulated payment success for payment {} and granted entitlement", payment.getId());
+
+        saveNotification(payment.getUserId(), payment.getProductId(), payment.getAmount());
     }
 
     // ── Private: Webhook Handlers ─────────────────────────────────────────────
@@ -267,8 +274,8 @@ public class MonetizationService {
         String paymentIntentId      = paymentIntent.getId();
         Map<String, String> meta    = paymentIntent.getMetadata();
 
-        String userId    = meta.get("userId");
-        String productId = meta.get("productId");
+        String userId    = meta != null ? meta.get("userId") : null;
+        String productId = meta != null ? meta.get("productId") : null;
 
         if (!StringUtils.hasText(userId) || !StringUtils.hasText(productId)) {
             log.error("PaymentIntent {} succeeded but missing userId or productId in metadata",
@@ -279,7 +286,6 @@ public class MonetizationService {
         // Update payment record status
         Payment payment = paymentRepository.findByStripePaymentIntentId(paymentIntentId)
                 .orElseGet(() -> {
-                    // Edge case: webhook arrived before our save (unlikely but safe to handle)
                     log.warn("No payment record found for PaymentIntent {}; creating one", paymentIntentId);
                     return Payment.builder()
                             .userId(userId)
@@ -316,6 +322,8 @@ public class MonetizationService {
 
         log.info("Entitlement {} granted to user {} after payment {} succeeded",
                 granted.getEntitlementKey(), userId, payment.getId());
+
+        saveNotification(userId, productId, payment.getAmount());
     }
 
     /**
@@ -339,24 +347,33 @@ public class MonetizationService {
         }
 
         Map<String, String> metadata = checkoutSession.getMetadata();
-        String userId = metadata.get("userId");
-        String productId = metadata.get("productId");
+        String userId = metadata != null ? metadata.get("userId") : null;
+        if (!StringUtils.hasText(userId)) {
+            userId = checkoutSession.getClientReferenceId();
+        }
+
+        String productId = metadata != null ? metadata.get("productId") : null;
+
         if (!StringUtils.hasText(userId) || !StringUtils.hasText(productId)) {
-            log.error("Checkout Session {} is missing userId or productId metadata", checkoutSession.getId());
+            log.error("Checkout Session {} is missing userId ({}) or productId ({}) metadata",
+                    checkoutSession.getId(), userId, productId);
             return;
         }
 
         String stripePaymentId = StringUtils.hasText(checkoutSession.getPaymentIntent())
                 ? checkoutSession.getPaymentIntent()
                 : "checkout_" + checkoutSession.getId();
+        
+        final String finalUserId = userId;
+        final String finalProductId = productId;
         Payment payment = paymentRepository.findByStripePaymentIntentId(stripePaymentId)
                 .orElseGet(() -> Payment.builder()
-                        .userId(userId)
+                        .userId(finalUserId)
                         .stripePaymentIntentId(stripePaymentId)
                         .amount(checkoutSession.getAmountTotal())
-                        .currency(checkoutSession.getCurrency().toUpperCase())
+                        .currency(checkoutSession.getCurrency() != null ? checkoutSession.getCurrency().toUpperCase() : "NPR")
                         .status(PaymentStatus.PENDING)
-                        .productId(productId)
+                        .productId(finalProductId)
                         .build());
 
         payment.setStatus(PaymentStatus.SUCCEEDED);
@@ -369,6 +386,8 @@ public class MonetizationService {
                 new HashMap<>()
         );
         log.info("Checkout Session {} completed; entitlement granted for user {}", checkoutSession.getId(), userId);
+
+        saveNotification(userId, productId, checkoutSession.getAmountTotal());
     }
 
     private void handlePaymentFailed(Event event) {
@@ -382,6 +401,57 @@ public class MonetizationService {
     }
 
     // ── Private: Helpers ──────────────────────────────────────────────────────
+
+    /**
+     * Persists a purchase notification for the user's Notifications page.
+     */
+    private void saveNotification(String userId, String productId, Long amountPaisa) {
+        if (!StringUtils.hasText(userId) || !StringUtils.hasText(productId)) {
+            log.warn("Cannot save notification: missing userId ({}) or productId ({})", userId, productId);
+            return;
+        }
+        long amount = amountPaisa != null ? amountPaisa : 0L;
+        String[] info = notificationDetails(productId);
+        String title  = info[0];
+        String body   = info[1] + (amount > 0 ? String.format(" (NPR %.2f)", amount / 100.0) : "");
+        try {
+            notificationRepository.save(
+                UserNotification.builder()
+                    .userId(userId)
+                    .type("purchase")
+                    .title(title)
+                    .body(body)
+                    .metadata(Map.of("product_id", productId, "amount_paisa", String.valueOf(amount)))
+                    .build()
+            );
+            log.info("Saved purchase notification for user {} product {}", userId, productId);
+        } catch (Exception ex) {
+            log.error("Failed to save purchase notification for user {} product {}: {}",
+                    userId, productId, ex.getMessage(), ex);
+        }
+    }
+
+    /** Returns [title, bodyPrefix] for a given product ID. */
+    private static String[] notificationDetails(String productId) {
+        return switch (productId) {
+            case "undo_skip"       -> new String[]{"⏪ Undo Skip activated",
+                    "Your Undo Skip was successful. The skipped profile has been restored to your today's list."};
+            case "extra_like"      -> new String[]{"❤️ Extra Introductions added",
+                    "3 extra curated matches have been added to your Today's list."};
+            case "reveal_like"     -> new String[]{"👁️ Like Reveal purchased",
+                    "Your purchase unlocks one admirer reveal. Visit your Likes tab to see who it is."};
+            case "extend_chat"     -> new String[]{"💬 Chat Extended",
+                    "Your conversation has been extended by 7 days. Keep the connection going!"};
+            case "profile_boost"   -> new String[]{"🚀 Profile Boost active",
+                    "Your profile is now boosted for 24 hours. Expect 3× more profile views!"};
+            case "premium_monthly" -> new String[]{"✨ Premium activated",
+                    "Welcome to EternalBond Premium! Enjoy unlimited reveals, undo skips, advanced filters and more for 30 days."};
+            case "premium_yearly"  -> new String[]{"✨ Premium activated (Yearly)",
+                    "Welcome to EternalBond Premium! Your annual plan is now active — enjoy all premium features for 12 months."};
+            default                -> new String[]{"✅ Purchase confirmed",
+                    "Your purchase was successful. Your new feature is now available."};
+        };
+    }
 
     /**
      * Validates that once-per-day products are not being purchased twice today.

@@ -8,6 +8,9 @@ export default function PaymentSuccess() {
   const { entitlements, refresh } = useEntitlements();
   const [checking, setChecking] = useState(true);
 
+  // Detect if this was a one-time undo-skip purchase
+  const isUndoPurchase = !!sessionStorage.getItem("eb_pending_undo_profile_id");
+
   useEffect(() => {
     let cancelled = false;
     const verify = async () => {
@@ -22,5 +25,57 @@ export default function PaymentSuccess() {
   }, [refresh]);
 
   const isPremium = entitlements?.premium === true;
-  return <div className="min-h-screen bg-gradient-blush flex items-center justify-center px-6"><main className="w-full max-w-md rounded-3xl border border-border/60 bg-card/80 backdrop-blur p-8 text-center shadow-[var(--shadow-card)]">{checking ? <><Loader2 className="h-10 w-10 text-primary animate-spin mx-auto" /><h1 className="font-[Fraunces] text-2xl text-foreground mt-5">Confirming your payment</h1><p className="text-sm text-muted-foreground mt-2">We’re waiting for secure confirmation from our billing service.</p></> : isPremium ? <><div className="h-16 w-16 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto"><Check className="h-8 w-8" strokeWidth={3} /></div><h1 className="font-[Fraunces] text-2xl text-foreground mt-5">Payment Successful</h1><p className="text-sm text-muted-foreground mt-2">Your Premium membership is now active.</p><Button asChild className="mt-6 rounded-full"><Link to="/pricing">Continue</Link></Button></> : <><h1 className="font-[Fraunces] text-2xl text-foreground">Payment received</h1><p className="text-sm text-muted-foreground mt-2">Your payment is still being confirmed. Premium will appear automatically as soon as confirmation arrives.</p><Button asChild className="mt-6 rounded-full"><Link to="/billing">Check membership</Link></Button></>}</main></div>;
+
+  return (
+    <div className="min-h-screen bg-gradient-blush flex items-center justify-center px-6">
+      <main className="w-full max-w-md rounded-3xl border border-border/60 bg-card/80 backdrop-blur p-8 text-center shadow-[var(--shadow-card)]">
+        {checking ? (
+          <>
+            <Loader2 className="h-10 w-10 text-primary animate-spin mx-auto" />
+            <h1 className="font-[Fraunces] text-2xl text-foreground mt-5">Confirming your payment</h1>
+            <p className="text-sm text-muted-foreground mt-2">
+              We're waiting for secure confirmation from our billing service.
+            </p>
+          </>
+        ) : isPremium ? (
+          <>
+            <div className="h-16 w-16 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto">
+              <Check className="h-8 w-8" strokeWidth={3} />
+            </div>
+            <h1 className="font-[Fraunces] text-2xl text-foreground mt-5">Payment Successful</h1>
+            <p className="text-sm text-muted-foreground mt-2">Your Premium membership is now active.</p>
+            <Button asChild className="mt-6 rounded-full">
+              <Link to="/pricing">Continue</Link>
+            </Button>
+          </>
+        ) : isUndoPurchase ? (
+          <>
+            <div className="h-16 w-16 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto">
+              <Check className="h-8 w-8" strokeWidth={3} />
+            </div>
+            <h1 className="font-[Fraunces] text-2xl text-foreground mt-5">Undo Skip activated</h1>
+            <p className="text-sm text-muted-foreground mt-2">
+              Returning you to your matches — the skipped profile will be restored automatically.
+            </p>
+            <Button asChild className="mt-6 rounded-full bg-gradient-sunset text-white hover:opacity-90">
+              <Link to="/today">Go back to my matches</Link>
+            </Button>
+          </>
+        ) : (
+          <>
+            <div className="h-16 w-16 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto">
+              <Check className="h-8 w-8" strokeWidth={3} />
+            </div>
+            <h1 className="font-[Fraunces] text-2xl text-foreground">Payment received</h1>
+            <p className="text-sm text-muted-foreground mt-2">
+              Your purchase is confirmed. It will appear in your account shortly.
+            </p>
+            <Button asChild className="mt-6 rounded-full">
+              <Link to="/today">Back to matches</Link>
+            </Button>
+          </>
+        )}
+      </main>
+    </div>
+  );
 }

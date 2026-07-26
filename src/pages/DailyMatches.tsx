@@ -23,7 +23,7 @@ import {
   Wallet,
   Tag,
   Flag,
-  SlidersHorizontal,
+  Undo2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +33,9 @@ import MatchCelebration from "@/components/matches/MatchCelebration";
 import FullProfileDialog, {
   type FullProfileData,
 } from "@/components/matches/FullProfileDialog";
+import { CheckoutDialog } from "@/components/premium/CheckoutDialog";
 import { useAuth } from "@/hooks/use-auth";
+import { useEntitlements } from "@/hooks/useEntitlements";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ReportPhotoDialog from "@/components/ReportPhotoDialog";
@@ -135,11 +137,18 @@ const getFamilyDetails = (dto: any) => {
 
 const DailyMatches = () => {
   const { session } = useAuth();
+  const {
+    entitlements,
+    consume,
+    refresh: refreshEntitlements,
+  } = useEntitlements();
   const [matches, setMatches] = useState<Match[]>([]);
   const [myInterests, setMyInterests] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
+  const [lastSkippedIndex, setLastSkippedIndex] = useState<number | null>(null);
+  const [undoCheckoutOpen, setUndoCheckoutOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [feedback, setFeedback] = useState<Decision | null>(null);
   const [animKey, setAnimKey] = useState(0);
@@ -327,6 +336,12 @@ const DailyMatches = () => {
     if (!current || !session?.access_token) return;
     setFeedback(d);
 
+    if (d === "skipped") {
+      setLastSkippedIndex(index);
+    } else {
+      setLastSkippedIndex(null);
+    }
+
     if (d === "interested") {
       setBurst(true);
       setMascotState("beat");
@@ -368,6 +383,72 @@ const DailyMatches = () => {
 
     setTimeout(advance, 700);
   };
+
+  const performUndo = async (skippedIdx: number) => {
+    try {
+      if (!entitlements?.premium) {
+        await consume("undo_skip");
+      }
+      const skippedMatch = matches[skippedIdx];
+      if (skippedMatch) {
+        setDecisions((prev) => {
+          const next = { ...prev };
+          delete next[skippedMatch.id];
+          return next;
+        });
+      }
+      setIndex(skippedIdx);
+      setLastSkippedIndex(null);
+      setFeedback(null);
+      setExpanded(false);
+      setGalleryIdx(0);
+      setAnimKey((k) => k + 1);
+      sessionStorage.removeItem("eb_pending_undo_profile_id");
+      toast.success("Skip undone!", {
+        description: "You are back on the previous profile.",
+      });
+    } catch (err: any) {
+      console.error("Failed to undo skip:", err);
+      toast.error("Could not undo skip. Please try again.");
+    }
+  };
+
+  const handleUndoSkip = async () => {
+    if (lastSkippedIndex === null) return;
+
+    const canUndo = entitlements?.canUndoSkip || entitlements?.premium;
+    const hasPendingUndo = (entitlements?.pendingUndoSkips ?? 0) > 0;
+
+    if (!canUndo && !hasPendingUndo) {
+      // Save skipped profile ID before Stripe redirect destroys state
+      const skippedMatch = matches[lastSkippedIndex];
+      if (skippedMatch) {
+        sessionStorage.setItem("eb_pending_undo_profile_id", skippedMatch.id);
+      }
+      setUndoCheckoutOpen(true);
+      return;
+    }
+
+    await performUndo(lastSkippedIndex);
+  };
+
+  // After returning from Stripe, auto-restore the skipped profile when
+  // the entitlement is granted and matches are loaded.
+  useEffect(() => {
+    const pendingId = sessionStorage.getItem("eb_pending_undo_profile_id");
+    if (!pendingId || matches.length === 0) return;
+    const hasPendingUndo = (entitlements?.pendingUndoSkips ?? 0) > 0;
+    const canUndo = entitlements?.canUndoSkip || entitlements?.premium || hasPendingUndo;
+    if (!canUndo) return;
+
+    const idx = matches.findIndex((m) => m.id === pendingId);
+    if (idx === -1) return;
+
+    // Small delay so the page settles before restoring
+    const t = setTimeout(() => performUndo(idx), 600);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matches, entitlements]);
 
   const greet = () => {
     const h = new Date().getHours();
@@ -826,6 +907,25 @@ const DailyMatches = () => {
                             <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                           </button>
                         </div>
+
+                        {/* Undo skip button */}
+                        {lastSkippedIndex !== null && (
+                          <button
+                            onClick={handleUndoSkip}
+                            className="w-full h-10 rounded-full border border-border/80 bg-card/60 hover:bg-secondary/50 text-xs font-medium text-muted-foreground hover:text-foreground transition-all flex items-center justify-center gap-2"
+                          >
+                            <Undo2 className="h-3.5 w-3.5 text-primary-deep" />
+                            Undo previous skip
+                            {!entitlements?.premium && (
+                              <span className="text-[10px] bg-primary/10 text-primary-deep px-2 py-0.5 rounded-full font-sans">
+                                {(entitlements?.pendingUndoSkips ?? 0) > 0
+                                  ? `${entitlements?.pendingUndoSkips} left`
+                                  : "Single Use"}
+                              </span>
+                            )}
+                          </button>
+                        )}
+
                         <p className="text-[11px] text-muted-foreground text-center pt-1">
                           Take your time. Decisions stay private until matched.
                         </p>
@@ -848,9 +948,22 @@ const DailyMatches = () => {
                     interesting. We'll let you know if any feeling is mutual.
                     Five new matches arrive tomorrow morning.
                   </p>
-                  <Button asChild className="mt-8 rounded-full" size="lg">
-                    <Link to="/">Return home</Link>
-                  </Button>
+                  <div className="mt-8 flex items-center justify-center gap-3">
+                    {lastSkippedIndex !== null && (
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="rounded-full"
+                        onClick={handleUndoSkip}
+                      >
+                        <Undo2 className="h-4 w-4 mr-2 text-primary-deep" />
+                        Undo last skip
+                      </Button>
+                    )}
+                    <Button asChild className="rounded-full" size="lg">
+                      <Link to="/">Return home</Link>
+                    </Button>
+                  </div>
                 </div>
               )}
             </section>
@@ -902,6 +1015,18 @@ const DailyMatches = () => {
             reportedUserId={current.id}
           />
         )}
+
+        <CheckoutDialog
+          open={undoCheckoutOpen}
+          onOpenChange={setUndoCheckoutOpen}
+          title="Undo Skip"
+          description="Pay once to bring back the profile you just skipped. You'll be returned here automatically after checkout and the profile will be restored."
+          price={80}
+          appliesWhen="Profile is restored instantly after successful payment."
+          receiptLabel="Undo Skip purchased"
+          productId="undo_skip"
+        />
+
         <ScrollToTopButton />
       </main>
     </>

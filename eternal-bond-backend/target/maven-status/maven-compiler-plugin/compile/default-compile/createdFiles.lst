@@ -57,7 +57,6 @@ com\eternalbond\api\EternalBondApplication.class
 com\eternalbond\api\service\StripeService.class
 com\eternalbond\api\model\UserDailyUsage$UserDailyUsageBuilder.class
 com\eternalbond\api\dto\CheckoutResponse$CheckoutResponseBuilder.class
-com\eternalbond\api\service\EntitlementServiceImpl.class
 com\eternalbond\api\controller\AuthController.class
 com\eternalbond\api\exception\EmailNotVerifiedException.class
 com\eternalbond\api\astrology\profile\ProfileKundaliController.class

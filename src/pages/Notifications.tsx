@@ -7,6 +7,7 @@ import {
   Search,
   MailOpen,
   Mail,
+  ShoppingBag,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -17,6 +18,8 @@ import { toast } from "sonner";
 import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
 import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 
+// ── Types ─────────────────────────────────────────────────────────────────────
+
 type Announcement = {
   id: string;
   title: string;
@@ -25,12 +28,31 @@ type Announcement = {
   sent_at: string;
 };
 
+type UserNotification = {
+  id: string;
+  type: string;
+  title: string;
+  body: string;
+  metadata: Record<string, string> | null;
+  is_read: boolean;
+  created_at: string;
+};
+
+type FeedItem =
+  | { kind: "announcement"; data: Announcement; isRead: boolean }
+  | { kind: "purchase"; data: UserNotification };
+
 type Filter = "all" | "unread" | "read";
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 const Notifications = () => {
   const { user } = useAuth();
-  const [items, setItems] = useState<Announcement[]>([]);
+
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const [purchases, setPurchases] = useState<UserNotification[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,6 +72,7 @@ const Notifications = () => {
         { data: reads, error: e2 },
         { data: profile, error: e3 },
         { data: roles, error: e4 },
+        { data: userNotifs, error: e5 },
       ] = await Promise.all([
         supabase
           .from("announcements")
@@ -65,12 +88,18 @@ const Notifications = () => {
           .eq("id", user.id)
           .maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", user.id),
+        supabase
+          .from("user_notifications")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false }),
       ]);
 
       if (e1) throw e1;
       if (e2) throw e2;
       if (e3) throw e3;
       if (e4) throw e4;
+      if (e5) throw e5;
 
       const userGender = profile?.gender;
       const userCreatedAt = profile?.created_at
@@ -81,23 +110,20 @@ const Notifications = () => {
         userRoles.includes("premium") ||
         userRoles.includes("admin") ||
         userRoles.includes("moderator");
-
       const isNewUser =
         Date.now() - userCreatedAt.getTime() < 7 * 24 * 60 * 60 * 1000;
 
-      const filteredAnnouncements = ((ann as Announcement[]) ?? []).filter(
-        (item) => {
-          const aud = item.audience;
-          if (!aud || aud === "all") return true;
-          if (aud === "male" && userGender === "male") return true;
-          if (aud === "female" && userGender === "female") return true;
-          if (aud === "premium" && isPremium) return true;
-          if (aud === "new" && isNewUser) return true;
-          return false;
-        },
-      );
+      const filteredAnn = ((ann as Announcement[]) ?? []).filter((item) => {
+        const aud = item.audience;
+        if (!aud || aud === "all") return true;
+        if (aud === "male" && userGender === "male") return true;
+        if (aud === "female" && userGender === "female") return true;
+        if (aud === "premium" && isPremium) return true;
+        if (aud === "new" && isNewUser) return true;
+        return false;
+      });
 
-      setItems(filteredAnnouncements);
+      setAnnouncements(filteredAnn);
       setReadIds(
         new Set(
           (reads ?? []).map(
@@ -105,6 +131,7 @@ const Notifications = () => {
           ),
         ),
       );
+      setPurchases((userNotifs as UserNotification[]) ?? []);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -117,7 +144,9 @@ const Notifications = () => {
     load();
   }, [load]);
 
-  const markRead = async (id: string) => {
+  // ── Read handlers ──────────────────────────────────────────────────────────
+
+  const markAnnRead = async (id: string) => {
     if (!user || readIds.has(id)) return;
     setReadIds((s) => new Set(s).add(id));
     const { error: err } = await supabase
@@ -133,7 +162,7 @@ const Notifications = () => {
     }
   };
 
-  const markUnread = async (id: string) => {
+  const markAnnUnread = async (id: string) => {
     if (!user || !readIds.has(id)) return;
     const prev = readIds;
     setReadIds((s) => {
@@ -152,22 +181,47 @@ const Notifications = () => {
     }
   };
 
+  const markPurchaseRead = async (id: string) => {
+    if (!user) return;
+    setPurchases((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
+    );
+    await supabase
+      .from("user_notifications")
+      .update({ is_read: true })
+      .eq("id", id)
+      .eq("user_id", user.id);
+  };
+
   const markAllRead = async () => {
     if (!user) return;
-    const unread = items.filter((i) => !readIds.has(i.id));
-    if (unread.length === 0) return;
-    const rows = unread.map((i) => ({
-      user_id: user.id,
-      announcement_id: i.id,
-    }));
-    const next = new Set(readIds);
-    unread.forEach((i) => next.add(i.id));
-    setReadIds(next);
-    const { error: err } = await supabase
-      .from("notification_reads")
-      .upsert(rows, { onConflict: "user_id,announcement_id" });
-    if (err) toast.error("Couldn't mark all read");
-    else toast.success("All caught up");
+    const unreadAnn = announcements.filter((i) => !readIds.has(i.id));
+    if (unreadAnn.length > 0) {
+      const rows = unreadAnn.map((i) => ({
+        user_id: user.id,
+        announcement_id: i.id,
+      }));
+      const next = new Set(readIds);
+      unreadAnn.forEach((i) => next.add(i.id));
+      setReadIds(next);
+      await supabase
+        .from("notification_reads")
+        .upsert(rows, { onConflict: "user_id,announcement_id" });
+    }
+
+    const unreadPurchaseIds = purchases
+      .filter((n) => !n.is_read)
+      .map((n) => n.id);
+    if (unreadPurchaseIds.length > 0) {
+      setPurchases((prev) => prev.map((n) => ({ ...n, is_read: true })));
+      await supabase
+        .from("user_notifications")
+        .update({ is_read: true })
+        .in("id", unreadPurchaseIds)
+        .eq("user_id", user.id);
+    }
+
+    toast.success("All caught up");
   };
 
   const refresh = async () => {
@@ -175,21 +229,48 @@ const Notifications = () => {
     await load();
   };
 
-  const filtered = useMemo(() => {
+  // ── Merged + filtered feed ─────────────────────────────────────────────────
+
+  const feed: FeedItem[] = useMemo(() => {
+    const annItems: FeedItem[] = announcements.map((a) => ({
+      kind: "announcement",
+      data: a,
+      isRead: readIds.has(a.id),
+    }));
+    const purchaseItems: FeedItem[] = purchases.map((p) => ({
+      kind: "purchase",
+      data: p,
+    }));
+
+    const merged = [...annItems, ...purchaseItems].sort((a, b) => {
+      const dateA =
+        a.kind === "announcement" ? a.data.sent_at : a.data.created_at;
+      const dateB =
+        b.kind === "announcement" ? b.data.sent_at : b.data.created_at;
+      return new Date(dateB).getTime() - new Date(dateA).getTime();
+    });
+
     const q = query.trim().toLowerCase();
-    return items.filter((i) => {
-      const isRead = readIds.has(i.id);
+    return merged.filter((item) => {
+      const isRead =
+        item.kind === "announcement" ? item.isRead : item.data.is_read;
       if (filter === "unread" && isRead) return false;
       if (filter === "read" && !isRead) return false;
       if (!q) return true;
       return (
-        i.title.toLowerCase().includes(q) || i.body.toLowerCase().includes(q)
+        item.data.title.toLowerCase().includes(q) ||
+        item.data.body.toLowerCase().includes(q)
       );
     });
-  }, [items, readIds, filter, query]);
+  }, [announcements, purchases, readIds, filter, query]);
 
-  const unreadCount =
-    items.length - items.filter((i) => readIds.has(i.id)).length;
+  const unreadCount = useMemo(() => {
+    const annUnread = announcements.filter((a) => !readIds.has(a.id)).length;
+    const purchaseUnread = purchases.filter((p) => !p.is_read).length;
+    return annUnread + purchaseUnread;
+  }, [announcements, purchases, readIds]);
+
+  // ── Render ────────────────────────────────────────────────────────────────
 
   return (
     <>
@@ -287,7 +368,7 @@ const Notifications = () => {
             </div>
           )}
 
-          {/* List */}
+          {/* Feed */}
           <div className="mt-6 space-y-3">
             {loading ? (
               Array.from({ length: 4 }).map((_, i) => (
@@ -311,7 +392,7 @@ const Notifications = () => {
                   Try again
                 </Button>
               </div>
-            ) : filtered.length === 0 ? (
+            ) : feed.length === 0 ? (
               <div className="p-12 text-center rounded-2xl border border-border/60 bg-secondary/20">
                 <Bell className="w-8 h-8 mx-auto text-muted-foreground/60" />
                 <p className="mt-3 font-serif text-lg text-foreground">
@@ -326,12 +407,76 @@ const Notifications = () => {
                 </p>
               </div>
             ) : (
-              filtered.map((n) => {
-                const isRead = readIds.has(n.id);
+              feed.map((item) => {
+                /* ── Purchase notification card ── */
+                if (item.kind === "purchase") {
+                  const n = item.data;
+                  const isRead = n.is_read;
+                  return (
+                    <article
+                      key={`purchase-${n.id}`}
+                      onClick={() => markPurchaseRead(n.id)}
+                      className={`group cursor-pointer rounded-2xl border p-5 transition-all ${
+                        isRead
+                          ? "border-border/60 bg-secondary/20"
+                          : "border-emerald-400/40 bg-emerald-50/60 shadow-[0_0_24px_hsl(150_60%_50%/0.08)]"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`shrink-0 grid place-items-center w-9 h-9 rounded-xl ${
+                            isRead
+                              ? "bg-secondary text-muted-foreground"
+                              : "bg-emerald-100 text-emerald-700"
+                          }`}
+                        >
+                          <ShoppingBag className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {!isRead && (
+                              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                            )}
+                            <h3
+                              className={`font-serif text-lg leading-tight ${
+                                isRead
+                                  ? "text-foreground/70 font-light"
+                                  : "text-foreground font-semibold"
+                              }`}
+                            >
+                              {n.title}
+                            </h3>
+                            {!isRead && (
+                              <Badge className="text-[10px] uppercase tracking-widest bg-emerald-500 text-white border-0">
+                                Purchase
+                              </Badge>
+                            )}
+                          </div>
+                          <p
+                            className={`mt-2 text-sm whitespace-pre-wrap ${
+                              isRead
+                                ? "text-muted-foreground/70"
+                                : "text-foreground/90"
+                            }`}
+                          >
+                            {n.body}
+                          </p>
+                          <div className="mt-3 text-[11px] uppercase tracking-[0.25em] text-muted-foreground/80">
+                            {new Date(n.created_at).toLocaleString()}
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                }
+
+                /* ── Announcement card ── */
+                const n = item.data;
+                const isRead = item.isRead;
                 return (
                   <article
-                    key={n.id}
-                    onClick={() => markRead(n.id)}
+                    key={`ann-${n.id}`}
+                    onClick={() => markAnnRead(n.id)}
                     className={`group cursor-pointer rounded-2xl border p-5 transition-all ${
                       isRead
                         ? "border-border/60 bg-secondary/20"
@@ -389,8 +534,8 @@ const Notifications = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (isRead) markUnread(n.id);
-                          else markRead(n.id);
+                          if (isRead) markAnnUnread(n.id);
+                          else markAnnRead(n.id);
                         }}
                         className="shrink-0 p-2 rounded-full text-muted-foreground hover:bg-secondary/60 transition-colors opacity-0 group-hover:opacity-100"
                         aria-label={isRead ? "Mark unread" : "Mark read"}

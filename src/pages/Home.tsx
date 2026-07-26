@@ -56,7 +56,7 @@ const BASE_NODES: Omit<Node, "angle">[] = [
     badgeLabel: "new",
   },
   {
-    to: "/chat",
+    to: "/matches",
     label: "Chat",
     whisper: "Conversations unfolding",
     icon: MessageCircle,

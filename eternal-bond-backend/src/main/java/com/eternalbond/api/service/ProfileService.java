@@ -19,7 +19,8 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final ProfilePreferencesRepository profilePreferencesRepository;
 
-    public ProfileService(ProfileRepository profileRepository, ProfilePreferencesRepository profilePreferencesRepository) {
+    public ProfileService(ProfileRepository profileRepository,
+            ProfilePreferencesRepository profilePreferencesRepository) {
         this.profileRepository = profileRepository;
         this.profilePreferencesRepository = profilePreferencesRepository;
     }
@@ -104,19 +105,24 @@ public class ProfileService {
                 // 1. Age range filter
                 if (p.getDateOfBirth() != null) {
                     int age = java.time.Period.between(p.getDateOfBirth(), java.time.LocalDate.now()).getYears();
-                    if (pref.getPrefAgeMin() != null && age < pref.getPrefAgeMin()) return false;
-                    if (pref.getPrefAgeMax() != null && age > pref.getPrefAgeMax()) return false;
+                    if (pref.getPrefAgeMin() != null && age < pref.getPrefAgeMin())
+                        return false;
+                    if (pref.getPrefAgeMax() != null && age > pref.getPrefAgeMax())
+                        return false;
                 }
 
                 // 2. Height range filter
                 if (p.getHeightCm() != null) {
-                    if (pref.getPrefHeightMin() != null && p.getHeightCm() < pref.getPrefHeightMin()) return false;
-                    if (pref.getPrefHeightMax() != null && p.getHeightCm() > pref.getPrefHeightMax()) return false;
+                    if (pref.getPrefHeightMin() != null && p.getHeightCm() < pref.getPrefHeightMin())
+                        return false;
+                    if (pref.getPrefHeightMax() != null && p.getHeightCm() > pref.getPrefHeightMax())
+                        return false;
                 }
 
                 // 3. Location filter (comma separated)
                 if (pref.getPrefLocation() != null && !pref.getPrefLocation().trim().isEmpty()) {
-                    if (p.getLocation() == null) return false;
+                    if (p.getLocation() == null)
+                        return false;
                     String loc = p.getLocation().toLowerCase().trim();
                     boolean matched = false;
                     for (String val : pref.getPrefLocation().split(",")) {
@@ -125,7 +131,8 @@ public class ProfileService {
                             break;
                         }
                     }
-                    if (!matched) return false;
+                    if (!matched)
+                        return false;
                 }
 
                 // 4. Religion filter
@@ -139,29 +146,33 @@ public class ProfileService {
                 // 5. Intention filter
                 if (pref.getPrefIntention() != null && !pref.getPrefIntention().trim().isEmpty() &&
                         !pref.getPrefIntention().equalsIgnoreCase("When right")) {
-                    if (p.getMarriageIntention() == null || !p.getMarriageIntention().equalsIgnoreCase(pref.getPrefIntention().trim())) {
+                    if (p.getMarriageIntention() == null
+                            || !p.getMarriageIntention().equalsIgnoreCase(pref.getPrefIntention().trim())) {
                         return false;
                     }
                 }
 
                 // 6. Education filter (comma separated)
                 if (pref.getPrefEducation() != null && !pref.getPrefEducation().trim().isEmpty()) {
-                    if (p.getHighestEducation() == null) return false;
+                    if (p.getHighestEducation() == null)
+                        return false;
                     String edu = p.getHighestEducation().name().toLowerCase();
                     boolean matched = false;
                     for (String val : pref.getPrefEducation().split(",")) {
                         if (val.toLowerCase().trim().replace(" ", "_").contains(edu) ||
-                            edu.contains(val.toLowerCase().trim().replace(" ", "_"))) {
+                                edu.contains(val.toLowerCase().trim().replace(" ", "_"))) {
                             matched = true;
                             break;
                         }
                     }
-                    if (!matched) return false;
+                    if (!matched)
+                        return false;
                 }
 
                 // 7. Profession filter (comma separated)
                 if (pref.getPrefProfession() != null && !pref.getPrefProfession().trim().isEmpty()) {
-                    if (p.getProfession() == null) return false;
+                    if (p.getProfession() == null)
+                        return false;
                     String prof = p.getProfession().toLowerCase().trim();
                     boolean matched = false;
                     for (String val : pref.getPrefProfession().split(",")) {
@@ -170,7 +181,8 @@ public class ProfileService {
                             break;
                         }
                     }
-                    if (!matched) return false;
+                    if (!matched)
+                        return false;
                 }
 
                 // 8. Verified filter
@@ -184,7 +196,7 @@ public class ProfileService {
             }).collect(Collectors.toList());
         }
 
-        return recommendations.stream()
+        return recommendations.stream().limit(5)
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }

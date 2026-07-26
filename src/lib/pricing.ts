@@ -106,14 +106,14 @@ export const PAY_PER_ACTION: PayPerAction[] = [
     id: "extra-likes",
     title: "3 extra introductions today",
     description: "Add three hand-picked matches to today's set.",
-    price: 199,
+    price: 80,
     appliesWhen: "Arriving in Today within the hour.",
   },
   {
     id: "undo-skip",
     title: "Undo last skip",
     description: "Bring back the last profile you dismissed.",
-    price: 49,
+    price: 80,
     appliesWhen: "Restored to your current set instantly.",
   },
   {
@@ -132,13 +132,33 @@ export const COMPARE_ROWS: {
   ppa: string | boolean;
   premium: string | boolean;
 }[] = [
-  { label: "Daily curated matches", free: "5 / day", ppa: "5 / day", premium: "5 + extras" },
+  {
+    label: "Daily curated matches",
+    free: "5 / day",
+    ppa: "5 / day",
+    premium: "5 + extras",
+  },
   { label: "Send interests", free: true, ppa: true, premium: true },
-  { label: "Reveal who liked you", free: "1 / day", ppa: "Pay per reveal", premium: "Unlimited" },
+  {
+    label: "Reveal who liked you",
+    free: "1 / day",
+    ppa: "Pay per reveal",
+    premium: "Unlimited",
+  },
   { label: "Advanced filters", free: false, ppa: false, premium: true },
-  { label: "Priority Interest badge", free: false, ppa: "Per use", premium: "Unlimited" },
+  {
+    label: "Priority Interest badge",
+    free: false,
+    ppa: "Per use",
+    premium: "Unlimited",
+  },
   { label: "Undo skip", free: false, ppa: "Per use", premium: "Unlimited" },
-  { label: "Extend chat window", free: false, ppa: "Per chat", premium: "Up to 30 days" },
+  {
+    label: "Extend chat window",
+    free: false,
+    ppa: "Per chat",
+    premium: "Up to 30 days",
+  },
   { label: "Profile Boost", free: false, ppa: "Per boost", premium: "Weekly" },
   { label: "Read receipts", free: false, ppa: false, premium: true },
 ];

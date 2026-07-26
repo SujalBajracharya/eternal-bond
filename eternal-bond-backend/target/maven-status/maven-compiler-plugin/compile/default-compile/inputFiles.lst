@@ -72,6 +72,7 @@ C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\model\User.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\model\UserDailyUsage.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\model\UserEntitlement.java
+C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\model\UserNotification.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\repository\FamilyMemberRepository.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\repository\MatchRepository.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\repository\MessageRepository.java
@@ -83,6 +84,7 @@ C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\repository\SwipeRepository.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\repository\UserDailyUsageRepository.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\repository\UserEntitlementRepository.java
+C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\repository\UserNotificationRepository.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\repository\UserRepository.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\security\CustomUserDetailsService.java
 C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\src\main\java\com\eternalbond\api\security\JwtService.java
