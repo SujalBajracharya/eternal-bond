@@ -23,7 +23,6 @@ com\eternalbond\api\dto\AuthResponse$AuthResponseBuilder.class
 com\eternalbond\api\astrology\profile\KundaliProfileResponse$KundaliProfileResponseBuilder.class
 com\eternalbond\api\astrology\profile\ProfileKundaliMapper.class
 com\eternalbond\api\astrology\profile\ProfileKundaliService.class
-com\eternalbond\api\exception\GlobalExceptionHandler$ErrorResponse.class
 com\eternalbond\api\dto\CheckoutRequest$CheckoutRequestBuilder.class
 com\eternalbond\api\dto\SwipeRequest.class
 com\eternalbond\api\service\ProfileService.class
@@ -134,7 +133,6 @@ com\eternalbond\api\dto\RefundResponse$RefundResponseBuilder.class
 com\eternalbond\api\astrology\dto\AstrologyMatchResultDto.class
 com\eternalbond\api\dto\PaymentRequest$PaymentRequestBuilder.class
 com\eternalbond\api\model\Message$MessageBuilder.class
-com\eternalbond\api\exception\GlobalExceptionHandler.class
 com\eternalbond\api\security\OAuth2SuccessHandler.class
 com\eternalbond\api\model\Profile$FamilyType.class
 com\eternalbond\api\model\ProductCatalog$ProductCatalogBuilder.class

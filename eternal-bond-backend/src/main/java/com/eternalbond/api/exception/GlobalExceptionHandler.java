@@ -15,8 +15,13 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
@@ -68,7 +73,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({BadCredentialsException.class, AuthenticationException.class})
     public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception ex) {
-        ex.printStackTrace(); // DEBUG
+        log.warn("Authentication failure: {}", ex.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Invalid email or password",
@@ -79,6 +84,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUsernameNotFound(UsernameNotFoundException ex) {
+        log.warn("User lookup failure: {}", ex.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Invalid email or password",
@@ -89,9 +95,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailSendingException.class)
     public ResponseEntity<ErrorResponse> handleEmailSendingException(EmailSendingException ex) {
+        log.error("Email delivery error", ex);
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                ex.getMessage(),
+                "Failed to send email. Please try again later.",
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -109,10 +116,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PaymentProcessingException.class)
     public ResponseEntity<ErrorResponse> handlePaymentProcessingException(PaymentProcessingException ex) {
-        ex.printStackTrace();
+        log.error("Payment processing error", ex);
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_GATEWAY.value(),
-                ex.getMessage(),
+                "Payment processing failed.",
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_GATEWAY);
@@ -120,10 +127,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(StripePaymentException.class)
     public ResponseEntity<ErrorResponse> handleStripePaymentException(StripePaymentException ex) {
-        ex.printStackTrace();
+        log.error("Stripe payment error", ex);
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_GATEWAY.value(),
-                ex.getMessage(),
+                "Stripe payment gateway error.",
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_GATEWAY);
@@ -131,10 +138,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(StripeException.class)
     public ResponseEntity<ErrorResponse> handleStripeException(StripeException ex) {
-        ex.printStackTrace();
+        log.error("Stripe SDK error", ex);
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_GATEWAY.value(),
-                "Stripe processing failed: " + ex.getMessage(),
+                "Stripe gateway communication failed.",
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_GATEWAY);
@@ -142,10 +149,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
-        ex.printStackTrace();
+        log.error("Unhandled internal server exception", ex);
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred: " + ex.getMessage(),
+                "An unexpected internal error occurred.",
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);

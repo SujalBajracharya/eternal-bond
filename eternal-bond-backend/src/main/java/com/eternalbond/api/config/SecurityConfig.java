@@ -45,13 +45,35 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                // Disable CSRF for stateless REST endpoints using Authorization: Bearer header
                 .csrf(csrf -> csrf.disable())
+                // Apply strict CORS policy
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // Ephemeral session policy for OAuth2 state preservation
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(false)
+                )
+                // Modern HTTP Security Headers
+                .headers(headers -> headers
+                        // Content Security Policy (CSP)
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; frame-ancestors 'none'; object-src 'none'; base-uri 'self';")
+                        )
+                        // Anti-Clickjacking
+                        .frameOptions(frame -> frame.deny())
+                        // Prevent MIME-type sniffing
+                        .contentTypeOptions(ct -> {})
+                        // Referrer Policy
+                        .referrerPolicy(referrer -> referrer
+                                .policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
+                        )
+                        // Permissions Policy (Feature Policy)
+                        .permissionsPolicy(permissions -> permissions
+                                .policy("camera=(), microphone=(), geolocation=(), payment=()")
+                        )
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -102,12 +124,30 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedMethods(
-                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        );
-        config.setAllowedHeaders(List.of("*"));
+        // Explicit allowed origin patterns for local development and SPA frontend
+        config.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://localhost:8080",
+                "http://localhost:3000"
+        ));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        config.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With",
+                "Accept",
+                "Origin",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers"
+        ));
+        config.setExposedHeaders(List.of(
+                "Authorization",
+                "Link",
+                "X-Total-Count",
+                "Content-Disposition"
+        ));
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L); // Preflight cache 1 hour
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
