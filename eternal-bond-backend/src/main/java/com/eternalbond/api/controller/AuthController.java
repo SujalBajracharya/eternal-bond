@@ -48,4 +48,14 @@ public class AuthController {
         UserDto userDto = userService.getUserById(userId);
         return ResponseEntity.ok(userDto);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<SignupResponse> logout(jakarta.servlet.http.HttpServletRequest request) {
+        jakarta.servlet.http.HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        org.springframework.security.core.context.SecurityContextHolder.clearContext();
+        return ResponseEntity.ok(new SignupResponse("Logged out successfully."));
+    }
 }
