@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.eternalbond.api.repository.UserRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.142 s -- in com.eternalbond.api.repository.UserRepositoryTest

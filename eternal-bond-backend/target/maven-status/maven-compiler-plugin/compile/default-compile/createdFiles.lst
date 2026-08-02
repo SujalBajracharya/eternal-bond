@@ -1,4 +1,3 @@
-com\eternalbond\api\astrology\dto\AstrologyMatchResultDto$KootaInfo.class
 com\eternalbond\api\dto\PaymentRequest.class
 com\eternalbond\api\model\UserEntitlement$UserEntitlementBuilder.class
 com\eternalbond\api\service\EntitlementService.class
@@ -103,7 +102,6 @@ com\eternalbond\api\model\ProfilePreferences$ProfilePreferencesBuilder.class
 com\eternalbond\api\dto\RefundRequest$RefundRequestBuilder.class
 com\eternalbond\api\astrology\profile\KundaliProfileResponse.class
 com\eternalbond\api\model\FamilyMember.class
-com\eternalbond\api\astrology\dto\AstrologyMatchResultDto$KootaInfo$KootaInfoBuilder.class
 com\eternalbond\api\astrology\client\AstrologyMatchResponse$KootaDetail.class
 com\eternalbond\api\astrology\profile\UpdateKundaliProfileRequest.class
 com\eternalbond\api\astrology\client\AstrologyApiClient$AstrologyRateLimitException.class
