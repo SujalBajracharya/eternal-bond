@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.eternalbond.api.security.SecurityIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.262 s -- in com.eternalbond.api.security.SecurityIntegrationTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.636 s -- in com.eternalbond.api.security.SecurityIntegrationTest

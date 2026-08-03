@@ -11,6 +11,8 @@ import com.eternalbond.api.model.User;
 import com.eternalbond.api.repository.ProfileRepository;
 import com.eternalbond.api.repository.UserRepository;
 import com.eternalbond.api.security.JwtService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +25,8 @@ import java.util.UUID;
 
 @Service
 public class UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
@@ -48,6 +52,7 @@ public class UserService {
     @Transactional
     public SignupResponse signup(SignupRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
+            log.warn("Signup attempt with already registered email: {}", request.getEmail());
             throw new IllegalArgumentException("This email is already registered. Try signing in.");
         }
 
@@ -60,6 +65,7 @@ public class UserService {
                 .verificationToken(UUID.randomUUID().toString())
                 .build();
         User savedUser = userRepository.save(user);
+        log.info("New user registered successfully with ID: {}", savedUser.getId());
 
         // 2. Automatically create associated Profile to preserve foreign key mappings
         // and allow onboarding
@@ -84,13 +90,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
-        System.out.println("DEBUG: Login attempt for email: " + request.getEmail());
+        log.debug("Login attempt for email: {}", request.getEmail());
         
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + request.getEmail()));
-                
-        System.out.println("DEBUG: Found user in DB. Hash: " + user.getPassword());
-        System.out.println("DEBUG: Does password match manually? " + passwordEncoder.matches(request.getPassword(), user.getPassword()));
+                .orElseThrow(() -> {
+                    log.warn("Login failed: User not found with email {}", request.getEmail());
+                    return new UsernameNotFoundException("User not found with email: " + request.getEmail());
+                });
 
         // This will now invoke your explicit ProviderManager with BCrypt
         authenticationManager.authenticate(

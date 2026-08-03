@@ -16,8 +16,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -60,9 +65,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    log.debug("Authenticated user ID {} via JWT token", userId);
+                } else {
+                    log.warn("Invalid JWT token or user not found for ID {}", userId);
                 }
             }
         } catch (Exception e) {
+            log.warn("JWT authentication error: {}", e.getMessage());
             SecurityContextHolder.clearContext();
         }
 
