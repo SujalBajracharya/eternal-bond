@@ -41,4 +41,13 @@ public class SwipeController {
     ) {
         return ResponseEntity.ok(swipeService.getAdmirers(userId));
     }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/{swipedId}")
+    public ResponseEntity<Map<String, Object>> undoSwipe(
+            @AuthenticationPrincipal String userId,
+            @org.springframework.web.bind.annotation.PathVariable String swipedId
+    ) {
+        swipeService.deleteSwipe(userId, swipedId);
+        return ResponseEntity.ok(Map.of("success", true, "message", "Swipe removed."));
+    }
 }

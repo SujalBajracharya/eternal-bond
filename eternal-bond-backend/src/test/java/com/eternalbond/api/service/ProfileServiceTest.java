@@ -2,19 +2,24 @@ package com.eternalbond.api.service;
 
 import com.eternalbond.api.dto.ProfileDto;
 import com.eternalbond.api.exception.ResourceNotFoundException;
+import com.eternalbond.api.model.DailyMatch;
 import com.eternalbond.api.model.Profile;
 import com.eternalbond.api.model.ProfilePreferences;
+import com.eternalbond.api.repository.DailyMatchRepository;
 import com.eternalbond.api.repository.ProfilePreferencesRepository;
 import com.eternalbond.api.repository.ProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -29,6 +34,7 @@ class ProfileServiceTest {
 
     @Mock private ProfileRepository profileRepository;
     @Mock private ProfilePreferencesRepository profilePreferencesRepository;
+    @Mock private DailyMatchRepository dailyMatchRepository;
 
     @InjectMocks
     private ProfileService profileService;
@@ -127,7 +133,6 @@ class ProfileServiceTest {
     @DisplayName("updateProfile - marks profileCompleted=true when all core fields present")
     void updateProfile_allCoreFields_setsProfileCompleted() {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
-        // Return the same object that was passed to save (to capture mutations)
         when(profileRepository.save(any(Profile.class))).thenAnswer(inv -> inv.getArgument(0));
 
         ProfileDto dto = ProfileDto.builder()
@@ -163,7 +168,7 @@ class ProfileServiceTest {
     }
 
     // -------------------------------------------------------------------------
-    // getDailyMatches()
+    // getDailyMatches() — persistent batch system
     // -------------------------------------------------------------------------
 
     @Test
@@ -177,9 +182,14 @@ class ProfileServiceTest {
     }
 
     @Test
-    @DisplayName("getDailyMatches - returns up to 5 candidates when no preferences are active")
-    void getDailyMatches_noPreferences_returnsUpToFive() {
+    @DisplayName("getDailyMatches - first request of the day creates exactly 5 DailyMatch records")
+    void getDailyMatches_firstRequestOfDay_persistsExactlyFiveRecords() {
+        // Arrange: no existing batch today
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+                .thenReturn(Collections.emptyList());
         when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
                 .thenReturn(Optional.empty());
 
@@ -188,16 +198,120 @@ class ProfileServiceTest {
                 .toList();
         when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
                 .thenReturn(candidates);
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
+
+        // Act
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        // Assert: exactly 5 returned and exactly 5 persisted
+        assertThat(results).hasSize(5);
+
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<List<DailyMatch>> captor = ArgumentCaptor.forClass(List.class);
+        verify(dailyMatchRepository).saveAll(captor.capture());
+        assertThat(captor.getValue()).hasSize(5);
+    }
+
+    @Test
+    @DisplayName("getDailyMatches - repeated request on the same day returns the persisted batch (no new inserts)")
+    void getDailyMatches_sameDay_returnsCachedBatch() {
+        // Arrange: batch already exists today
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(true);
+
+        List<DailyMatch> existingBatch = IntStream.range(0, 5)
+                .mapToObj(i -> DailyMatch.builder()
+                        .userId("uid-001")
+                        .recommendedProfileId("cand-" + i)
+                        .matchDate(LocalDate.now())
+                        .sortOrder(i)
+                        .build())
+                .toList();
+        when(dailyMatchRepository.findByUserIdAndMatchDateOrderBySortOrderAsc("uid-001", LocalDate.now()))
+                .thenReturn(existingBatch);
+
+        List<Profile> profiles = IntStream.range(0, 5)
+                .mapToObj(i -> Profile.builder().id("cand-" + i).fullName("Candidate " + i).build())
+                .toList();
+        when(profileRepository.findAllById(anyList())).thenReturn(profiles);
+
+        // Act
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        // Assert: same 5 returned, no saveAll called
+        assertThat(results).hasSize(5);
+        verify(dailyMatchRepository, never()).saveAll(anyList());
+        verify(profileRepository, never()).findDailyMatchesForUser(any(), any());
+    }
+
+    @Test
+    @DisplayName("getDailyMatches - next day generates a new batch of up to 5 profiles")
+    void getDailyMatches_nextDay_generatesNewBatch() {
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+                .thenReturn(List.of("cand-0", "cand-1", "cand-2", "cand-3", "cand-4")); // yesterday's batch
+        when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
+                .thenReturn(Optional.empty());
+
+        // 10 total candidates; first 5 are yesterday's, next 5 are fresh
+        List<Profile> candidates = IntStream.range(0, 10)
+                .mapToObj(i -> Profile.builder().id("cand-" + i).fullName("Candidate " + i).build())
+                .toList();
+        when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
+                .thenReturn(candidates);
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
 
         List<ProfileDto> results = profileService.getDailyMatches("uid-001");
 
         assertThat(results).hasSize(5);
+        // The returned IDs must be the NEW candidates (cand-5 through cand-9)
+        List<String> returnedIds = results.stream().map(ProfileDto::getId).toList();
+        assertThat(returnedIds).containsExactly("cand-5", "cand-6", "cand-7", "cand-8", "cand-9");
+    }
+
+    @Test
+    @DisplayName("getDailyMatches - previous day's profiles are not reused when unused eligible profiles exist")
+    void getDailyMatches_previousProfilesExcluded() {
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        // Simulate two days of already-seen profiles
+        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+                .thenReturn(List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J"));
+        when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
+                .thenReturn(Optional.empty());
+
+        // Candidates K, L, M (only 3 fresh ones)
+        List<Profile> candidates = List.of(
+                Profile.builder().id("A").build(), // already seen
+                Profile.builder().id("K").build(),
+                Profile.builder().id("L").build(),
+                Profile.builder().id("J").build(), // already seen
+                Profile.builder().id("M").build()
+        );
+        when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
+                .thenReturn(candidates);
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
+
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        // Only K, L, M should survive
+        assertThat(results).hasSize(3);
+        List<String> ids = results.stream().map(ProfileDto::getId).toList();
+        assertThat(ids).containsExactlyInAnyOrder("K", "L", "M");
     }
 
     @Test
     @DisplayName("getDailyMatches - applies age min/max filter from active preferences")
     void getDailyMatches_withAgePreference_filtersOutOfRangeProfiles() {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+                .thenReturn(Collections.emptyList());
 
         ProfilePreferences prefs = ProfilePreferences.builder()
                 .prefAgeMin(25)
@@ -222,6 +336,7 @@ class ProfileServiceTest {
 
         when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
                 .thenReturn(List.of(inRange, outOfRange));
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
 
         List<ProfileDto> results = profileService.getDailyMatches("uid-001");
 
@@ -233,6 +348,10 @@ class ProfileServiceTest {
     @DisplayName("getDailyMatches - applies religion filter from active preferences")
     void getDailyMatches_withReligionPreference_filtersNonMatchingReligion() {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+                .thenReturn(Collections.emptyList());
 
         ProfilePreferences prefs = ProfilePreferences.builder()
                 .prefReligion("Hindu")
@@ -246,6 +365,7 @@ class ProfileServiceTest {
 
         when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
                 .thenReturn(List.of(hindu, buddhist));
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
 
         List<ProfileDto> results = profileService.getDailyMatches("uid-001");
 
@@ -257,6 +377,10 @@ class ProfileServiceTest {
     @DisplayName("getDailyMatches - 'No preference' religion pref returns all")
     void getDailyMatches_noPreferenceReligion_returnsAll() {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+                .thenReturn(Collections.emptyList());
 
         ProfilePreferences prefs = ProfilePreferences.builder()
                 .prefReligion("No preference")
@@ -270,10 +394,128 @@ class ProfileServiceTest {
 
         when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
                 .thenReturn(List.of(p1, p2));
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
 
         List<ProfileDto> results = profileService.getDailyMatches("uid-001");
 
         // Both should pass the religion filter
         assertThat(results).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("getDailyMatches - fewer than 5 eligible profiles returns available profiles (not an error)")
+    void getDailyMatches_fewerThanFiveEligible_returnsAvailable() {
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+                .thenReturn(Collections.emptyList());
+        when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
+                .thenReturn(Optional.empty());
+
+        // Only 3 candidates available
+        List<Profile> candidates = IntStream.range(0, 3)
+                .mapToObj(i -> Profile.builder().id("c-" + i).build())
+                .toList();
+        when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
+                .thenReturn(candidates);
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
+
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        assertThat(results).hasSize(3);
+    }
+
+    @Test
+    @DisplayName("getDailyMatches - zero eligible profiles returns empty list")
+    void getDailyMatches_zeroEligible_returnsEmptyList() {
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+                .thenReturn(Collections.emptyList());
+        when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
+                .thenReturn(Optional.empty());
+        when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
+                .thenReturn(Collections.emptyList());
+
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        assertThat(results).isEmpty();
+        verify(dailyMatchRepository, never()).saveAll(anyList());
+    }
+
+    @Test
+    @DisplayName("getDailyMatches - concurrent request falls back to committed batch on DataIntegrityViolationException")
+    void getDailyMatches_concurrentRequest_fallsBackToCommittedBatch() {
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        // First check: no batch exists (both concurrent requests see this)
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+                .thenReturn(Collections.emptyList());
+        when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
+                .thenReturn(Optional.empty());
+
+        List<Profile> candidates = IntStream.range(0, 5)
+                .mapToObj(i -> Profile.builder().id("c-" + i).fullName("C" + i).build())
+                .toList();
+        when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
+                .thenReturn(candidates);
+
+        // Simulate the second concurrent request losing the unique-constraint race
+        when(dailyMatchRepository.saveAll(anyList()))
+                .thenThrow(new DataIntegrityViolationException("unique constraint violated"));
+
+        // The committed batch that the first request persisted
+        List<DailyMatch> committedBatch = IntStream.range(0, 5)
+                .mapToObj(i -> DailyMatch.builder()
+                        .userId("uid-001")
+                        .recommendedProfileId("c-" + i)
+                        .matchDate(LocalDate.now())
+                        .sortOrder(i)
+                        .build())
+                .toList();
+        when(dailyMatchRepository.findByUserIdAndMatchDateOrderBySortOrderAsc("uid-001", LocalDate.now()))
+                .thenReturn(committedBatch);
+        when(profileRepository.findAllById(anyList())).thenReturn(candidates);
+
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        // Should fall back and return the 5 profiles the winning request committed
+        assertThat(results).hasSize(5);
+        verify(dailyMatchRepository).findByUserIdAndMatchDateOrderBySortOrderAsc("uid-001", LocalDate.now());
+    }
+
+    @Test
+    @DisplayName("getDailyMatches - application restart does not lose the daily batch (reads from DB)")
+    void getDailyMatches_afterRestart_returnsPersistedBatch() {
+        // Simulates: app restarted, no in-memory state, but DB has the batch
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(true); // DB has the batch
+
+        List<DailyMatch> persistedBatch = IntStream.range(0, 5)
+                .mapToObj(i -> DailyMatch.builder()
+                        .userId("uid-001")
+                        .recommendedProfileId("persisted-" + i)
+                        .matchDate(LocalDate.now())
+                        .sortOrder(i)
+                        .build())
+                .toList();
+        when(dailyMatchRepository.findByUserIdAndMatchDateOrderBySortOrderAsc("uid-001", LocalDate.now()))
+                .thenReturn(persistedBatch);
+
+        List<Profile> profiles = IntStream.range(0, 5)
+                .mapToObj(i -> Profile.builder().id("persisted-" + i).fullName("P" + i).build())
+                .toList();
+        when(profileRepository.findAllById(anyList())).thenReturn(profiles);
+
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        assertThat(results).hasSize(5);
+        // Crucially: no saveAll and no findDailyMatchesForUser called — came from DB
+        verify(dailyMatchRepository, never()).saveAll(anyList());
+        verify(profileRepository, never()).findDailyMatchesForUser(any(), any());
     }
 }

@@ -142,7 +142,6 @@ public class EntitlementServiceImpl implements EntitlementService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean canLike(String userId) {
         UserDailyUsage usage = getOrCreateTodayUsage(userId);
         int baseLimit        = getDailyLikeLimit(userId);

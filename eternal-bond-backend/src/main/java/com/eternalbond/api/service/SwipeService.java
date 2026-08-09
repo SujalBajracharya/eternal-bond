@@ -44,22 +44,33 @@ public class SwipeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Swiped target profile not found"));
 
         // Retrieve existing swipe decision to prevent duplicate database writes
-        Swipe swipe = swipeRepository.findBySwiperIdAndSwipedId(swiperId, swipedId)
-                .orElseGet(() -> Swipe.builder().swiper(swiper).swiped(swiped).build());
-
-        swipe.setAction(action);
-        swipe.setCreatedAt(LocalDateTime.now());
-        swipeRepository.save(swipe);
+        java.util.Optional<Swipe> existingSwipeOpt = swipeRepository.findBySwiperIdAndSwipedId(swiperId, swipedId);
+        if (existingSwipeOpt.isPresent()) {
+            throw new IllegalArgumentException("You have already made a decision on this profile.");
+        }
 
         // Check if there is a mutual "like" to declare a match
         if (action == Swipe.SwipeAction.like) {
-            // Check daily limit for the swiper
+            // ── Validate entitlement BEFORE writing anything to the DB ──
+            // This ensures no dirty write occurs if the limit is exceeded.
             if (!entitlementService.canLike(swiperId)) {
                 throw new com.eternalbond.api.exception.LimitExceededException(
                         "Daily like limit reached. Upgrade to Premium or buy an extra like.");
             }
+        }
 
-            // Record the like usage
+        Swipe swipe = Swipe.builder().swiper(swiper).swiped(swiped).build();
+        swipe.setAction(action);
+        swipe.setCreatedAt(LocalDateTime.now());
+        
+        try {
+            swipeRepository.saveAndFlush(swipe);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("You have already made a decision on this profile.");
+        }
+
+        if (action == Swipe.SwipeAction.like) {
+            // Record the like usage (we already verified canLike above)
             entitlementService.consumeLike(swiperId);
 
             boolean reciprocalLike = swipeRepository.existsBySwiperIdAndSwipedIdAndAction(
@@ -111,5 +122,12 @@ public class SwipeService {
                         .photos(p.getPhotos())
                         .build())
                 .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteSwipe(String swiperId, String swipedId) {
+        Swipe swipe = swipeRepository.findBySwiperIdAndSwipedId(swiperId, swipedId)
+                .orElseThrow(() -> new ResourceNotFoundException("Swipe not found"));
+        swipeRepository.delete(swipe);
     }
 }

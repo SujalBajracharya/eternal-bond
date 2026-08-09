@@ -149,6 +149,7 @@ const DailyMatches = () => {
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const [lastSkippedIndex, setLastSkippedIndex] = useState<number | null>(null);
   const [undoCheckoutOpen, setUndoCheckoutOpen] = useState(false);
+  const [checkoutIntent, setCheckoutIntent] = useState<"undo_skip" | "extra_like">("undo_skip");
   const [expanded, setExpanded] = useState(false);
   const [feedback, setFeedback] = useState<Decision | null>(null);
   const [animKey, setAnimKey] = useState(0);
@@ -363,7 +364,19 @@ const DailyMatches = () => {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to register decision");
+        // Handle daily like limit exceeded — offer to purchase an extra like
+        if (res.status === 429 && d === "interested") {
+          setFeedback(null);
+          setBurst(false);
+          setMascotState("idle");
+          toast.error("Daily like limit reached", {
+            description: "Purchase an extra like to continue.",
+          });
+          setCheckoutIntent("extra_like");
+          setUndoCheckoutOpen(true);
+          return;
+        }
+        throw new Error(`Server error: ${res.status}`);
       }
 
       const result = await res.json();
@@ -378,7 +391,12 @@ const DailyMatches = () => {
       }
     } catch (err) {
       console.error(err);
+      // Reset optimistic UI state so the card doesn't stay broken
+      setFeedback(null);
+      setBurst(false);
+      setMascotState("idle");
       toast.error("Failed to register decision. Please try again.");
+      return;
     }
 
     setTimeout(advance, 700);
@@ -386,11 +404,26 @@ const DailyMatches = () => {
 
   const performUndo = async (skippedIdx: number) => {
     try {
-      if (!entitlements?.premium) {
-        await consume("undo_skip");
-      }
       const skippedMatch = matches[skippedIdx];
       if (skippedMatch) {
+        const API_BASE_URL =
+          import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
+        
+        const res = await fetch(`${API_BASE_URL}/api/swipes/${skippedMatch.id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+
+        if (!entitlements?.premium) {
+          await consume("undo_skip");
+        }
+
         setDecisions((prev) => {
           const next = { ...prev };
           delete next[skippedMatch.id];
@@ -425,6 +458,7 @@ const DailyMatches = () => {
       if (skippedMatch) {
         sessionStorage.setItem("eb_pending_undo_profile_id", skippedMatch.id);
       }
+      setCheckoutIntent("undo_skip");
       setUndoCheckoutOpen(true);
       return;
     }
@@ -1019,12 +1053,20 @@ const DailyMatches = () => {
         <CheckoutDialog
           open={undoCheckoutOpen}
           onOpenChange={setUndoCheckoutOpen}
-          title="Undo Skip"
-          description="Pay once to bring back the profile you just skipped. You'll be returned here automatically after checkout and the profile will be restored."
+          productId={checkoutIntent === "extra_like" ? "extra-likes" : "undo_skip"}
+          title={checkoutIntent === "extra_like" ? "Buy an extra like" : "Undo Skip"}
+          description={
+            checkoutIntent === "extra_like"
+              ? "You've used today's likes. Purchase one extra like to express interest in this profile."
+              : "Pay once to bring back the profile you just skipped. You'll be returned here automatically after checkout and the profile will be restored."
+          }
           price={80}
-          appliesWhen="Profile is restored instantly after successful payment."
-          receiptLabel="Undo Skip purchased"
-          productId="undo_skip"
+          appliesWhen={
+            checkoutIntent === "extra_like"
+              ? "Applied immediately — like this profile right away."
+              : "Profile is restored instantly after successful payment."
+          }
+          receiptLabel={checkoutIntent === "extra_like" ? "Extra Like purchased" : "Undo Skip purchased"}
         />
 
         <ScrollToTopButton />

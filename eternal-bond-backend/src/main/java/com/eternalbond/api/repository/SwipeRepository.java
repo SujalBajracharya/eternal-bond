@@ -15,4 +15,7 @@ public interface SwipeRepository extends JpaRepository<Swipe, String> {
 
     @org.springframework.data.jpa.repository.Query("SELECT s.swiper FROM Swipe s WHERE s.swiped.id = :userId AND s.action = com.eternalbond.api.model.Swipe.SwipeAction.like")
     java.util.List<com.eternalbond.api.model.Profile> findProfilesWhoLikedUser(@org.springframework.data.repository.query.Param("userId") String userId);
+
+    @org.springframework.data.jpa.repository.Query("SELECT s.swiped.id FROM Swipe s WHERE s.swiper.id = :swiperId AND s.swiped.id IN :swipedIds")
+    java.util.Set<String> findSwipedIdsBySwiperIdAndSwipedIds(@org.springframework.data.repository.query.Param("swiperId") String swiperId, @org.springframework.data.repository.query.Param("swipedIds") java.util.Collection<String> swipedIds);
 }
