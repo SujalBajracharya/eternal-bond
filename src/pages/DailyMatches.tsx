@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Heart,
@@ -30,9 +30,6 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import HeartMascot from "@/components/matches/HeartMascot";
 import MatchCelebration from "@/components/matches/MatchCelebration";
-import FullProfileDialog, {
-  type FullProfileData,
-} from "@/components/matches/FullProfileDialog";
 import { CheckoutDialog } from "@/components/premium/CheckoutDialog";
 import { useAuth } from "@/hooks/use-auth";
 import { useEntitlements } from "@/hooks/useEntitlements";
@@ -149,16 +146,18 @@ const DailyMatches = () => {
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const [lastSkippedIndex, setLastSkippedIndex] = useState<number | null>(null);
   const [undoCheckoutOpen, setUndoCheckoutOpen] = useState(false);
-  const [checkoutIntent, setCheckoutIntent] = useState<"undo_skip" | "extra_like">("undo_skip");
+  const [checkoutIntent, setCheckoutIntent] = useState<
+    "undo_skip" | "extra_like"
+  >("undo_skip");
   const [expanded, setExpanded] = useState(false);
   const [feedback, setFeedback] = useState<Decision | null>(null);
+  const navigate = useNavigate();
   const [animKey, setAnimKey] = useState(0);
   const [mascotState, setMascotState] = useState<"idle" | "wink" | "beat">(
     "idle",
   );
   const [burst, setBurst] = useState(false);
   const [celebrate, setCelebrate] = useState<Match | null>(null);
-  const [profileOpen, setProfileOpen] = useState(false);
   const [galleryIdx, setGalleryIdx] = useState(0);
   const [reportPhotoUrl, setReportPhotoUrl] = useState<string | null>(null);
 
@@ -408,13 +407,16 @@ const DailyMatches = () => {
       if (skippedMatch) {
         const API_BASE_URL =
           import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
-        
-        const res = await fetch(`${API_BASE_URL}/api/swipes/${skippedMatch.id}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${session?.access_token}`,
+
+        const res = await fetch(
+          `${API_BASE_URL}/api/swipes/${skippedMatch.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${session?.access_token}`,
+            },
           },
-        });
+        );
 
         if (!res.ok) {
           throw new Error(`Server error: ${res.status}`);
@@ -472,7 +474,8 @@ const DailyMatches = () => {
     const pendingId = sessionStorage.getItem("eb_pending_undo_profile_id");
     if (!pendingId || matches.length === 0) return;
     const hasPendingUndo = (entitlements?.pendingUndoSkips ?? 0) > 0;
-    const canUndo = entitlements?.canUndoSkip || entitlements?.premium || hasPendingUndo;
+    const canUndo =
+      entitlements?.canUndoSkip || entitlements?.premium || hasPendingUndo;
     if (!canUndo) return;
 
     const idx = matches.findIndex((m) => m.id === pendingId);
@@ -481,7 +484,7 @@ const DailyMatches = () => {
     // Small delay so the page settles before restoring
     const t = setTimeout(() => performUndo(idx), 600);
     return () => clearTimeout(t);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matches, entitlements]);
 
   const greet = () => {
@@ -930,7 +933,10 @@ const DailyMatches = () => {
                             Not this time
                           </button>
                           <button
-                            onClick={() => setProfileOpen(true)}
+                            onClick={() => {
+                              if (current?.id)
+                                navigate(`/profile/${current.id}`);
+                            }}
                             className={cn(
                               "group h-12 rounded-full bg-secondary/40 hover:bg-secondary",
                               "text-sm font-medium transition-all duration-300 hover:-translate-y-0.5",
@@ -1035,12 +1041,6 @@ const DailyMatches = () => {
             }}
           />
         )}
-
-        <FullProfileDialog
-          open={profileOpen}
-          onOpenChange={setProfileOpen}
-          profile={fullProfile}
-        />
         {current && (
           <ReportPhotoDialog
             open={!!reportPhotoUrl}
@@ -1053,8 +1053,12 @@ const DailyMatches = () => {
         <CheckoutDialog
           open={undoCheckoutOpen}
           onOpenChange={setUndoCheckoutOpen}
-          productId={checkoutIntent === "extra_like" ? "extra-likes" : "undo_skip"}
-          title={checkoutIntent === "extra_like" ? "Buy an extra like" : "Undo Skip"}
+          productId={
+            checkoutIntent === "extra_like" ? "extra-likes" : "undo_skip"
+          }
+          title={
+            checkoutIntent === "extra_like" ? "Buy an extra like" : "Undo Skip"
+          }
           description={
             checkoutIntent === "extra_like"
               ? "You've used today's likes. Purchase one extra like to express interest in this profile."
@@ -1066,7 +1070,11 @@ const DailyMatches = () => {
               ? "Applied immediately — like this profile right away."
               : "Profile is restored instantly after successful payment."
           }
-          receiptLabel={checkoutIntent === "extra_like" ? "Extra Like purchased" : "Undo Skip purchased"}
+          receiptLabel={
+            checkoutIntent === "extra_like"
+              ? "Extra Like purchased"
+              : "Undo Skip purchased"
+          }
         />
 
         <ScrollToTopButton />
