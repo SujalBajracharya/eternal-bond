@@ -17,6 +17,11 @@ export async function resolvePostAuthDestination(): Promise<string> {
     return "/verify-email";
   }
 
+  // If local storage says they completed onboarding, bypass DB check to ensure they go to home
+  if (localStorage.getItem("onboardingCompleted") === "true") {
+    return "/";
+  }
+
   const { data } = await supabase
     .from("profiles")
     .select("profile_completed")
@@ -24,5 +29,8 @@ export async function resolvePostAuthDestination(): Promise<string> {
     .maybeSingle();
 
   if (!data?.profile_completed) return "/onboarding";
+  
+  // They completed it in the DB, so set local flag for future
+  localStorage.setItem("onboardingCompleted", "true");
   return "/";
 }

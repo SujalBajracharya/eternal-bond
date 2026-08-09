@@ -62,7 +62,9 @@ const RequireAuth = ({ children, requireProfile = true }: Props) => {
     return <Navigate to="/verify-email" replace />;
   }
 
-  if (requireProfile && profileCompleted === false && location.pathname !== "/onboarding") {
+  const isOnboardingCompletedLocally = localStorage.getItem("onboardingCompleted") === "true";
+
+  if (requireProfile && !isOnboardingCompletedLocally && profileCompleted === false && location.pathname !== "/onboarding") {
     return <Navigate to="/onboarding" replace />;
   }
 

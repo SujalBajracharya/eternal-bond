@@ -667,6 +667,7 @@ const Onboarding = () => {
     const ok = await persist(true);
     if (!ok) return;
     toast.success("Welcome to EternalBond ✨");
+    localStorage.setItem("onboardingCompleted", "true");
     navigate("/", { replace: true });
   };
 
