@@ -3,20 +3,206 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
     <title>Eternal Bond</title>
-    <meta name="description" content="Eternal Bond Landing Page" />
-    <meta name="author" content="Eternal Bond" />
-
-    <meta property="og:title" content="Eternal Bond" />
-    <meta property="og:description" content="Eternal Bond Landing Page" />
+    <meta name="description" content="EternalBond — a thoughtful matrimonial platform where heartbeats find their rhythm." />
+    <meta name="author" content="EternalBond" />
+    <meta property="og:title" content="EternalBond" />
+    <meta property="og:description" content="EternalBond — a thoughtful matrimonial platform where heartbeats find their rhythm." />
     <meta property="og:type" content="website" />
 
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Preload splash fonts for instant render -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+      /* Splash screen styles */
+      :root {
+        --splash-cream: hsl(36 60% 97%);
+        --splash-ink: hsl(340 30% 14%);
+        --splash-coral: hsl(6 86% 64%);
+        --splash-peach: hsl(18 95% 72%);
+        --splash-gold: hsl(38 88% 60%);
+        --splash-plum: hsl(320 35% 45%);
+      }
+
+      #splash-root {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--splash-cream);
+        font-family: 'Inter', system-ui, sans-serif;
+        transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), visibility 700ms;
+      }
+
+      #splash-root.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .splash-brand {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin-bottom: 2rem;
+      }
+
+      .splash-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        animation: splash-spin 4s linear infinite;
+      }
+
+      .splash-ring:nth-child(1) {
+        border-top-color: var(--splash-coral);
+        border-right-color: var(--splash-peach);
+      }
+
+      .splash-ring:nth-child(2) {
+        inset: 10px;
+        border-bottom-color: var(--splash-gold);
+        border-left-color: var(--splash-plum);
+        animation-direction: reverse;
+        animation-duration: 5s;
+      }
+
+      .splash-ring:nth-child(3) {
+        inset: 22px;
+        border-top-color: var(--splash-coral);
+        border-bottom-color: var(--splash-gold);
+        animation-duration: 6s;
+      }
+
+      .splash-heart {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.25rem;
+        animation: splash-pulse 2.2s ease-in-out infinite;
+      }
+
+      .splash-title {
+        font-family: 'Fraunces', Georgia, serif;
+        font-size: clamp(1.75rem, 5vw, 2.5rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--splash-ink);
+        margin: 0;
+        opacity: 0;
+        transform: translateY(12px);
+        animation: splash-fade-up 900ms cubic-bezier(0.22, 1, 0.36, 1) 300ms forwards;
+      }
+
+      .splash-tagline {
+        font-size: 0.95rem;
+        color: hsl(340 12% 42%);
+        margin-top: 0.75rem;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: splash-fade-up 900ms cubic-bezier(0.22, 1, 0.36, 1) 500ms forwards;
+      }
+
+      .splash-dots {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 2.5rem;
+        opacity: 0;
+        animation: splash-fade-up 900ms cubic-bezier(0.22, 1, 0.36, 1) 700ms forwards;
+      }
+
+      .splash-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--splash-coral);
+        animation: splash-bounce 1.2s ease-in-out infinite;
+      }
+
+      .splash-dot:nth-child(2) {
+        background: var(--splash-gold);
+        animation-delay: 0.15s;
+      }
+
+      .splash-dot:nth-child(3) {
+        background: var(--splash-plum);
+        animation-delay: 0.3s;
+      }
+
+      @keyframes splash-spin {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes splash-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.12); }
+      }
+
+      @keyframes splash-fade-up {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes splash-bounce {
+        0%, 100% { transform: translateY(0); opacity: 0.55; }
+        50% { transform: translateY(-6px); opacity: 1; }
+      }
+    </style>
   </head>
 
   <body>
+    <div id="splash-root" aria-label="Loading EternalBond">
+      <div class="splash-brand">
+        <div class="splash-ring" aria-hidden="true"></div>
+        <div class="splash-ring" aria-hidden="true"></div>
+        <div class="splash-ring" aria-hidden="true"></div>
+        <div class="splash-heart" aria-hidden="true">❦</div>
+      </div>
+      <h1 class="splash-title">EternalBond</h1>
+      <p class="splash-tagline">Where heartbeats find their rhythm</p>
+      <div class="splash-dots" aria-hidden="true">
+        <div class="splash-dot"></div>
+        <div class="splash-dot"></div>
+        <div class="splash-dot"></div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Hide splash only after BOTH conditions are met:
+      //   1. Minimum display time (2000ms) has elapsed so animations finish.
+      //   2. The page (and React module) has fully loaded.
+      // Whichever takes longer wins — Promise.all resolves when both resolve.
+      var minDelay = new Promise(function(resolve) {
+        setTimeout(resolve, 2000);
+      });
+
+      var pageLoad = new Promise(function(resolve) {
+        if (document.readyState === 'complete') {
+          resolve();
+        } else {
+          window.addEventListener('load', resolve, { once: true });
+        }
+      });
+
+      Promise.all([minDelay, pageLoad]).then(function() {
+        var splash = document.getElementById('splash-root');
+        if (splash) {
+          splash.classList.add('hidden');
+        }
+      });
+    </script>
   </body>
 </html>
