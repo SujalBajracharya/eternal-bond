@@ -154,3 +154,47 @@ export async function getMe(token: string): Promise<UserDto> {
     throw new Error("Session expired.");
   }
 }
+
+/**
+ * Requests a password reset email.
+ */
+export async function forgotPassword(email: string): Promise<{ message: string }> {
+  const url = `${API_BASE_URL}/auth/forgot-password`;
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Failed to send reset link");
+    }
+    return await response.json();
+  } catch (error: any) {
+    console.error("ForgotPassword API Error:", error);
+    throw new Error(error.message || "Unable to connect to the server.");
+  }
+}
+
+/**
+ * Resets the password using a reset token.
+ */
+export async function resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
+  const url = `${API_BASE_URL}/auth/reset-password`;
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, password: newPassword }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Failed to reset password");
+    }
+    return await response.json();
+  } catch (error: any) {
+    console.error("ResetPassword API Error:", error);
+    throw new Error(error.message || "Unable to connect to the server.");
+  }
+}

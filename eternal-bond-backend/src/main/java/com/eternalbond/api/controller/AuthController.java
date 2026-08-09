@@ -2,6 +2,8 @@ package com.eternalbond.api.controller;
 
 import com.eternalbond.api.dto.AuthResponse;
 import com.eternalbond.api.dto.LoginRequest;
+import com.eternalbond.api.dto.ForgotPasswordRequest;
+import com.eternalbond.api.dto.ResetPasswordRequest;
 import com.eternalbond.api.dto.SignupRequest;
 import com.eternalbond.api.dto.SignupResponse;
 import com.eternalbond.api.dto.UserDto;
@@ -57,5 +59,18 @@ public class AuthController {
         }
         org.springframework.security.core.context.SecurityContextHolder.clearContext();
         return ResponseEntity.ok(new SignupResponse("Logged out successfully."));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<SignupResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        userService.forgotPassword(request.getEmail());
+        // Always return success message to prevent email enumeration
+        return ResponseEntity.ok(new SignupResponse("If an account exists with this email, a password reset link has been sent."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<SignupResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(request.getToken(), request.getPassword());
+        return ResponseEntity.ok(new SignupResponse("Password has been reset successfully. You can now login."));
     }
 }

@@ -22,6 +22,9 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
+
     public void sendVerificationEmail(String toEmail, String token) {
         String verificationLink = "http://localhost:8081/auth/verify?token=" + token;
 
@@ -40,6 +43,27 @@ public class EmailService {
         } catch (MailException ex) {
             logger.error("Failed to send verification email to {}: {}", toEmail, ex.getMessage(), ex);
             throw new EmailSendingException("Failed to send verification email. Please verify your email address or try again.", ex);
+        }
+    }
+
+    public void sendPasswordResetEmail(String toEmail, String token) {
+        String resetLink = frontendUrl + "/reset-password?token=" + token;
+
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(toEmail);
+            message.setSubject("Password Reset Request");
+            message.setText("We received a request to reset your password for EternalBond.\n\n" +
+                    "Please click the link below to set a new password:\n" +
+                    resetLink + "\n\n" +
+                    "If you did not request a password reset, please ignore this email.");
+            message.setFrom(fromEmail);
+
+            mailSender.send(message);
+            logger.info("Password reset email successfully sent to {}", toEmail);
+        } catch (MailException ex) {
+            logger.error("Failed to send password reset email to {}: {}", toEmail, ex.getMessage(), ex);
+            throw new EmailSendingException("Failed to send password reset email.", ex);
         }
     }
 }

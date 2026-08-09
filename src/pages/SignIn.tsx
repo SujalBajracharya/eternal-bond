@@ -212,9 +212,9 @@ const SignIn = () => {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <Label htmlFor="password">Password</Label>
-              <a href="#" className="text-xs text-primary hover:underline">
+              <Link to="/forgot-password" className="text-xs text-primary hover:underline">
                 Forgot?
-              </a>
+              </Link>
             </div>
             <div className="relative">
               <Input
