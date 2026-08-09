@@ -749,7 +749,7 @@ export default function Chat() {
       <NavbarAuthenticated />
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/75 border-b border-border/60">
         <div className="max-w-3xl mx-auto px-3 md:px-6 py-3 flex items-center gap-3">
-          <Link to="/conversations">
+          <Link to="/matches">
             <Button
               variant="ghost"
               size="icon"

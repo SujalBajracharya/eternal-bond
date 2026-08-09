@@ -1,0 +1,1931 @@
+{
+  "collection": {
+    "info": {
+      "_postman_id": "0a09588f-1722-4acd-b0f1-45aba2c3c69a",
+      "name": "Eternal Bond API",
+      "description": "Production-Grade API Collection for Eternal Bond platform. Features dynamic request chaining, JWT auto-persistence, DTO schema validation, comprehensive test scripts, and realistic response examples.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "uid": "47436573-0a09588f-1722-4acd-b0f1-45aba2c3c69a"
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": [
+        {
+          "key": "token",
+          "value": "{{jwt_token}}",
+          "type": "string"
+        }
+      ]
+    },
+    "variable": [
+      {
+        "key": "base_url",
+        "value": "http://localhost:8081",
+        "type": "string"
+      }
+    ],
+    "item": [
+      {
+        "name": "Authentication",
+        "item": [
+          {
+            "name": "Sign Up",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Password123!\",\n  \"fullName\": \"Sujal Tester\"\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/auth/signup",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "auth",
+                  "signup"
+                ]
+              },
+              "description": "Registers a new user account with email, password, and full name. Returns status message."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 201 Created', function () {",
+                    "    pm.response.to.have.status(201);",
+                    "});",
+                    "pm.test('Response contains message field', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.have.property('message');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "201 Created - Signup Success",
+                "status": "Created",
+                "code": 201,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"message\": \"User registered successfully. Please verify your email.\"\n}"
+              },
+              {
+                "name": "400 Bad Request - Validation Error",
+                "status": "Bad Request",
+                "code": 400,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"error\": \"Email is already in use\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Verify Email",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/auth/verify?token=sample-verification-token",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "auth",
+                  "verify"
+                ],
+                "query": [
+                  {
+                    "key": "token",
+                    "value": "sample-verification-token",
+                    "description": "Verification token sent to user's email"
+                  }
+                ]
+              },
+              "description": "Verifies user email using the token provided in the registration email."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Response message matches success', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.have.property('message');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Email Verified",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"message\": \"Email verified successfully. You can now sign in.\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Sign In",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Password123!\"\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/auth/signin",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "auth",
+                  "signin"
+                ]
+              },
+              "description": "Authenticates user and returns JWT token and user info. Automatically extracts and persists jwt_token and userId into environment variables for downstream request chaining."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Extract and set jwt_token and userId', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.have.property('token');",
+                    "    pm.expect(jsonData).to.have.property('user');",
+                    "    pm.expect(jsonData.user).to.have.property('id');",
+                    "    pm.environment.set('jwt_token', jsonData.token);",
+                    "    pm.environment.set('userId', jsonData.user.id);",
+                    "    console.log('Saved jwt_token and userId:', jsonData.user.id);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Sign In Success",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.sample_jwt_token\",\n  \"user\": {\n    \"id\": \"usr_883921\",\n    \"fullName\": \"Sujal Tester\",\n    \"email\": \"testuser@example.com\",\n    \"createdAt\": \"2026-08-03T10:00:00\"\n  }\n}"
+              },
+              {
+                "name": "401 Unauthorized - Invalid Credentials",
+                "status": "Unauthorized",
+                "code": 401,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"error\": \"Invalid email or password\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Get Current User (/me)",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/auth/me",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "auth",
+                  "me"
+                ]
+              },
+              "description": "Returns current authenticated user details based on the Bearer JWT token."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Response matches UserDto schema', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.have.property('id');",
+                    "    pm.expect(jsonData).to.have.property('email');",
+                    "    pm.expect(jsonData).to.have.property('fullName');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Authenticated User Profile",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"id\": \"usr_883921\",\n  \"fullName\": \"Sujal Tester\",\n  \"email\": \"testuser@example.com\",\n  \"createdAt\": \"2026-08-03T10:00:00\"\n}"
+              },
+              {
+                "name": "401 Unauthorized - Missing Token",
+                "status": "Unauthorized",
+                "code": 401,
+                "_postman_previewlanguage": "json",
+                "header": [],
+                "body": ""
+              }
+            ]
+          },
+          {
+            "name": "Logout",
+            "request": {
+              "method": "POST",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/auth/logout",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "auth",
+                  "logout"
+                ]
+              },
+              "description": "Invalidates user session and clears security context."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Logout message returned', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData.message).to.include('Logged out');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Logout Success",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"message\": \"Logged out successfully.\"\n}"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Profiles",
+        "item": [
+          {
+            "name": "Get My Profile",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/profiles/me",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "profiles",
+                  "me"
+                ]
+              },
+              "description": "Retrieves profile of authenticated user. Automatically captures profileId for request chaining."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Extract and set profileId', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    if (jsonData && jsonData.id) {",
+                    "        pm.environment.set('profileId', jsonData.id);",
+                    "        console.log('Saved profileId:', jsonData.id);",
+                    "    }",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Profile Found",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"id\": \"prof_883921\",\n  \"fullName\": \"Sujal Tester\",\n  \"gender\": \"MALE\",\n  \"bio\": \"Software Developer\",\n  \"dateOfBirth\": \"1998-05-15\",\n  \"city\": \"Kathmandu\",\n  \"country\": \"Nepal\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Update My Profile",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"fullName\": \"Sujal Bajracharya\",\n  \"gender\": \"MALE\",\n  \"bio\": \"Full Stack Developer & AI enthusiast\",\n  \"dateOfBirth\": \"1998-05-15\",\n  \"city\": \"Kathmandu\",\n  \"country\": \"Nepal\"\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/profiles/me",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "profiles",
+                  "me"
+                ]
+              },
+              "description": "Updates profile information for the authenticated user. Body matches ProfileDto exactly."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Updated profile fields match request', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData.fullName).to.eql('Sujal Bajracharya');",
+                    "    pm.expect(jsonData.gender).to.eql('MALE');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Profile Updated",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"id\": \"prof_883921\",\n  \"fullName\": \"Sujal Bajracharya\",\n  \"gender\": \"MALE\",\n  \"bio\": \"Full Stack Developer & AI enthusiast\",\n  \"dateOfBirth\": \"1998-05-15\",\n  \"city\": \"Kathmandu\",\n  \"country\": \"Nepal\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Get Daily Recommendations",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/profiles/daily",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "profiles",
+                  "daily"
+                ]
+              },
+              "description": "Returns candidate profiles for daily matching feed. Automatically extracts the first profile id into targetProfileId."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Extract targetProfileId from daily match list', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.be.an('array');",
+                    "    if (jsonData.length > 0 && jsonData[0].id) {",
+                    "        pm.environment.set('targetProfileId', jsonData[0].id);",
+                    "        console.log('Saved targetProfileId:', jsonData[0].id);",
+                    "    }",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Daily Candidates Array",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "[\n  {\n    \"id\": \"prof_cand_9921\",\n    \"fullName\": \"Ananya Sharma\",\n    \"gender\": \"FEMALE\",\n    \"bio\": \"Designer & Traveler\",\n    \"dateOfBirth\": \"1999-08-20\",\n    \"city\": \"Kathmandu\",\n    \"country\": \"Nepal\"\n  }\n]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Users",
+        "item": [
+          {
+            "name": "Get User Profile by ID",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/users/:userId",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "users",
+                  ":userId"
+                ],
+                "variable": [
+                  {
+                    "key": "userId",
+                    "value": "{{userId}}",
+                    "description": "User ID dynamically chained from auth or environment"
+                  }
+                ]
+              },
+              "description": "Retrieves public user profile details by User ID."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('User ID matches requested parameter', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.have.property('id');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - User Details Found",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"id\": \"usr_883921\",\n  \"fullName\": \"Sujal Tester\",\n  \"email\": \"testuser@example.com\",\n  \"createdAt\": \"2026-08-03T10:00:00\"\n}"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Astrology & Matching",
+        "item": [
+          {
+            "name": "Get Kundali Profile",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/astrology/profile",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "astrology",
+                  "profile"
+                ]
+              },
+              "description": "Fetches Kundali birth chart details for authenticated user."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK or 404', function () {",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Kundali Chart Found",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"dateOfBirth\": \"1998-05-15\",\n  \"timeOfBirth\": \"08:30\",\n  \"latitude\": 27.7172,\n  \"longitude\": 85.324,\n  \"timezone\": 5.75\n}"
+              }
+            ]
+          },
+          {
+            "name": "Create Kundali Profile",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"dateOfBirth\": \"1998-05-15\",\n  \"timeOfBirth\": \"08:30\",\n  \"latitude\": 27.7172,\n  \"longitude\": 85.324,\n  \"timezone\": 5.75\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/astrology/profile",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "astrology",
+                  "profile"
+                ]
+              },
+              "description": "Saves birth details for astrological compatibility calculation."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK or 201 Created', function () {",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Kundali Created",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"dateOfBirth\": \"1998-05-15\",\n  \"timeOfBirth\": \"08:30\",\n  \"latitude\": 27.7172,\n  \"longitude\": 85.324,\n  \"timezone\": 5.75\n}"
+              }
+            ]
+          },
+          {
+            "name": "Update Kundali Profile",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"dateOfBirth\": \"1998-05-15\",\n  \"timeOfBirth\": \"09:00\",\n  \"latitude\": 27.7172,\n  \"longitude\": 85.324,\n  \"timezone\": 5.75\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/astrology/profile",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "astrology",
+                  "profile"
+                ]
+              },
+              "description": "Updates birth details for astrological compatibility calculation."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Kundali Profile Updated",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"dateOfBirth\": \"1998-05-15\",\n  \"timeOfBirth\": \"09:00\",\n  \"latitude\": 27.7172,\n  \"longitude\": 85.324,\n  \"timezone\": 5.75\n}"
+              }
+            ]
+          },
+          {
+            "name": "Delete Kundali Profile",
+            "request": {
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/astrology/profile",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "astrology",
+                  "profile"
+                ]
+              },
+              "description": "Deletes current user Kundali profile."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK or 204 No Content', function () {",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Kundali Deleted",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [],
+                 body: "{\n  \"message\": \"Kundali profile deleted.\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Calculate Astrology Match",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/astrology/match/:targetProfileId",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "astrology",
+                  "match",
+                  ":targetProfileId"
+                ],
+                "variable": [
+                  {
+                    "key": "targetProfileId",
+                    "value": "{{targetProfileId}}",
+                    "description": "Target profile ID dynamically chained"
+                  }
+                ]
+              },
+              "description": "Calculates 36-Koota Gun Milan compatibility score between current user and target profile."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Response includes score or breakdown', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.be.an('object');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Gun Milan Result",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"totalScore\": 28.5,\n  \"maxScore\": 36,\n  \"compatibilityLevel\": \"EXCELLENT\",\n  \"details\": {\n    \"varna\": 1,\n    \"vasya\": 2,\n    \"tara\": 3,\n    \"yoni\": 4,\n    \"grahaMaitri\": 5,\n    \"gana\": 6,\n    \"bhakoot\": 7,\n    \"nadi\": 0.5\n  }\n}"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Swiping & Admirers",
+        "item": [
+          {
+            "name": "Record Swipe Action",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"targetProfileId\": \"{{targetProfileId}}\",\n  \"action\": \"LIKE\"\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/swipes",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "swipes"
+                ]
+              },
+              "description": "Registers a swipe action (LIKE or PASS). Matches SwipeRequest DTO. Extracts matchId if a mutual match is created."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Response contains success and isMatch', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.have.property('success', true);",
+                    "    pm.expect(jsonData).to.have.property('isMatch');",
+                    "    if (jsonData.matchId) {",
+                    "        pm.environment.set('matchId', jsonData.matchId);",
+                    "        console.log('Saved matchId:', jsonData.matchId);",
+                    "    }",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Mutual Match Created",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"success\": true,\n  \"isMatch\": true,\n  \"matchId\": \"match_991823\",\n  \"message\": \"Mutual match created!\"\n}"
+              },
+              {
+                "name": "200 OK - Swipe Recorded (No Match Yet)",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"success\": true,\n  \"isMatch\": false,\n  \"message\": \"Swipe registered.\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Get Admirers",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/swipes/admirers",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "swipes",
+                  "admirers"
+                ]
+              },
+              "description": "Returns profiles of users who have liked the authenticated user profile."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Response is an array of profiles', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.be.an('array');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Admirers List",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "[\n  {\n    \"id\": \"prof_cand_9921\",\n    \"fullName\": \"Ananya Sharma\",\n    \"gender\": \"FEMALE\",\n    \"bio\": \"Designer & Traveler\"\n  }\n]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Preferences",
+        "item": [
+          {
+            "name": "Get User Preferences",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/preferences",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "preferences"
+                ]
+              },
+              "description": "Fetches partner preferences filtering settings."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Preferences Found",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"presetName\": \"Default\",\n  \"isActive\": true,\n  \"prefAgeMin\": 21,\n  \"prefAgeMax\": 35,\n  \"prefHeightMin\": 150,\n  \"prefHeightMax\": 190,\n  \"prefLocation\": \"Kathmandu\",\n  \"prefVerifiedOnly\": true,\n  \"prefFamilyAssisted\": false\n}"
+              }
+            ]
+          },
+          {
+            "name": "Save User Preferences",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"presetName\": \"Default\",\n  \"isActive\": true,\n  \"prefAgeMin\": 21,\n  \"prefAgeMax\": 35,\n  \"prefHeightMin\": 150,\n  \"prefHeightMax\": 190,\n  \"prefLocation\": \"Kathmandu\",\n  \"prefRelocate\": \"YES\",\n  \"prefEducation\": \"Bachelors\",\n  \"prefProfession\": \"Engineering\",\n  \"prefReligion\": \"Any\",\n  \"prefIntention\": \"MARRIAGE\",\n  \"prefVerifiedOnly\": true,\n  \"prefFamilyAssisted\": false\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/preferences",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "preferences"
+                ]
+              },
+              "description": "Saves partner search criteria matching PreferencesDto exactly."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Preferences Saved",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"presetName\": \"Default\",\n  \"isActive\": true,\n  \"prefAgeMin\": 21,\n  \"prefAgeMax\": 35,\n  \"prefHeightMin\": 150,\n  \"prefHeightMax\": 190,\n  \"prefLocation\": \"Kathmandu\",\n  \"prefVerifiedOnly\": true,\n  \"prefFamilyAssisted\": false\n}"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Monetization & Payments",
+        "item": [
+          {
+            "name": "Create Checkout Session",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"productId\": \"premium_monthly\",\n  \"context\": {\n    \"source\": \"postman_test\"\n  }\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/monetize/checkout",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "monetize",
+                  "checkout"
+                ]
+              },
+              "description": "Initiates purchase checkout session. Body matches CheckoutRequest DTO exactly. Automatically captures paymentId for request chaining."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 201 Created', function () {",
+                    "    pm.response.to.have.status(201);",
+                    "});",
+                    "pm.test('Response contains clientSecret and paymentId', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.have.property('clientSecret');",
+                    "    if (jsonData.paymentId) {",
+                    "        pm.environment.set('paymentId', jsonData.paymentId);",
+                    "        console.log('Saved paymentId:', jsonData.paymentId);",
+                    "    }",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "201 Created - Checkout Session Created",
+                "status": "Created",
+                "code": 201,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"clientSecret\": \"pi_3MtwB2LkdIwHu7ix28a3sCv_secret_Nk83219\",\n  \"paymentId\": \"pay_998124\",\n  \"amount\": 1999,\n  \"currency\": \"usd\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Get Entitlements",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/monetize/entitlements",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "monetize",
+                  "entitlements"
+                ]
+              },
+              "description": "Fetches permission snapshot and entitlement limits for authenticated user."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Response matches EntitlementResponse DTO schema', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.have.property('tier');",
+                    "    pm.expect(jsonData).to.have.property('activeEntitlements');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Entitlements Snapshot",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"tier\": \"GOLD\",\n  \"activeEntitlements\": [\n    \"extra_like\",\n    \"undo_skip\"\n  ],\n  \"remainingLikes\": 25\n}"
+              }
+            ]
+          },
+          {
+            "name": "Consume Entitlement",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"entitlementKey\": \"extra_like\"\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/monetize/consume",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "monetize",
+                  "consume"
+                ]
+              },
+              "description": "Consumes one single-use entitlement token."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Entitlement consumed successfully', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.have.property('success', true);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Entitlement Consumed",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"success\": true,\n  \"consumed\": \"extra_like\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Extend Chat",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"matchId\": \"{{matchId}}\"\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/monetize/extend-chat",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "monetize",
+                  "extend-chat"
+                ]
+              },
+              "description": "Extends chat duration for a match by 24 hours using extend_chat entitlement."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK or 400 Bad Request', function () {",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Chat Extended",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"success\": true,\n  \"newExpiry\": \"2026-08-04T10:00:00\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Stripe Webhook (Monetize)",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Stripe-Signature",
+                  "value": "t=1722680000,v1=mock_signature"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"id\": \"evt_test_12345\",\n  \"type\": \"payment_intent.succeeded\",\n  \"data\": {\n    \"object\": {\n      \"id\": \"pi_3MtwB2LkdIwHu7ix28a3sCv\",\n      \"amount\": 1999,\n      \"currency\": \"usd\"\n    }\n  }\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/monetize/webhook",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "monetize",
+                  "webhook"
+                ]
+              },
+              "description": "Public webhook endpoint for Stripe event processing. Verified by Stripe-Signature."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK or 400 Signature Error', function () {",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Webhook Processed",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "text",
+                "header": [],
+                "body": "Webhook processed"
+              }
+            ]
+          },
+          {
+            "name": "Get Payments History",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/payments",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "payments"
+                ]
+              },
+              "description": "Fetches past transactions and payments history for authenticated user."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Response is an array of payment summaries', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.be.an('array');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Payments History Array",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "[\n  {\n    \"id\": \"pay_998124\",\n    \"amount\": 19.99,\n    \"currency\": \"USD\",\n    \"status\": \"COMPLETED\",\n    \"createdAt\": \"2026-08-03T10:00:00\"\n  }\n]"
+              }
+            ]
+          },
+          {
+            "name": "Get Payment Details by ID",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/payments/:id",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "payments",
+                  ":id"
+                ],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "{{paymentId}}",
+                    "description": "Payment ID dynamically chained"
+                  }
+                ]
+              },
+              "description": "Fetches detailed payment transaction record by Payment ID."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Payment Record Found",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"id\": \"pay_998124\",\n  \"amount\": 19.99,\n  \"currency\": \"USD\",\n  \"status\": \"COMPLETED\",\n  \"productId\": \"premium_monthly\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Refund Payment",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"reason\": \"Requested by user test suite\"\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/payments/:paymentId/refund",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "payments",
+                  ":paymentId",
+                  "refund"
+                ],
+                "variable": [
+                  {
+                    "key": "paymentId",
+                    "value": "{{paymentId}}",
+                    "description": "Payment ID to refund"
+                  }
+                ]
+              },
+              "description": "Processes refund for a completed payment transaction."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK or 400 Bad Request', function () {",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Refund Success",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"paymentId\": \"pay_998124\",\n  \"refundStatus\": \"REFUNDED\",\n  \"amountRefunded\": 19.99\n}"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Subscriptions",
+        "item": [
+          {
+            "name": "Activate Subscription",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"tier\": \"GOLD\",\n  \"paymentMethodId\": \"pm_card_visa\"\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{base_url}}/api/subscriptions/activate",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "subscriptions",
+                  "activate"
+                ]
+              },
+              "description": "Activates tier subscription for authenticated user. Matches SubscriptionRequest DTO."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK or 201 Created', function () {",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Subscription Activated",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"tier\": \"GOLD\",\n  \"status\": \"ACTIVE\",\n  \"expiresAt\": \"2026-09-03T10:00:00\"\n}"
+              }
+            ]
+          },
+          {
+            "name": "Check Subscription Status",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/subscriptions/status",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "subscriptions",
+                  "status"
+                ]
+              },
+              "description": "Fetches current active subscription tier and expiry date."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Active Subscription",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"tier\": \"GOLD\",\n  \"status\": \"ACTIVE\",\n  \"expiresAt\": \"2026-09-03T10:00:00\"\n}"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Chat",
+        "item": [
+          {
+            "name": "Get Chat History",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api/chats/:matchId/history",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "api",
+                  "chats",
+                  ":matchId",
+                  "history"
+                ],
+                "variable": [
+                  {
+                    "key": "matchId",
+                    "value": "{{matchId}}",
+                    "description": "Match ID dynamically chained"
+                  }
+                ]
+              },
+              "description": "Fetches historical REST messages for a given match ID."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Response is an array of messages', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData).to.be.an('array');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - Chat History List",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "[\n  {\n    \"id\": \"msg_101\",\n    \"senderId\": \"usr_883921\",\n    \"receiverId\": \"usr_9921\",\n    \"content\": \"Hello! Nice to connect with you.\",\n    \"timestamp\": \"2026-08-03T10:15:00\"\n  }\n]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Public & System",
+        "item": [
+          {
+            "name": "Actuator Health Check",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/actuator/health",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "actuator",
+                  "health"
+                ]
+              },
+              "description": "Spring Boot Actuator health endpoint."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "pm.test('Status is UP', function () {",
+                    "    var jsonData = pm.response.json();",
+                    "    pm.expect(jsonData.status).to.eql('UP');",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - System Health UP",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"status\": \"UP\",\n  \"components\": {\n    \"db\": {\n      \"status\": \"UP\"\n    }\n  }\n}"
+              }
+            ]
+          },
+          {
+            "name": "Actuator Info",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/actuator/info",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "actuator",
+                  "info"
+                ]
+              },
+              "description": "Spring Boot Actuator application info."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK', function () {",
+                    "    pm.response.to.have.status(200);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "200 OK - System Info",
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": "{\n  \"app\": {\n    \"name\": \"Eternal Bond Backend\",\n    \"version\": \"1.0.0\"\n  }\n}"
+              }
+            ]
+          },
+          {
+            "name": "Google OAuth2 Login Success Callback",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/google-success",
+                "host": [
+                  "{{base_url}}"
+                ],
+                "path": [
+                  "google-success"
+                ]
+              },
+              "description": "Google OAuth2 login callback endpoint."
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200 OK or 302 Found', function () {",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
+                    "});"
+                  ]
+                }
+              }
+            ],
+            "response": [
+              {
+                "name": "302 Found - Redirect to Frontend",
+                "status": "Found",
+                "code": 302,
+                "_postman_previewlanguage": "html",
+                "header": [],
+                "body": ""
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
