@@ -32,6 +32,7 @@ import Billing from "./pages/Billing.tsx";
 import RevealLikes from "./pages/RevealLikes.tsx";
 import PaymentSuccess from "./pages/PaymentSuccess.tsx";
 import PaymentCancelled from "./pages/PaymentCancelled.tsx";
+import TransactionDetails from "./pages/TransactionDetails.tsx";
 
 import AdminDashboard from "./pages/admin/AdminDashboard.tsx";
 import AdminUsers from "./pages/admin/AdminUsers.tsx";
@@ -210,6 +211,14 @@ const App = () => (
                 element={
                   <RequireAuth>
                     <PaymentCancelled />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/transactions/:id"
+                element={
+                  <RequireAuth>
+                    <TransactionDetails />
                   </RequireAuth>
                 }
               />

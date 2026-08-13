@@ -22,6 +22,9 @@ public class UserNotification {
     @Column(name = "user_id", nullable = false)
     private String userId;
 
+    @Column(name = "transaction_id")
+    private String transactionId;
+
     @Column(nullable = false)
     @Builder.Default
     private String type = "purchase";

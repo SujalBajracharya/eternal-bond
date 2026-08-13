@@ -264,7 +264,7 @@ public class MonetizationService {
         );
         log.info("Simulated payment success for payment {} and granted entitlement", payment.getId());
 
-        saveNotification(payment.getUserId(), payment.getProductId(), payment.getAmount());
+        saveNotification(payment.getUserId(), payment.getProductId(), payment.getAmount(), payment.getId());
     }
 
     // ── Private: Webhook Handlers ─────────────────────────────────────────────
@@ -323,7 +323,7 @@ public class MonetizationService {
         log.info("Entitlement {} granted to user {} after payment {} succeeded",
                 granted.getEntitlementKey(), userId, payment.getId());
 
-        saveNotification(userId, productId, payment.getAmount());
+        saveNotification(userId, productId, payment.getAmount(), payment.getId());
     }
 
     /**
@@ -387,7 +387,7 @@ public class MonetizationService {
         );
         log.info("Checkout Session {} completed; entitlement granted for user {}", checkoutSession.getId(), userId);
 
-        saveNotification(userId, productId, checkoutSession.getAmountTotal());
+        saveNotification(userId, productId, checkoutSession.getAmountTotal(), payment.getId());
     }
 
     private void handlePaymentFailed(Event event) {
@@ -405,7 +405,7 @@ public class MonetizationService {
     /**
      * Persists a purchase notification for the user's Notifications page.
      */
-    private void saveNotification(String userId, String productId, Long amountPaisa) {
+    private void saveNotification(String userId, String productId, Long amountPaisa, String transactionId) {
         if (!StringUtils.hasText(userId) || !StringUtils.hasText(productId)) {
             log.warn("Cannot save notification: missing userId ({}) or productId ({})", userId, productId);
             return;
@@ -418,6 +418,7 @@ public class MonetizationService {
             notificationRepository.save(
                 UserNotification.builder()
                     .userId(userId)
+                    .transactionId(transactionId)
                     .type("purchase")
                     .title(title)
                     .body(body)

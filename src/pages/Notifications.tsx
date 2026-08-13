@@ -34,6 +34,7 @@ type UserNotification = {
   title: string;
   body: string;
   metadata: Record<string, string> | null;
+  transaction_id?: string;
   is_read: boolean;
   created_at: string;
 };
@@ -46,8 +47,11 @@ type Filter = "all" | "unread" | "read";
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
+import { useNavigate } from "react-router-dom";
+
 const Notifications = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
@@ -415,7 +419,12 @@ const Notifications = () => {
                   return (
                     <article
                       key={`purchase-${n.id}`}
-                      onClick={() => markPurchaseRead(n.id)}
+                      onClick={() => {
+                        markPurchaseRead(n.id);
+                        if (n.transaction_id) {
+                          navigate(`/transactions/${n.transaction_id}`);
+                        }
+                      }}
                       className={`group cursor-pointer rounded-2xl border p-5 transition-all ${
                         isRead
                           ? "border-border/60 bg-secondary/20"

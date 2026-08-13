@@ -108,6 +108,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- OpenPDF for generating transaction receipts -->
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>1.3.36</version>
+        </dependency>
+
         <!-- Testing starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

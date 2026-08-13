@@ -38,6 +38,7 @@ import { toast } from "sonner";
 import ReportPhotoDialog from "@/components/ReportPhotoDialog";
 import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
 import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
+import { FullProfileData } from "@/components/matches/FullProfileDialog";
 
 type GalleryItem = { url: string; blurred?: boolean };
 
