@@ -24,10 +24,28 @@ public interface DailyMatchRepository extends JpaRepository<DailyMatch, String> 
     boolean existsByUserIdAndMatchDate(String userId, LocalDate matchDate);
 
     /**
-     * Returns all profile IDs that have ever been recommended to the given user on any previous day.
-     * Used to exclude already-seen profiles when building tomorrow's batch.
-     * This query deliberately excludes {@code today} so that we only exclude past days,
-     * not the current day being generated.
+     * Returns profile IDs recommended to the user within the rolling recency window
+     * ({@code cutoff} ≤ matchDate < {@code today}).
+     *
+     * <p>Only dates strictly before {@code today} are included so that the current
+     * day being generated is never self-excluded.  Only dates on or after {@code cutoff}
+     * are included so that profiles recommended more than {@code RECOMMENDATION_WINDOW_DAYS}
+     * days ago are no longer considered "recently seen" and become eligible for recycling.
+     *
+     * @param userId  the user whose history is queried
+     * @param today   the current calendar date (exclusive upper bound)
+     * @param cutoff  the oldest date still considered "recent" (inclusive lower bound)
+     */
+    @Query("SELECT dm.recommendedProfileId FROM DailyMatch dm " +
+           "WHERE dm.userId = :userId AND dm.matchDate < :today AND dm.matchDate >= :cutoff")
+    List<String> findRecentlyRecommendedProfileIds(
+            @Param("userId") String userId,
+            @Param("today") LocalDate today,
+            @Param("cutoff") LocalDate cutoff
+    );
+
+    /**
+     * Returns all profile IDs recommended to the user historically (any time before today).
      */
     @Query("SELECT dm.recommendedProfileId FROM DailyMatch dm " +
            "WHERE dm.userId = :userId AND dm.matchDate < :today")

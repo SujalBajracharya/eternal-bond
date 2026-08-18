@@ -917,7 +917,7 @@ const Onboarding = () => {
                           id="location"
                           value={form.location}
                           onChange={(e) => set("location", e.target.value)}
-                          placeholder="Bengaluru, India"
+                          placeholder="Kathmandu, Nepal"
                           className="h-11 rounded-xl"
                         />
                       </div>

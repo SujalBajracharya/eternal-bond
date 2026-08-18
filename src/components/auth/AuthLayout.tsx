@@ -40,11 +40,12 @@ const AuthLayout = ({ children, title, subtitle, side }: Props) => {
                 Where stories begin
               </span>
               <h2 className="font-serif text-5xl xl:text-6xl leading-[1.05] tracking-tight">
-                Every <em className="text-primary not-italic">heartbeat</em> finds its rhythm.
+                Every <em className="text-primary not-italic">heartbeat</em>{" "}
+                finds its rhythm.
               </h2>
               <p className="text-foreground/70 text-lg leading-relaxed">
-                Join thousands who found their forever through thoughtful matchmaking,
-                verified profiles, and meaningful conversations.
+                Join thousands who found their forever through thoughtful
+                matchmaking, verified profiles, and meaningful conversations.
               </p>
             </div>
 
@@ -59,17 +60,20 @@ const AuthLayout = ({ children, title, subtitle, side }: Props) => {
                   className="rounded-2xl bg-card/70 backdrop-blur border border-border/60 p-4 shadow-soft"
                 >
                   <div className="font-serif text-2xl text-primary">{s.n}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{s.l}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {s.l}
+                  </div>
                 </div>
               ))}
             </div>
 
             <figure className="rounded-3xl bg-card/70 backdrop-blur border border-border/60 p-6 shadow-soft">
               <blockquote className="font-serif text-lg italic leading-snug text-foreground/85">
-                "Within three weeks, we were planning our first chai together. A year later, our wedding."
+                "Within three weeks, we were planning our first chai together. A
+                year later, our wedding."
               </blockquote>
               <figcaption className="mt-3 text-sm text-muted-foreground">
-                — Aanya & Rohan, Bengaluru
+                — Aanya & Rohan, Kathmandu
               </figcaption>
             </figure>
           </div>
@@ -98,7 +102,9 @@ const AuthLayout = ({ children, title, subtitle, side }: Props) => {
             <div className="rounded-3xl bg-card/80 backdrop-blur-xl border border-border/60 shadow-soft p-7 sm:p-9">
               <header className="mb-6">
                 <h1 className="font-serif text-3xl tracking-tight">{title}</h1>
-                <p className="text-muted-foreground text-sm mt-1.5">{subtitle}</p>
+                <p className="text-muted-foreground text-sm mt-1.5">
+                  {subtitle}
+                </p>
               </header>
               {children}
             </div>

@@ -25,6 +25,8 @@ public class ProfileService {
 
     private static final Logger log = LoggerFactory.getLogger(ProfileService.class);
     private static final int DAILY_BATCH_SIZE = 5;
+    /** Profiles recommended within this many days are excluded from today's batch. */
+    private static final int RECOMMENDATION_WINDOW_DAYS = 30;
 
     private final ProfileRepository profileRepository;
     private final ProfilePreferencesRepository profilePreferencesRepository;
@@ -106,25 +108,31 @@ public class ProfileService {
     }
 
     /**
-     * Returns the user's daily batch of up to 5 recommended profiles.
+     * Returns the user's daily batch of up to {@value #DAILY_BATCH_SIZE} recommended profiles.
      *
-     * <p>Same-day idempotency: if a batch already exists for {@code userId} on
+     * <p><b>Same-day idempotency:</b> if a batch already exists for {@code userId} on
      * today's calendar date, those exact records are returned immediately without
      * re-running any eligibility logic.
      *
-     * <p>New-day generation: on the first request of a new calendar day:
+     * <p><b>New-day generation</b> — on the first request of a new calendar day:
      * <ol>
      *   <li>Fetch all eligible candidates via {@code findDailyMatchesForUser} (excludes own
-     *       profile and already-swiped profiles at the DB level).</li>
+     *       profile and already-swiped profiles permanently, at the DB level).</li>
      *   <li>Apply the user's active {@link ProfilePreferences} filters in-memory.</li>
-     *   <li>Exclude any profile that appeared in a previous day's batch for this user.</li>
-     *   <li>Select up to 5, persist them as {@link DailyMatch} rows, and return them.</li>
+     *   <li>Exclude profiles recommended within the last {@value #RECOMMENDATION_WINDOW_DAYS} days
+     *       (the <em>recent window</em>) — these are temporarily unavailable.</li>
+     *   <li>Select up to {@value #DAILY_BATCH_SIZE} fresh candidates and persist them.</li>
+     *   <li><b>Recycling fallback:</b> if fewer than {@value #DAILY_BATCH_SIZE} fresh candidates
+     *       exist, fill the remaining slots from eligible profiles that were last recommended
+     *       <em>more than {@value #RECOMMENDATION_WINDOW_DAYS} days ago</em>. Swiped profiles
+     *       are never recycled (they are permanently excluded at the DB level in step 1).</li>
      * </ol>
      *
-     * <p>Concurrency: If two simultaneous requests both find no existing batch they both
+     * <p><b>Concurrency:</b> if two simultaneous requests both find no existing batch they both
      * attempt to persist. The unique constraint {@code uq_daily_match_user_profile_date}
-     * causes the second write to throw a {@link DataIntegrityViolationException}.  That
-     * exception is caught and we fall back to reading the batch the first request committed.
+     * causes the second write to throw a {@link DataIntegrityViolationException}. That
+     * exception is caught and the code falls back to reading the batch the first request
+     * committed.
      */
     @Transactional
     public List<ProfileDto> getDailyMatches(String userId) {
@@ -132,6 +140,7 @@ public class ProfileService {
                 .orElseThrow(() -> new ResourceNotFoundException("Active profile not found"));
 
         LocalDate today = LocalDate.now();
+        LocalDate cutoff = today.minusDays(RECOMMENDATION_WINDOW_DAYS);
 
         // ── Same-day idempotency check ──────────────────────────────────────────
         if (dailyMatchRepository.existsByUserIdAndMatchDate(userId, today)) {
@@ -140,42 +149,83 @@ public class ProfileService {
         }
 
         // ── Build eligibility candidate list ───────────────────────────────────
+        // findDailyMatchesForUser already excludes the user's own profile AND any
+        // profiles they have swiped on (permanent exclusion at the DB level).
         List<Profile> candidates = profileRepository.findDailyMatchesForUser(
                 userId, userProfile.getLookingFor());
 
-        // Apply active preferences filter (identical to original logic)
+        // Apply active preferences filter
         ProfilePreferences pref = profilePreferencesRepository
                 .findByProfileIdAndIsActiveTrue(userId)
                 .orElse(null);
-
         if (pref != null) {
             candidates = applyPreferencesFilter(candidates, pref);
         }
 
-        // Exclude profiles already shown on any previous day
-        Set<String> alreadySeen = new HashSet<>(
-                dailyMatchRepository.findAlreadyRecommendedProfileIds(userId, today));
+        // ── 30-day rolling-window exclusion ────────────────────────────────────
+        // Profiles recommended within the last RECOMMENDATION_WINDOW_DAYS days
+        // are temporarily off-limits. Profiles older than the window become
+        // eligible for recycling (provided they have not been swiped, which is
+        // already guaranteed because findDailyMatchesForUser excluded them above).
+        Set<String> recentlySeen = new HashSet<>(
+                dailyMatchRepository.findRecentlyRecommendedProfileIds(userId, today, cutoff));
 
-        List<Profile> newCandidates = candidates.stream()
-                .filter(p -> !alreadySeen.contains(p.getId()))
-                .limit(DAILY_BATCH_SIZE)
+        // Partition into: fresh (never seen OR last seen > 30 days ago)
+        //            vs.  stale (seen within last 30 days — temporarily excluded)
+        List<Profile> freshCandidates = candidates.stream()
+                .filter(p -> !recentlySeen.contains(p.getId()))
                 .collect(Collectors.toList());
 
-        if (newCandidates.isEmpty()) {
-            log.info("No new eligible profiles for user={} on date={}", userId, today);
+        List<Profile> batch;
+        if (freshCandidates.size() >= DAILY_BATCH_SIZE) {
+            // Happy path: enough completely fresh profiles
+            batch = freshCandidates.stream()
+                    .limit(DAILY_BATCH_SIZE)
+                    .collect(Collectors.toList());
+        } else {
+            // Recycling path: take all fresh candidates, then fill remaining
+            // slots from the "stale" pool (seen > 30 days ago, not swiped).
+            // The stale pool consists of every eligible candidate that IS in
+            // the recently-seen set — i.e., the inverse of freshCandidates.
+            // We track IDs already chosen to guarantee no duplicates within
+            // the same batch.
+            Set<String> chosenIds = new HashSet<>();
+            batch = new ArrayList<>(freshCandidates);
+            freshCandidates.forEach(p -> chosenIds.add(p.getId()));
+
+            int remaining = DAILY_BATCH_SIZE - batch.size();
+            if (remaining > 0) {
+                // stale = eligible (not swiped) AND in the recently-seen window
+                List<Profile> staleRecyclable = candidates.stream()
+                        .filter(p -> recentlySeen.contains(p.getId()))
+                        .filter(p -> !chosenIds.contains(p.getId()))
+                        .limit(remaining)
+                        .collect(Collectors.toList());
+
+                if (!staleRecyclable.isEmpty()) {
+                    log.info("Recycling {} profile(s) for user={} on date={} (fresh pool insufficient)",
+                            staleRecyclable.size(), userId, today);
+                    batch.addAll(staleRecyclable);
+                }
+            }
+        }
+
+        if (batch.isEmpty()) {
+            log.info("No eligible profiles available for user={} on date={}", userId, today);
             return Collections.emptyList();
         }
 
         // ── Persist the batch ─────────────────────────────────────────────────
         try {
-            persistBatch(userId, today, newCandidates);
+            persistBatch(userId, today, batch);
         } catch (DataIntegrityViolationException ex) {
             // A concurrent request already committed the batch; read it back.
-            log.warn("Concurrent batch creation detected for user={} date={}, reading committed batch.", userId, today);
+            log.warn("Concurrent batch creation detected for user={} date={}, reading committed batch.",
+                    userId, today);
             return loadPersistedBatch(userId, today);
         }
 
-        return newCandidates.stream()
+        return batch.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }

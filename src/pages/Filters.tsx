@@ -227,7 +227,7 @@ export default function Filters() {
   // states matching original Filter.tsx
   const [age, setAge] = useState<number[]>([26, 32]);
   const [height, setHeight] = useState<number[]>([160, 180]);
-  const [cities, setCities] = useState<string[]>(["Bengaluru", "Pune"]);
+  const [cities, setCities] = useState<string[]>(["Kathmandu", "Pokhara"]);
   const [relocate, setRelocate] = useState<string>("open");
   const [educ, setEduc] = useState<string[]>(["Postgraduate"]);
   const [prof, setProf] = useState<string[]>(["Tech & engineering"]);
@@ -264,7 +264,11 @@ export default function Filters() {
         }
 
         if (!res.ok) {
-          console.error("[Filters] Failed to fetch preferences:", res.status, await res.text());
+          console.error(
+            "[Filters] Failed to fetch preferences:",
+            res.status,
+            await res.text(),
+          );
           return;
         }
 
@@ -278,18 +282,33 @@ export default function Filters() {
           setHeight([data.prefHeightMin, data.prefHeightMax]);
         }
         if (data.prefLocation) {
-          setCities(data.prefLocation.split(",").map((s: string) => s.trim()).filter(Boolean));
+          setCities(
+            data.prefLocation
+              .split(",")
+              .map((s: string) => s.trim())
+              .filter(Boolean),
+          );
         } else {
           setCities([]);
         }
         setRelocate(data.prefRelocate ?? "any");
         if (data.prefEducation) {
-          setEduc(data.prefEducation.split(",").map((s: string) => s.trim()).filter(Boolean));
+          setEduc(
+            data.prefEducation
+              .split(",")
+              .map((s: string) => s.trim())
+              .filter(Boolean),
+          );
         } else {
           setEduc([]);
         }
         if (data.prefProfession) {
-          setProf(data.prefProfession.split(",").map((s: string) => s.trim()).filter(Boolean));
+          setProf(
+            data.prefProfession
+              .split(",")
+              .map((s: string) => s.trim())
+              .filter(Boolean),
+          );
         } else {
           setProf([]);
         }
@@ -361,7 +380,12 @@ export default function Filters() {
   useEffect(() => {
     console.log("Current filter states:", {
       age,
-      height: { minCm: height[0], maxCm: height[1], minFeet: cmToFeet(height[0]), maxFeet: cmToFeet(height[1]) },
+      height: {
+        minCm: height[0],
+        maxCm: height[1],
+        minFeet: cmToFeet(height[0]),
+        maxFeet: cmToFeet(height[1]),
+      },
       cities,
       relocate,
       educ,
@@ -369,9 +393,20 @@ export default function Filters() {
       faith,
       intention,
       verifiedOnly,
-      familyAssisted
+      familyAssisted,
     });
-  }, [age, height, cities, relocate, educ, prof, faith, intention, verifiedOnly, familyAssisted]);
+  }, [
+    age,
+    height,
+    cities,
+    relocate,
+    educ,
+    prof,
+    faith,
+    intention,
+    verifiedOnly,
+    familyAssisted,
+  ]);
 
   const isPremium = false; // demo default
 
@@ -508,7 +543,7 @@ export default function Filters() {
     if (name === "My ideal match") {
       setAge([26, 32]);
       setHeight([160, 180]);
-      setCities(["Bengaluru", "Pune"]);
+      setCities(["Kathmandu", "Pokhara"]);
       setRelocate("open");
       setEduc(["Postgraduate"]);
       setProf(["Tech & engineering"]);
@@ -811,7 +846,7 @@ export default function Filters() {
         {/* Stellar Background */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(122,31,43,0.15)_0%,transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(201,161,90,0.1)_0%,transparent_50%)]" />
-        
+
         <div className="text-center relative z-10 space-y-6">
           <div className="relative w-20 h-20 mx-auto">
             {/* Inner spinning star */}
@@ -821,8 +856,12 @@ export default function Filters() {
             <Compass className="w-10 h-10 text-primary absolute inset-0 m-auto animate-pulse" />
           </div>
           <div className="space-y-2">
-            <h2 className="font-serif text-lg tracking-wide text-foreground">Aligning the Heavens</h2>
-            <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Reading your Constellation...</p>
+            <h2 className="font-serif text-lg tracking-wide text-foreground">
+              Aligning the Heavens
+            </h2>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+              Reading your Constellation...
+            </p>
           </div>
         </div>
       </div>

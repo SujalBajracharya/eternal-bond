@@ -8,6 +8,7 @@ import com.eternalbond.api.model.ProfilePreferences;
 import com.eternalbond.api.repository.DailyMatchRepository;
 import com.eternalbond.api.repository.ProfilePreferencesRepository;
 import com.eternalbond.api.repository.ProfileRepository;
+import com.eternalbond.api.repository.SwipeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ class ProfileServiceTest {
     @Mock private ProfileRepository profileRepository;
     @Mock private ProfilePreferencesRepository profilePreferencesRepository;
     @Mock private DailyMatchRepository dailyMatchRepository;
+    @Mock private SwipeRepository swipeRepository;
 
     @InjectMocks
     private ProfileService profileService;
@@ -188,7 +190,8 @@ class ProfileServiceTest {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
-        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
                 .thenReturn(Collections.emptyList());
         when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
                 .thenReturn(Optional.empty());
@@ -251,7 +254,8 @@ class ProfileServiceTest {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
-        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
                 .thenReturn(List.of("cand-0", "cand-1", "cand-2", "cand-3", "cand-4")); // yesterday's batch
         when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
                 .thenReturn(Optional.empty());
@@ -273,24 +277,25 @@ class ProfileServiceTest {
     }
 
     @Test
-    @DisplayName("getDailyMatches - previous day's profiles are not reused when unused eligible profiles exist")
-    void getDailyMatches_previousProfilesExcluded() {
+    @DisplayName("getDailyMatches - profiles seen within 30 days are excluded; truly unseen profiles are served first")
+    void getDailyMatches_recentProfilesExcluded_withinWindow() {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
-        // Simulate two days of already-seen profiles
-        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+        // A–J were recommended within the last 30 days
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
                 .thenReturn(List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J"));
         when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
                 .thenReturn(Optional.empty());
 
-        // Candidates K, L, M (only 3 fresh ones)
+        // Candidates K, L, M are fresh; A and J are recently-seen (should be excluded if fresh ones fill the batch)
         List<Profile> candidates = List.of(
-                Profile.builder().id("A").build(), // already seen
-                Profile.builder().id("K").build(),
-                Profile.builder().id("L").build(),
-                Profile.builder().id("J").build(), // already seen
-                Profile.builder().id("M").build()
+                Profile.builder().id("A").build(), // recently seen
+                Profile.builder().id("K").build(), // fresh
+                Profile.builder().id("L").build(), // fresh
+                Profile.builder().id("J").build(), // recently seen
+                Profile.builder().id("M").build()  // fresh
         );
         when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
                 .thenReturn(candidates);
@@ -298,7 +303,7 @@ class ProfileServiceTest {
 
         List<ProfileDto> results = profileService.getDailyMatches("uid-001");
 
-        // Only K, L, M should survive
+        // Only K, L, M should survive; A and J are within the 30-day window
         assertThat(results).hasSize(3);
         List<String> ids = results.stream().map(ProfileDto::getId).toList();
         assertThat(ids).containsExactlyInAnyOrder("K", "L", "M");
@@ -310,7 +315,8 @@ class ProfileServiceTest {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
-        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
                 .thenReturn(Collections.emptyList());
 
         ProfilePreferences prefs = ProfilePreferences.builder()
@@ -350,7 +356,8 @@ class ProfileServiceTest {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
-        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
                 .thenReturn(Collections.emptyList());
 
         ProfilePreferences prefs = ProfilePreferences.builder()
@@ -379,7 +386,8 @@ class ProfileServiceTest {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
-        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
                 .thenReturn(Collections.emptyList());
 
         ProfilePreferences prefs = ProfilePreferences.builder()
@@ -408,7 +416,8 @@ class ProfileServiceTest {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
-        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
                 .thenReturn(Collections.emptyList());
         when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
                 .thenReturn(Optional.empty());
@@ -432,7 +441,8 @@ class ProfileServiceTest {
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
-        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
                 .thenReturn(Collections.emptyList());
         when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
                 .thenReturn(Optional.empty());
@@ -452,7 +462,8 @@ class ProfileServiceTest {
         // First check: no batch exists (both concurrent requests see this)
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
-        when(dailyMatchRepository.findAlreadyRecommendedProfileIds("uid-001", LocalDate.now()))
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
                 .thenReturn(Collections.emptyList());
         when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
                 .thenReturn(Optional.empty());
@@ -517,5 +528,114 @@ class ProfileServiceTest {
         // Crucially: no saveAll and no findDailyMatchesForUser called — came from DB
         verify(dailyMatchRepository, never()).saveAll(anyList());
         verify(profileRepository, never()).findDailyMatchesForUser(any(), any());
+    }
+    // -------------------------------------------------------------------------
+    // getDailyMatches() — 30-day recycling fallback
+    // -------------------------------------------------------------------------
+
+    @Test
+    @DisplayName("getDailyMatches - recycling: profiles seen >30 days ago fill remaining batch slots")
+    void getDailyMatches_recycling_fillsRemainingSlots() {
+        // Arrange: 2 fresh profiles + 4 recently-seen (within 30 days),
+        //          so recycling should pad the batch with recently-seen candidates.
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        // "old-1" .. "old-4" were recommended more than 30 days ago → NOT in recentlySeen
+        // "new-1" .. "new-2" are truly fresh                           → NOT in recentlySeen
+        // "recent-1" was shown 5 days ago                              → IN recentlySeen
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
+                .thenReturn(List.of("recent-1"));
+        when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
+                .thenReturn(Optional.empty());
+
+        // findDailyMatchesForUser already excluded swiped profiles at DB level.
+        // "old-1".."old-4" appear here because they are older than 30 days and NOT swiped.
+        List<Profile> candidates = List.of(
+                Profile.builder().id("new-1").fullName("New 1").build(),
+                Profile.builder().id("new-2").fullName("New 2").build(),
+                Profile.builder().id("recent-1").fullName("Recent 1").build(), // seen 5 days ago
+                Profile.builder().id("old-1").fullName("Old 1").build(),       // seen 45 days ago
+                Profile.builder().id("old-2").fullName("Old 2").build()        // seen 60 days ago
+        );
+        when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
+                .thenReturn(candidates);
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
+
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        // Fresh = new-1, new-2, old-1, old-2 (4 profiles)
+        // recent-1 is within the 30-day window so it is excluded even during recycling
+        // (it stays in the "stale" set, but the batch already has 4 slots filled)
+        assertThat(results).hasSize(4);
+        List<String> ids = results.stream().map(ProfileDto::getId).toList();
+        // new-1, new-2 are definitely in; old-1 and old-2 pad the batch
+        assertThat(ids).containsExactlyInAnyOrder("new-1", "new-2", "old-1", "old-2");
+        // recent-1 must NOT appear in the batch
+        assertThat(ids).doesNotContain("recent-1");
+    }
+
+    @Test
+    @DisplayName("getDailyMatches - recycling fills up to DAILY_BATCH_SIZE without duplicates")
+    void getDailyMatches_recycling_noDuplicatesInBatch() {
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        // All 3 candidates are within 30-day window; none are fresh
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
+                .thenReturn(List.of("A", "B", "C"));
+        when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
+                .thenReturn(Optional.empty());
+
+        List<Profile> candidates = List.of(
+                Profile.builder().id("A").build(),
+                Profile.builder().id("B").build(),
+                Profile.builder().id("C").build()
+        );
+        when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
+                .thenReturn(candidates);
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
+
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        // All 3 are recycled from the stale pool; no duplicates
+        assertThat(results).hasSize(3);
+        List<String> ids = results.stream().map(ProfileDto::getId).toList();
+        assertThat(ids).doesNotHaveDuplicates();
+        // Verify saveAll was called with exactly 3 unique DailyMatch rows
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<List<DailyMatch>> captor = ArgumentCaptor.forClass(List.class);
+        verify(dailyMatchRepository).saveAll(captor.capture());
+        List<String> persistedIds = captor.getValue().stream()
+                .map(DailyMatch::getRecommendedProfileId).toList();
+        assertThat(persistedIds).doesNotHaveDuplicates();
+        assertThat(persistedIds).hasSize(3);
+    }
+
+    @Test
+    @DisplayName("getDailyMatches - swiped profiles are never recycled even when pool is exhausted")
+    void getDailyMatches_swipedProfilesAreNeverRecycled() {
+        // The DB-level exclusion in findDailyMatchesForUser already strips swiped profiles.
+        // This test verifies that even when the entire candidate pool is exhausted (all
+        // profiles removed at the DB level by the swipe filter), the service returns empty
+        // rather than somehow surfacing swiped profiles.
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
+                .thenReturn(Collections.emptyList());
+        when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
+                .thenReturn(Optional.empty());
+        // Simulate: all remaining eligible profiles have been swiped → DB returns nothing
+        when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
+                .thenReturn(Collections.emptyList());
+
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        assertThat(results).isEmpty();
+        verify(dailyMatchRepository, never()).saveAll(anyList());
     }
 }
