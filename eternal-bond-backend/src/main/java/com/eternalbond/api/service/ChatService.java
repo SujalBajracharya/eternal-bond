@@ -21,11 +21,13 @@ public class ChatService {
     private final MessageRepository messageRepository;
     private final MatchRepository matchRepository;
     private final ProfileRepository profileRepository;
+    private final EntitlementService entitlementService;
 
-    public ChatService(MessageRepository messageRepository, MatchRepository matchRepository, ProfileRepository profileRepository) {
+    public ChatService(MessageRepository messageRepository, MatchRepository matchRepository, ProfileRepository profileRepository, EntitlementService entitlementService) {
         this.messageRepository = messageRepository;
         this.matchRepository = matchRepository;
         this.profileRepository = profileRepository;
+        this.entitlementService = entitlementService;
     }
 
     @Transactional(readOnly = true)
@@ -39,7 +41,15 @@ public class ChatService {
         }
 
         List<Message> messages = messageRepository.findAllByMatchIdOrderByCreatedAtAsc(matchId);
-        return messages.stream().map(this::mapToDto).collect(Collectors.toList());
+        boolean hasReadReceipts = entitlementService.hasActivePremium(requesterId);
+
+        return messages.stream().map(msg -> {
+            MessageDto dto = mapToDto(msg);
+            if (!hasReadReceipts && msg.getSender().getId().equals(requesterId)) {
+                dto.setRead(false);
+            }
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @Transactional

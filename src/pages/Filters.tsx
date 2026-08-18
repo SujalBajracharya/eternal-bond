@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
+import { useEntitlements } from "@/hooks/useEntitlements";
 
 const cmToFeet = (cm: number) => {
   const totalIn = cm / 2.54;
@@ -237,6 +238,10 @@ export default function Filters() {
   const [familyAssisted, setFamilyAssisted] = useState(false);
 
   const { user, session } = useAuth();
+  const { entitlements } = useEntitlements();
+  // Derive premium state from the backend entitlement snapshot.
+  // Do NOT duplicate subscription logic here — the backend is authoritative.
+  const isPremium = entitlements?.advancedFiltersEnabled === true;
   const [loading, setLoading] = useState(true);
   const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
 
@@ -408,7 +413,7 @@ export default function Filters() {
     familyAssisted,
   ]);
 
-  const isPremium = false; // demo default
+
 
   // radius adaptation
   useEffect(() => {

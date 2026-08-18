@@ -67,6 +67,12 @@ public class EntitlementResponse {
     /** Premium: access to advanced discovery filters */
     private boolean advancedFiltersEnabled;
 
+    /** Premium: read receipts in chat (know when messages are read) */
+    private boolean readReceiptsEnabled;
+
+    /** Premium: user appears with a priority interest badge in others' feeds */
+    private boolean priorityBadgeEnabled;
+
     /** Premium: profile is boosted in recommendations */
     private boolean profileBoostActive;
 

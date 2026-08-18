@@ -11,6 +11,7 @@ export interface EntitlementResponse {
   likesRemainingToday: number;
   canLike: boolean;
   extraLikePurchasedToday: boolean;
+  /** -1 means unlimited (Premium). 0 means free (no reveals unless purchased). */
   dailyRevealLimit: number;
   revealsUsedToday: number;
   canRevealFree: boolean;
@@ -19,6 +20,10 @@ export interface EntitlementResponse {
   chatExpiryDisabled: boolean;
   kundaliEnabled: boolean;
   advancedFiltersEnabled: boolean;
+  /** Premium: know when messages are read in chat */
+  readReceiptsEnabled: boolean;
+  /** Premium: user appears with a priority badge in others' recommendation feeds */
+  priorityBadgeEnabled: boolean;
   profileBoostActive: boolean;
   profileBoostExpiresAt: number | null;
   pendingUndoSkips: number;

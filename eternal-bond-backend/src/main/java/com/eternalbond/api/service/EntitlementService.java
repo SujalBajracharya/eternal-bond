@@ -58,8 +58,9 @@ public interface EntitlementService {
     // ── Reveals ───────────────────────────────────────────────────
 
     /**
-     * Returns true if the user can reveal a profile who liked them for free today.
-     * Free users: 0 free reveals (must pay). Premium: up to 3 per day.
+     * Returns true if the user can reveal a profile who liked them for free.
+     * Free users: 0 free reveals (must pay per reveal via reveal_like entitlement).
+     * Premium users: unlimited reveals (always returns true).
      */
     boolean canRevealFree(String userId);
 

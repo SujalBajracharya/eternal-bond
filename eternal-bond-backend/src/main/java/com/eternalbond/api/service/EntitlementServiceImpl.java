@@ -34,7 +34,8 @@ public class EntitlementServiceImpl implements EntitlementService {
     // Business rule constants
     private static final int FREE_DAILY_LIKES   = 3;
     private static final int PREMIUM_BONUS_LIKES = 3;   // 3 base + 3 = 6 total
-    private static final int PREMIUM_DAILY_REVEALS = 3;
+    // Premium users get unlimited reveals — we use Integer.MAX_VALUE as a sentinel
+    private static final int PREMIUM_DAILY_REVEALS = Integer.MAX_VALUE;
 
     private final UserEntitlementRepository entitlementRepo;
     private final UserDailyUsageRepository  dailyUsageRepo;
@@ -68,8 +69,9 @@ public class EntitlementServiceImpl implements EntitlementService {
         boolean canLike       = likesRemaining > 0;
 
         int dailyRevealLimit  = premium ? PREMIUM_DAILY_REVEALS : 0;
-        int revealsRemaining  = Math.max(0, dailyRevealLimit - usage.getRevealsUsed());
-        boolean canRevealFree = revealsRemaining > 0;
+        // For premium users, reveals are unlimited (MAX_VALUE sentinel means no cap)
+        int revealsRemaining  = premium ? Integer.MAX_VALUE : Math.max(0, dailyRevealLimit - usage.getRevealsUsed());
+        boolean canRevealFree = premium || revealsRemaining > 0;
 
         // Profile boost: check if there's an active non-expired profile_boost entitlement
         List<UserEntitlement> boosts = entitlementRepo.findActiveEntitlements(
@@ -88,8 +90,8 @@ public class EntitlementServiceImpl implements EntitlementService {
                 .likesRemainingToday(likesRemaining)
                 .canLike(canLike)
                 .extraLikePurchasedToday(usage.isExtraLikePurchased())
-                // Reveals
-                .dailyRevealLimit(dailyRevealLimit)
+                // Reveals — premium = unlimited (MAX_VALUE); free = 0 per day unless purchased
+                .dailyRevealLimit(premium ? -1 : dailyRevealLimit)  // -1 signals "unlimited" to frontend
                 .revealsUsedToday(usage.getRevealsUsed())
                 .canRevealFree(canRevealFree)
                 .revealPurchasedToday(usage.isRevealPurchased())
@@ -98,6 +100,8 @@ public class EntitlementServiceImpl implements EntitlementService {
                 .chatExpiryDisabled(premium)
                 .kundaliEnabled(premium || hasActiveEntitlement(userId, EntitlementKey.kundali_access))
                 .advancedFiltersEnabled(premium || hasActiveEntitlement(userId, EntitlementKey.advanced_filters))
+                .readReceiptsEnabled(premium)
+                .priorityBadgeEnabled(premium)
                 .profileBoostActive(boostActive)
                 .profileBoostExpiresAt(boostExpiresAt)
                 // Pending single-use counts
@@ -178,7 +182,8 @@ public class EntitlementServiceImpl implements EntitlementService {
     @Override
     @Transactional(readOnly = true)
     public boolean canRevealFree(String userId) {
-        if (!hasActivePremium(userId)) return false;
+        // Premium users have unlimited reveals — always true
+        if (hasActivePremium(userId)) return true;
         UserDailyUsage usage = getOrCreateTodayUsage(userId);
         return usage.getRevealsUsed() < PREMIUM_DAILY_REVEALS;
     }

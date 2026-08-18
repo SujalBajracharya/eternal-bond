@@ -54,6 +54,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import ReportMessageDialog from "@/components/ReportMessageDialog";
 import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
+import { useEntitlements } from "@/hooks/useEntitlements";
 
 type MsgStatus = "sent" | "delivered" | "read";
 
@@ -295,6 +296,8 @@ export default function Chat() {
   const navigate = useNavigate();
   const { id: matchId } = useParams();
   const { session } = useAuth();
+  const { entitlements } = useEntitlements();
+  const canSeeReadReceipts = entitlements?.readReceiptsEnabled === true;
 
   const [messages, setMessages] = useState<Msg[]>([]);
   const [partner, setPartner] = useState<Partner | null>(null);
@@ -419,7 +422,7 @@ export default function Chat() {
               hour: "numeric",
               minute: "2-digit",
             }),
-            status: m.is_read ? "read" : "delivered",
+            status: m.is_read && canSeeReadReceipts ? "read" : "delivered",
             attachment: isImage
               ? {
                   kind: "image",
@@ -496,7 +499,7 @@ export default function Chat() {
               hour: "numeric",
               minute: "2-digit",
             }),
-            status: newMsg.is_read ? "read" : "delivered",
+            status: newMsg.is_read && canSeeReadReceipts ? "read" : "delivered",
             attachment: isImage
               ? {
                   kind: "image",
@@ -533,7 +536,7 @@ export default function Chat() {
           setMessages((prev) =>
             prev.map((m) =>
               m.id === updatedMsg.id
-                ? { ...m, status: updatedMsg.is_read ? "read" : "delivered" }
+                ? { ...m, status: updatedMsg.is_read && canSeeReadReceipts ? "read" : "delivered" }
                 : m,
             ),
           );
