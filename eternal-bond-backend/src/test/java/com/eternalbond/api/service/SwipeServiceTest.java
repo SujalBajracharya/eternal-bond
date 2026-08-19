@@ -62,7 +62,7 @@ class SwipeServiceTest {
         boolean matched = swipeService.registerSwipe("user-a", request);
 
         assertThat(matched).isFalse();
-        verify(swipeRepository).save(any(Swipe.class));
+        verify(swipeRepository).saveAndFlush(any(Swipe.class));
         verifyNoInteractions(matchRepository);
         verifyNoInteractions(entitlementService);
     }

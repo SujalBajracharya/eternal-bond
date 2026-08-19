@@ -80,6 +80,14 @@ public class UserEntitlement {
     @Column(columnDefinition = "jsonb")
     private String metadata;
 
+    /** Period key used by recurring grants, for example 2026-W34 or 2026-08-1. */
+    @Column(name = "grant_period", length = 32)
+    private String grantPeriod;
+
+    /** Category used to keep weekly and yearly monthly boosts independent. */
+    @Column(name = "grant_type", length = 32)
+    private String grantType;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

@@ -92,4 +92,7 @@ public class ProfileDto {
     private String marriageIntention;
 
     private Boolean openToRelocate;
+
+    /** True when this profile has an active Premium priority-interest badge. */
+    private boolean priorityBadge;
 }

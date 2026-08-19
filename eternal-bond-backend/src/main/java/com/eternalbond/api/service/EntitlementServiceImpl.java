@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -60,6 +61,7 @@ public class EntitlementServiceImpl implements EntitlementService {
     public EntitlementResponse getEntitlements(String userId) {
         boolean premium      = hasActivePremium(userId);
         String  tier         = getCurrentTier(userId);
+        boolean yearly       = "premium_yearly".equals(tier);
         UserDailyUsage usage = getOrCreateTodayUsage(userId);
 
         int dailyLikeLimit    = premium ? FREE_DAILY_LIKES + PREMIUM_BONUS_LIKES : FREE_DAILY_LIKES;
@@ -102,6 +104,8 @@ public class EntitlementServiceImpl implements EntitlementService {
                 .advancedFiltersEnabled(premium || hasActiveEntitlement(userId, EntitlementKey.advanced_filters))
                 .readReceiptsEnabled(premium)
                 .priorityBadgeEnabled(premium)
+                .priorityCustomerCareEnabled(yearly)
+                .lockedInPricingEnabled(yearly)
                 .profileBoostActive(boostActive)
                 .profileBoostExpiresAt(boostExpiresAt)
                 // Pending single-use counts
@@ -130,8 +134,10 @@ public class EntitlementServiceImpl implements EntitlementService {
 
         if (premiumEntitlements.isEmpty()) return "free";
 
-        String productId = premiumEntitlements.get(0).getGrantedByProduct();
-        if ("premium_yearly".equals(productId)) return "premium_yearly";
+        if (premiumEntitlements.stream()
+                .anyMatch(e -> "premium_yearly".equals(e.getGrantedByProduct()))) {
+            return "premium_yearly";
+        }
         return "premium_monthly";
     }
 
@@ -284,6 +290,49 @@ public class EntitlementServiceImpl implements EntitlementService {
             log.info("Expired {} stale entitlements.", count);
         }
         return count;
+    }
+
+    /** Reconciles the current period's Premium boost grants without duplicating them. */
+    @Scheduled(fixedRateString = "${monetization.profile-boost-grant-check-ms:3600000}")
+    public void grantRecurringProfileBoosts() {
+        LocalDate today = LocalDate.now(ZoneOffset.UTC);
+        String week = today.get(WeekFields.ISO.weekBasedYear()) + "-W" + String.format("%02d",
+            today.get(WeekFields.ISO.weekOfWeekBasedYear()));
+        String month = today.toString().substring(0, 7);
+
+        for (String userId : entitlementRepo.findAllActivePremiumUserIds(LocalDateTime.now())) {
+            List<UserEntitlement> premium = entitlementRepo.findActiveEntitlements(
+                    userId, EntitlementKey.premium_access, LocalDateTime.now());
+            boolean yearly = premium.stream()
+                    .anyMatch(e -> "premium_yearly".equals(e.getGrantedByProduct()));
+            String product = yearly ? "premium_yearly" : "premium_monthly";
+
+            grantPeriodicBoost(userId, product, "premium_weekly", week);
+            if (yearly) {
+                grantPeriodicBoost(userId, product, "premium_monthly", month + "-1");
+                grantPeriodicBoost(userId, product, "premium_monthly", month + "-2");
+            }
+        }
+    }
+
+    private void grantPeriodicBoost(String userId, String product, String grantType, String grantPeriod) {
+        if (entitlementRepo.existsByUserIdAndEntitlementKeyAndGrantTypeAndGrantPeriod(
+                userId, EntitlementKey.profile_boost, grantType, grantPeriod)) {
+            return;
+        }
+
+        entitlementRepo.save(UserEntitlement.builder()
+                .userId(userId)
+                .entitlementKey(EntitlementKey.profile_boost)
+                .grantedByProduct(product)
+                .grantedAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusHours(24))
+                .consumed(false)
+                .active(true)
+                .grantType(grantType)
+                .grantPeriod(grantPeriod)
+                .build());
+        log.info("Granted {} profile boost {} to user {}", grantType, grantPeriod, userId);
     }
 
     // ── Private Helpers ───────────────────────────────────────────────────────

@@ -47,6 +47,33 @@ public interface UserEntitlementRepository extends JpaRepository<UserEntitlement
         """)
     boolean hasPremiumAccess(@Param("userId") String userId, @Param("now") LocalDateTime now);
 
+    /** Returns active premium users from the supplied candidate set. */
+    @Query("""
+        SELECT DISTINCT e.userId FROM UserEntitlement e
+        WHERE e.userId IN :userIds
+          AND e.entitlementKey = 'premium_access'
+          AND e.active = true
+          AND e.consumed = false
+          AND (e.expiresAt IS NULL OR e.expiresAt > :now)
+        """)
+    List<String> findActivePremiumUserIds(
+            @Param("userIds") List<String> userIds,
+            @Param("now") LocalDateTime now
+    );
+
+        /** Returns every user with at least one active Premium entitlement. */
+        @Query("""
+      SELECT DISTINCT e.userId FROM UserEntitlement e
+      WHERE e.entitlementKey = 'premium_access'
+        AND e.active = true
+        AND e.consumed = false
+        AND (e.expiresAt IS NULL OR e.expiresAt > :now)
+      """)
+        List<String> findAllActivePremiumUserIds(@Param("now") LocalDateTime now);
+
+        boolean existsByUserIdAndEntitlementKeyAndGrantTypeAndGrantPeriod(
+          String userId, EntitlementKey entitlementKey, String grantType, String grantPeriod);
+
     /**
      * Fetch the first (most recently granted) unconsumed entitlement for a user and key.
      * Used for single-use entitlements.

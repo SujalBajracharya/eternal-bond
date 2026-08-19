@@ -24,6 +24,10 @@ export interface EntitlementResponse {
   readReceiptsEnabled: boolean;
   /** Premium: user appears with a priority badge in others' recommendation feeds */
   priorityBadgeEnabled: boolean;
+  /** Yearly Premium: priority customer care is available. */
+  priorityCustomerCareEnabled: boolean;
+  /** Yearly Premium: the recorded purchase price remains identifiable. */
+  lockedInPricingEnabled: boolean;
   profileBoostActive: boolean;
   profileBoostExpiresAt: number | null;
   pendingUndoSkips: number;

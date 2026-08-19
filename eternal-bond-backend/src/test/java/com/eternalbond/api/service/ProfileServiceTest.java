@@ -9,6 +9,7 @@ import com.eternalbond.api.repository.DailyMatchRepository;
 import com.eternalbond.api.repository.ProfilePreferencesRepository;
 import com.eternalbond.api.repository.ProfileRepository;
 import com.eternalbond.api.repository.SwipeRepository;
+import com.eternalbond.api.repository.UserEntitlementRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +39,7 @@ class ProfileServiceTest {
     @Mock private ProfilePreferencesRepository profilePreferencesRepository;
     @Mock private DailyMatchRepository dailyMatchRepository;
     @Mock private SwipeRepository swipeRepository;
+        @Mock private UserEntitlementRepository userEntitlementRepository;
 
     @InjectMocks
     private ProfileService profileService;
@@ -216,6 +219,34 @@ class ProfileServiceTest {
     }
 
     @Test
+    @DisplayName("getDailyMatches - active Premium candidates are ordered first")
+    void getDailyMatches_activePremiumCandidatesArePrioritized() {
+        when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
+        when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
+                .thenReturn(false);
+        when(dailyMatchRepository.findRecentlyRecommendedProfileIds(
+                eq("uid-001"), eq(LocalDate.now()), any(LocalDate.class)))
+                .thenReturn(Collections.emptyList());
+        when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
+                .thenReturn(Optional.empty());
+
+        List<Profile> candidates = List.of(
+                Profile.builder().id("free-candidate").fullName("Free").build(),
+                Profile.builder().id("premium-candidate").fullName("Premium").build());
+        when(profileRepository.findDailyMatchesForUser("uid-001", Profile.GenderType.female))
+                .thenReturn(candidates);
+        when(userEntitlementRepository.findActivePremiumUserIds(anyList(), any(LocalDateTime.class)))
+                .thenReturn(List.of("premium-candidate"));
+        when(dailyMatchRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
+
+        List<ProfileDto> results = profileService.getDailyMatches("uid-001");
+
+        assertThat(results).extracting(ProfileDto::getId)
+                .startsWith("premium-candidate");
+        assertThat(results.get(0).isPriorityBadge()).isTrue();
+    }
+
+    @Test
     @DisplayName("getDailyMatches - repeated request on the same day returns the persisted batch (no new inserts)")
     void getDailyMatches_sameDay_returnsCachedBatch() {
         // Arrange: batch already exists today
@@ -289,7 +320,8 @@ class ProfileServiceTest {
         when(profilePreferencesRepository.findByProfileIdAndIsActiveTrue("uid-001"))
                 .thenReturn(Optional.empty());
 
-        // Candidates K, L, M are fresh; A and J are recently-seen (should be excluded if fresh ones fill the batch)
+        // Candidates K, L, M are fresh; A and J are recently-seen and are used
+        // to pad the batch because fewer than five fresh candidates exist.
         List<Profile> candidates = List.of(
                 Profile.builder().id("A").build(), // recently seen
                 Profile.builder().id("K").build(), // fresh
@@ -303,10 +335,11 @@ class ProfileServiceTest {
 
         List<ProfileDto> results = profileService.getDailyMatches("uid-001");
 
-        // Only K, L, M should survive; A and J are within the 30-day window
-        assertThat(results).hasSize(3);
+        // The three fresh candidates are returned first, then the recent
+        // candidates fill the batch to the daily limit.
+        assertThat(results).hasSize(5);
         List<String> ids = results.stream().map(ProfileDto::getId).toList();
-        assertThat(ids).containsExactlyInAnyOrder("K", "L", "M");
+        assertThat(ids).containsExactlyInAnyOrder("A", "J", "K", "L", "M");
     }
 
     @Test
@@ -536,8 +569,8 @@ class ProfileServiceTest {
     @Test
     @DisplayName("getDailyMatches - recycling: profiles seen >30 days ago fill remaining batch slots")
     void getDailyMatches_recycling_fillsRemainingSlots() {
-        // Arrange: 2 fresh profiles + 4 recently-seen (within 30 days),
-        //          so recycling should pad the batch with recently-seen candidates.
+        // Arrange: 4 fresh profiles + 1 recently-seen profile, so recycling
+        // pads the batch with the recently-seen candidate.
         when(profileRepository.findById("uid-001")).thenReturn(Optional.of(testProfile));
         when(dailyMatchRepository.existsByUserIdAndMatchDate("uid-001", LocalDate.now()))
                 .thenReturn(false);
@@ -565,15 +598,12 @@ class ProfileServiceTest {
 
         List<ProfileDto> results = profileService.getDailyMatches("uid-001");
 
-        // Fresh = new-1, new-2, old-1, old-2 (4 profiles)
-        // recent-1 is within the 30-day window so it is excluded even during recycling
-        // (it stays in the "stale" set, but the batch already has 4 slots filled)
-        assertThat(results).hasSize(4);
+        // Fresh = new-1, new-2, old-1, old-2 (4 profiles); recent-1 fills
+        // the remaining slot during recycling.
+        assertThat(results).hasSize(5);
         List<String> ids = results.stream().map(ProfileDto::getId).toList();
-        // new-1, new-2 are definitely in; old-1 and old-2 pad the batch
-        assertThat(ids).containsExactlyInAnyOrder("new-1", "new-2", "old-1", "old-2");
-        // recent-1 must NOT appear in the batch
-        assertThat(ids).doesNotContain("recent-1");
+        assertThat(ids).containsExactlyInAnyOrder("new-1", "new-2", "old-1", "old-2", "recent-1");
+        assertThat(ids).contains("recent-1");
     }
 
     @Test

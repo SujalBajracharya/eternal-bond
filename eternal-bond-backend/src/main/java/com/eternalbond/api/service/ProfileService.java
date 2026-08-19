@@ -9,6 +9,7 @@ import com.eternalbond.api.repository.DailyMatchRepository;
 import com.eternalbond.api.repository.ProfilePreferencesRepository;
 import com.eternalbond.api.repository.ProfileRepository;
 import com.eternalbond.api.repository.SwipeRepository;
+import com.eternalbond.api.repository.UserEntitlementRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,22 +33,25 @@ public class ProfileService {
     private final ProfilePreferencesRepository profilePreferencesRepository;
     private final DailyMatchRepository dailyMatchRepository;
     private final SwipeRepository swipeRepository;
+    private final UserEntitlementRepository userEntitlementRepository;
 
     public ProfileService(ProfileRepository profileRepository,
             ProfilePreferencesRepository profilePreferencesRepository,
             DailyMatchRepository dailyMatchRepository,
-            SwipeRepository swipeRepository) {
+            SwipeRepository swipeRepository,
+            UserEntitlementRepository userEntitlementRepository) {
         this.profileRepository = profileRepository;
         this.profilePreferencesRepository = profilePreferencesRepository;
         this.dailyMatchRepository = dailyMatchRepository;
         this.swipeRepository = swipeRepository;
+        this.userEntitlementRepository = userEntitlementRepository;
     }
 
     @Transactional(readOnly = true)
     public ProfileDto getProfile(String id) {
         Profile profile = profileRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile not found with ID: " + id));
-        return mapToDto(profile);
+        return mapToDto(profile, false);
     }
 
     @Transactional
@@ -151,8 +155,8 @@ public class ProfileService {
         // ── Build eligibility candidate list ───────────────────────────────────
         // findDailyMatchesForUser already excludes the user's own profile AND any
         // profiles they have swiped on (permanent exclusion at the DB level).
-        List<Profile> candidates = profileRepository.findDailyMatchesForUser(
-                userId, userProfile.getLookingFor());
+        List<Profile> candidates = new ArrayList<>(profileRepository.findDailyMatchesForUser(
+            userId, userProfile.getLookingFor()));
 
         // Apply active preferences filter
         ProfilePreferences pref = profilePreferencesRepository
@@ -161,6 +165,10 @@ public class ProfileService {
         if (pref != null) {
             candidates = applyPreferencesFilter(candidates, pref);
         }
+
+        Set<String> premiumCandidateIds = activePremiumProfileIds(candidates);
+        candidates.sort(Comparator.comparing(
+            profile -> !premiumCandidateIds.contains(profile.getId())));
 
         // ── 30-day rolling-window exclusion ────────────────────────────────────
         // Profiles recommended within the last RECOMMENDATION_WINDOW_DAYS days
@@ -226,7 +234,7 @@ public class ProfileService {
         }
 
         return batch.stream()
-                .map(this::mapToDto)
+            .map(profile -> mapToDto(profile, premiumCandidateIds.contains(profile.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -247,6 +255,7 @@ public class ProfileService {
                 .collect(Collectors.toList());
 
         Set<String> swipedIds = swipeRepository.findSwipedIdsBySwiperIdAndSwipedIds(userId, ids);
+        Set<String> premiumIds = activePremiumIds(ids);
 
         Map<String, Profile> profileMap = profileRepository.findAllById(ids).stream()
                 .collect(Collectors.toMap(Profile::getId, p -> p));
@@ -255,8 +264,18 @@ public class ProfileService {
                 .filter(dm -> !swipedIds.contains(dm.getRecommendedProfileId()))
                 .map(dm -> profileMap.get(dm.getRecommendedProfileId()))
                 .filter(Objects::nonNull)
-                .map(this::mapToDto)
+                .map(profile -> mapToDto(profile, premiumIds.contains(profile.getId())))
                 .collect(Collectors.toList());
+    }
+
+    private Set<String> activePremiumProfileIds(Collection<Profile> profiles) {
+        return activePremiumIds(profiles.stream().map(Profile::getId).collect(Collectors.toList()));
+    }
+
+    private Set<String> activePremiumIds(Collection<String> profileIds) {
+        if (profileIds.isEmpty()) return Collections.emptySet();
+        return new HashSet<>(userEntitlementRepository.findActivePremiumUserIds(
+                new ArrayList<>(profileIds), LocalDateTime.now()));
     }
 
     /** Inserts one DailyMatch row per selected profile, assigning sort_order = index. */
@@ -375,6 +394,10 @@ public class ProfileService {
     }
 
     public ProfileDto mapToDto(Profile profile) {
+        return mapToDto(profile, false);
+    }
+
+    private ProfileDto mapToDto(Profile profile, boolean priorityBadge) {
         return ProfileDto.builder()
                 .id(profile.getId())
                 .fullName(profile.getFullName())
@@ -409,6 +432,7 @@ public class ProfileService {
                 .profileVisibility(profile.getProfileVisibility())
                 .marriageIntention(profile.getMarriageIntention())
                 .openToRelocate(profile.getOpenToRelocate())
+                .priorityBadge(priorityBadge)
                 .build();
     }
 }

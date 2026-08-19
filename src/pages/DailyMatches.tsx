@@ -60,6 +60,7 @@ type Match = {
   location: string;
   verified: boolean;
   mutual?: boolean;
+  priorityBadge?: boolean;
 };
 
 type Decision = "interested" | "skipped";
@@ -288,6 +289,7 @@ const DailyMatches = () => {
             interests: interestsByProfile[dto.id] || [],
             location: dto.location || "India",
             verified: dto.kycStatus === "verified",
+            priorityBadge: dto.priorityBadge === true,
           };
         });
 
@@ -650,6 +652,11 @@ const DailyMatches = () => {
                           <span className="px-3 py-1.5 rounded-full bg-background/90 backdrop-blur text-xs font-medium inline-flex items-center gap-1">
                             <ShieldCheck className="h-3.5 w-3.5 text-sage" />{" "}
                             Verified
+                          </span>
+                        )}
+                        {current.priorityBadge && (
+                          <span className="px-3 py-1.5 rounded-full bg-primary/90 text-primary-foreground text-xs font-medium inline-flex items-center gap-1">
+                            <Sparkles className="h-3.5 w-3.5" /> Priority
                           </span>
                         )}
                       </div>

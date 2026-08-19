@@ -73,6 +73,12 @@ public class EntitlementResponse {
     /** Premium: user appears with a priority interest badge in others' feeds */
     private boolean priorityBadgeEnabled;
 
+    /** Yearly Premium: route the user through priority customer care. */
+    private boolean priorityCustomerCareEnabled;
+
+    /** Yearly Premium: preserve the purchase price recorded for the subscription. */
+    private boolean lockedInPricingEnabled;
+
     /** Premium: profile is boosted in recommendations */
     private boolean profileBoostActive;
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.eternalbond.api.security.SecurityIntegrationTest" time="4.636" tests="7" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.eternalbond.api.security.SecurityIntegrationTest" time="4.644" tests="7" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\test-classes;C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\classes;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.3.0\spring-boot-starter-web-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter\3.3.0\spring-boot-starter-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot\3.3.0\spring-boot-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.3.0\spring-boot-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.3.0\spring-boot-starter-logging-3.3.0.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-classic\1.5.6\logback-classic-1.5.6.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-core\1.5.6\logback-core-1.5.6.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.23.1\log4j-to-slf4j-2.23.1.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar;C:\Users\ACER\.m2\repository\org\slf4j\jul-to-slf4j\2.0.13\jul-to-slf4j-2.0.13.jar;C:\Users\ACER\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\ACER\.m2\repository\org\yaml\snakeyaml\2.2\snakeyaml-2.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.3.0\spring-boot-starter-json-3.3.0.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.17.1\jackson-datatype-jdk8-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.17.1\jackson-datatype-jsr310-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.17.1\jackson-module-parameter-names-2.17.1.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.3.0\spring-boot-starter-tomcat-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.24\tomcat-embed-core-10.1.24.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.24\tomcat-embed-websocket-10.1.24.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-web\6.1.8\spring-web-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-beans\6.1.8\spring-beans-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webmvc\6.1.8\spring-webmvc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context\6.1.8\spring-context-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-expression\6.1.8\spring-expression-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-webflux\3.3.0\spring-boot-starter-webflux-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-reactor-netty\3.3.0\spring-boot-starter-reactor-netty-3.3.0.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-http\1.1.19\reactor-netty-http-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http\4.1.110.Final\netty-codec-http-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-common\4.1.110.Final\netty-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-buffer\4.1.110.Final\netty-buffer-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport\4.1.110.Final\netty-transport-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec\4.1.110.Final\netty-codec-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler\4.1.110.Final\netty-handler-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http2\4.1.110.Final\netty-codec-http2-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns\4.1.110.Final\netty-resolver-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver\4.1.110.Final\netty-resolver-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-dns\4.1.110.Final\netty-codec-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-native-macos\4.1.110.Final\netty-resolver-dns-native-macos-4.1.110.Final-osx-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-classes-macos\4.1.110.Final\netty-resolver-dns-classes-macos-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-epoll\4.1.110.Final\netty-transport-native-epoll-4.1.110.Final-linux-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-unix-common\4.1.110.Final\netty-transport-native-unix-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-classes-epoll\4.1.110.Final\netty-transport-classes-epoll-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-core\1.1.19\reactor-netty-core-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler-proxy\4.1.110.Final\netty-handler-proxy-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-socks\4.1.110.Final\netty-codec-socks-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webflux\6.1.8\spring-webflux-6.1.8.jar;C:\Users\ACER\.m2\repository\io\projectreactor\reactor-core\3.6.6\reactor-core-3.6.6.jar;C:\Users\ACER\.m2\repository\org\reactivestreams\reactive-streams\1.0.4\reactive-streams-1.0.4.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.3.0\spring-boot-starter-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-aop\3.3.0\spring-boot-starter-aop-3.3.0.jar;C:\Users\ACER\.m2\repository\org\aspectj\aspectjweaver\1.9.22\aspectjweaver-1.9.22.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.3.0\spring-boot-starter-jdbc-3.3.0.jar;C:\Users\ACER\.m2\repository\com\zaxxer\HikariCP\5.1.0\HikariCP-5.1.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jdbc\6.1.8\spring-jdbc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\hibernate\orm\hibernate-core\6.5.2.Final\hibernate-core-6.5.2.Final.jar;C:\Users\ACER\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\ACER\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\jboss\logging\jboss-logging\3.5.3.Final\jboss-logging-3.5.3.Final.jar;C:\Users\ACER\.m2\repository\org\hibernate\common\hibernate-commons-annotations\6.0.6.Final\hibernate-commons-annotations-6.0.6.Final.jar;C:\Users\ACER\.m2\repository\io\smallrye\jandex\3.1.2\jandex-3.1.2.jar;C:\Users\ACER\.m2\repository\com\fasterxml\classmate\1.7.0\classmate-1.7.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy\1.14.16\byte-buddy-1.14.16.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.5\jaxb-runtime-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.5\jaxb-core-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\txw2\4.0.5\txw2-4.0.5.jar;C:\Users\ACER\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\ACER\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-jpa\3.3.0\spring-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-commons\3.3.0\spring-data-commons-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-orm\6.1.8\spring-orm-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-tx\6.1.8\spring-tx-6.1.8.jar;C:\Users\ACER\.m2\repository\org\slf4j\slf4j-api\2.0.13\slf4j-api-2.0.13.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aspects\6.1.8\spring-aspects-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.3.0\spring-boot-starter-security-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aop\6.1.8\spring-aop-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-config\6.3.0\spring-security-config-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-web\6.3.0\spring-security-web-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-websocket\3.3.0\spring-boot-starter-websocket-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-messaging\6.1.8\spring-messaging-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-websocket\6.1.8\spring-websocket-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-validation\3.3.0\spring-boot-starter-validation-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.24\tomcat-embed-el-10.1.24.jar;C:\Users\ACER\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.1.Final\hibernate-validator-8.0.1.Final.jar;C:\Users\ACER\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-actuator\3.3.0\spring-boot-starter-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator-autoconfigure\3.3.0\spring-boot-actuator-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator\3.3.0\spring-boot-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-observation\1.13.0\micrometer-observation-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-commons\1.13.0\micrometer-commons-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-jakarta9\1.13.0\micrometer-jakarta9-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-core\1.13.0\micrometer-core-1.13.0.jar;C:\Users\ACER\.m2\repository\org\hdrhistogram\HdrHistogram\2.2.1\HdrHistogram-2.2.1.jar;C:\Users\ACER\.m2\repository\org\latencyutils\LatencyUtils\2.0.3\LatencyUtils-2.0.3.jar;C:\Users\ACER\.m2\repository\org\postgresql\postgresql\42.7.3\postgresql-42.7.3.jar;C:\Users\ACER\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-mail\3.3.0\spring-boot-starter-mail-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context-support\6.1.8\spring-context-support-6.1.8.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\jakarta.mail\2.0.3\jakarta.mail-2.0.3.jar;C:\Users\ACER\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\angus-activation\2.0.2\angus-activation-2.0.2.jar;C:\Users\ACER\.m2\repository\org\projectlombok\lombok\1.18.32\lombok-1.18.32.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-oauth2-client\3.3.0\spring-boot-starter-oauth2-client-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-core\6.3.0\spring-security-core-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-crypto\6.3.0\spring-security-crypto-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-client\6.3.0\spring-security-oauth2-client-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-core\6.3.0\spring-security-oauth2-core-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\oauth2-oidc-sdk\9.43.4\oauth2-oidc-sdk-9.43.4.jar;C:\Users\ACER\.m2\repository\com\github\stephenc\jcip\jcip-annotations\1.0-1\jcip-annotations-1.0-1.jar;C:\Users\ACER\.m2\repository\com\nimbusds\content-type\2.2\content-type-2.2.jar;C:\Users\ACER\.m2\repository\com\nimbusds\lang-tag\1.7\lang-tag-1.7.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-jose\6.3.0\spring-security-oauth2-jose-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\nimbus-jose-jwt\9.37.3\nimbus-jose-jwt-9.37.3.jar;C:\Users\ACER\.m2\repository\com\stripe\stripe-java\33.1.0\stripe-java-33.1.0.jar;C:\Users\ACER\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-impl\0.11.5\jjwt-impl-0.11.5.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.11.5\jjwt-jackson-0.11.5.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.17.1\jackson-databind-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.17.1\jackson-annotations-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.17.1\jackson-core-2.17.1.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.3.0\spring-boot-starter-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test\3.3.0\spring-boot-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.3.0\spring-boot-test-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\ACER\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\ACER\.m2\repository\net\minidev\json-smart\2.5.1\json-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\net\minidev\accessors-smart\2.5.1\accessors-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\org\ow2\asm\asm\9.6\asm-9.6.jar;C:\Users\ACER\.m2\repository\org\assertj\assertj-core\3.25.3\assertj-core-3.25.3.jar;C:\Users\ACER\.m2\repository\org\awaitility\awaitility\4.2.1\awaitility-4.2.1.jar;C:\Users\ACER\.m2\repository\org\hamcrest\hamcrest\2.2\hamcrest-2.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.2\junit-jupiter-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\ACER\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\ACER\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-core\5.11.0\mockito-core-5.11.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.16\byte-buddy-agent-1.14.16.jar;C:\Users\ACER\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-junit-jupiter\5.11.0\mockito-junit-jupiter-5.11.0.jar;C:\Users\ACER\.m2\repository\org\skyscreamer\jsonassert\1.5.1\jsonassert-1.5.1.jar;C:\Users\ACER\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-core\6.1.8\spring-core-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jcl\6.1.8\spring-jcl-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-test\6.1.8\spring-test-6.1.8.jar;C:\Users\ACER\.m2\repository\org\xmlunit\xmlunit-core\2.9.1\xmlunit-core-2.9.1.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-test\6.3.0\spring-security-test-6.3.0.jar;C:\Users\ACER\.m2\repository\com\h2database\h2\2.2.224\h2-2.2.224.jar;"/>
+    <property name="java.class.path" value="C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\test-classes;C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\classes;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.3.0\spring-boot-starter-web-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter\3.3.0\spring-boot-starter-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot\3.3.0\spring-boot-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.3.0\spring-boot-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.3.0\spring-boot-starter-logging-3.3.0.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-classic\1.5.6\logback-classic-1.5.6.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-core\1.5.6\logback-core-1.5.6.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.23.1\log4j-to-slf4j-2.23.1.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar;C:\Users\ACER\.m2\repository\org\slf4j\jul-to-slf4j\2.0.13\jul-to-slf4j-2.0.13.jar;C:\Users\ACER\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\ACER\.m2\repository\org\yaml\snakeyaml\2.2\snakeyaml-2.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.3.0\spring-boot-starter-json-3.3.0.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.17.1\jackson-datatype-jdk8-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.17.1\jackson-datatype-jsr310-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.17.1\jackson-module-parameter-names-2.17.1.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.3.0\spring-boot-starter-tomcat-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.24\tomcat-embed-core-10.1.24.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.24\tomcat-embed-websocket-10.1.24.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-web\6.1.8\spring-web-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-beans\6.1.8\spring-beans-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webmvc\6.1.8\spring-webmvc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context\6.1.8\spring-context-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-expression\6.1.8\spring-expression-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-webflux\3.3.0\spring-boot-starter-webflux-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-reactor-netty\3.3.0\spring-boot-starter-reactor-netty-3.3.0.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-http\1.1.19\reactor-netty-http-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http\4.1.110.Final\netty-codec-http-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-common\4.1.110.Final\netty-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-buffer\4.1.110.Final\netty-buffer-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport\4.1.110.Final\netty-transport-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec\4.1.110.Final\netty-codec-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler\4.1.110.Final\netty-handler-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http2\4.1.110.Final\netty-codec-http2-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns\4.1.110.Final\netty-resolver-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver\4.1.110.Final\netty-resolver-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-dns\4.1.110.Final\netty-codec-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-native-macos\4.1.110.Final\netty-resolver-dns-native-macos-4.1.110.Final-osx-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-classes-macos\4.1.110.Final\netty-resolver-dns-classes-macos-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-epoll\4.1.110.Final\netty-transport-native-epoll-4.1.110.Final-linux-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-unix-common\4.1.110.Final\netty-transport-native-unix-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-classes-epoll\4.1.110.Final\netty-transport-classes-epoll-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-core\1.1.19\reactor-netty-core-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler-proxy\4.1.110.Final\netty-handler-proxy-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-socks\4.1.110.Final\netty-codec-socks-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webflux\6.1.8\spring-webflux-6.1.8.jar;C:\Users\ACER\.m2\repository\io\projectreactor\reactor-core\3.6.6\reactor-core-3.6.6.jar;C:\Users\ACER\.m2\repository\org\reactivestreams\reactive-streams\1.0.4\reactive-streams-1.0.4.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.3.0\spring-boot-starter-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-aop\3.3.0\spring-boot-starter-aop-3.3.0.jar;C:\Users\ACER\.m2\repository\org\aspectj\aspectjweaver\1.9.22\aspectjweaver-1.9.22.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.3.0\spring-boot-starter-jdbc-3.3.0.jar;C:\Users\ACER\.m2\repository\com\zaxxer\HikariCP\5.1.0\HikariCP-5.1.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jdbc\6.1.8\spring-jdbc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\hibernate\orm\hibernate-core\6.5.2.Final\hibernate-core-6.5.2.Final.jar;C:\Users\ACER\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\ACER\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\jboss\logging\jboss-logging\3.5.3.Final\jboss-logging-3.5.3.Final.jar;C:\Users\ACER\.m2\repository\org\hibernate\common\hibernate-commons-annotations\6.0.6.Final\hibernate-commons-annotations-6.0.6.Final.jar;C:\Users\ACER\.m2\repository\io\smallrye\jandex\3.1.2\jandex-3.1.2.jar;C:\Users\ACER\.m2\repository\com\fasterxml\classmate\1.7.0\classmate-1.7.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy\1.14.16\byte-buddy-1.14.16.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.5\jaxb-runtime-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.5\jaxb-core-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\txw2\4.0.5\txw2-4.0.5.jar;C:\Users\ACER\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\ACER\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-jpa\3.3.0\spring-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-commons\3.3.0\spring-data-commons-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-orm\6.1.8\spring-orm-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-tx\6.1.8\spring-tx-6.1.8.jar;C:\Users\ACER\.m2\repository\org\slf4j\slf4j-api\2.0.13\slf4j-api-2.0.13.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aspects\6.1.8\spring-aspects-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.3.0\spring-boot-starter-security-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aop\6.1.8\spring-aop-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-config\6.3.0\spring-security-config-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-web\6.3.0\spring-security-web-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-websocket\3.3.0\spring-boot-starter-websocket-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-messaging\6.1.8\spring-messaging-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-websocket\6.1.8\spring-websocket-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-validation\3.3.0\spring-boot-starter-validation-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.24\tomcat-embed-el-10.1.24.jar;C:\Users\ACER\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.1.Final\hibernate-validator-8.0.1.Final.jar;C:\Users\ACER\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-actuator\3.3.0\spring-boot-starter-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator-autoconfigure\3.3.0\spring-boot-actuator-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator\3.3.0\spring-boot-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-observation\1.13.0\micrometer-observation-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-commons\1.13.0\micrometer-commons-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-jakarta9\1.13.0\micrometer-jakarta9-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-core\1.13.0\micrometer-core-1.13.0.jar;C:\Users\ACER\.m2\repository\org\hdrhistogram\HdrHistogram\2.2.1\HdrHistogram-2.2.1.jar;C:\Users\ACER\.m2\repository\org\latencyutils\LatencyUtils\2.0.3\LatencyUtils-2.0.3.jar;C:\Users\ACER\.m2\repository\org\postgresql\postgresql\42.7.3\postgresql-42.7.3.jar;C:\Users\ACER\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-mail\3.3.0\spring-boot-starter-mail-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context-support\6.1.8\spring-context-support-6.1.8.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\jakarta.mail\2.0.3\jakarta.mail-2.0.3.jar;C:\Users\ACER\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\angus-activation\2.0.2\angus-activation-2.0.2.jar;C:\Users\ACER\.m2\repository\org\projectlombok\lombok\1.18.32\lombok-1.18.32.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-oauth2-client\3.3.0\spring-boot-starter-oauth2-client-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-core\6.3.0\spring-security-core-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-crypto\6.3.0\spring-security-crypto-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-client\6.3.0\spring-security-oauth2-client-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-core\6.3.0\spring-security-oauth2-core-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\oauth2-oidc-sdk\9.43.4\oauth2-oidc-sdk-9.43.4.jar;C:\Users\ACER\.m2\repository\com\github\stephenc\jcip\jcip-annotations\1.0-1\jcip-annotations-1.0-1.jar;C:\Users\ACER\.m2\repository\com\nimbusds\content-type\2.2\content-type-2.2.jar;C:\Users\ACER\.m2\repository\com\nimbusds\lang-tag\1.7\lang-tag-1.7.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-jose\6.3.0\spring-security-oauth2-jose-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\nimbus-jose-jwt\9.37.3\nimbus-jose-jwt-9.37.3.jar;C:\Users\ACER\.m2\repository\com\stripe\stripe-java\33.1.0\stripe-java-33.1.0.jar;C:\Users\ACER\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-impl\0.11.5\jjwt-impl-0.11.5.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.11.5\jjwt-jackson-0.11.5.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.17.1\jackson-databind-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.17.1\jackson-annotations-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.17.1\jackson-core-2.17.1.jar;C:\Users\ACER\.m2\repository\com\github\librepdf\openpdf\1.3.36\openpdf-1.3.36.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.3.0\spring-boot-starter-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test\3.3.0\spring-boot-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.3.0\spring-boot-test-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\ACER\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\ACER\.m2\repository\net\minidev\json-smart\2.5.1\json-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\net\minidev\accessors-smart\2.5.1\accessors-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\org\ow2\asm\asm\9.6\asm-9.6.jar;C:\Users\ACER\.m2\repository\org\assertj\assertj-core\3.25.3\assertj-core-3.25.3.jar;C:\Users\ACER\.m2\repository\org\awaitility\awaitility\4.2.1\awaitility-4.2.1.jar;C:\Users\ACER\.m2\repository\org\hamcrest\hamcrest\2.2\hamcrest-2.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.2\junit-jupiter-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\ACER\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\ACER\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-core\5.11.0\mockito-core-5.11.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.16\byte-buddy-agent-1.14.16.jar;C:\Users\ACER\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-junit-jupiter\5.11.0\mockito-junit-jupiter-5.11.0.jar;C:\Users\ACER\.m2\repository\org\skyscreamer\jsonassert\1.5.1\jsonassert-1.5.1.jar;C:\Users\ACER\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-core\6.1.8\spring-core-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jcl\6.1.8\spring-jcl-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-test\6.1.8\spring-test-6.1.8.jar;C:\Users\ACER\.m2\repository\org\xmlunit\xmlunit-core\2.9.1\xmlunit-core-2.9.1.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-test\6.3.0\spring-security-test-6.3.0.jar;C:\Users\ACER\.m2\repository\com\h2database\h2\2.2.224\h2-2.2.224.jar;"/>
     <property name="java.vm.vendor" value="Eclipse Adoptium"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -16,9 +16,9 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\ACER\AppData\Local\Temp\surefire866523417961448286\surefirebooter-20260802222703093_3.jar C:\Users\ACER\AppData\Local\Temp\surefire866523417961448286 2026-08-02T22-27-02_891-jvmRun1 surefire-20260802222703093_1tmp surefire_0-20260802222703093_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\ACER\AppData\Local\Temp\surefire3955302123978947982\surefirebooter-20260819112725004_3.jar C:\Users\ACER\AppData\Local\Temp\surefire3955302123978947982 2026-08-19T11-27-24_757-jvmRun1 surefire-20260819112725004_1tmp surefire_0-20260819112725004_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\test-classes;C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\classes;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.3.0\spring-boot-starter-web-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter\3.3.0\spring-boot-starter-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot\3.3.0\spring-boot-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.3.0\spring-boot-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.3.0\spring-boot-starter-logging-3.3.0.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-classic\1.5.6\logback-classic-1.5.6.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-core\1.5.6\logback-core-1.5.6.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.23.1\log4j-to-slf4j-2.23.1.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar;C:\Users\ACER\.m2\repository\org\slf4j\jul-to-slf4j\2.0.13\jul-to-slf4j-2.0.13.jar;C:\Users\ACER\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\ACER\.m2\repository\org\yaml\snakeyaml\2.2\snakeyaml-2.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.3.0\spring-boot-starter-json-3.3.0.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.17.1\jackson-datatype-jdk8-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.17.1\jackson-datatype-jsr310-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.17.1\jackson-module-parameter-names-2.17.1.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.3.0\spring-boot-starter-tomcat-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.24\tomcat-embed-core-10.1.24.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.24\tomcat-embed-websocket-10.1.24.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-web\6.1.8\spring-web-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-beans\6.1.8\spring-beans-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webmvc\6.1.8\spring-webmvc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context\6.1.8\spring-context-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-expression\6.1.8\spring-expression-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-webflux\3.3.0\spring-boot-starter-webflux-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-reactor-netty\3.3.0\spring-boot-starter-reactor-netty-3.3.0.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-http\1.1.19\reactor-netty-http-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http\4.1.110.Final\netty-codec-http-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-common\4.1.110.Final\netty-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-buffer\4.1.110.Final\netty-buffer-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport\4.1.110.Final\netty-transport-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec\4.1.110.Final\netty-codec-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler\4.1.110.Final\netty-handler-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http2\4.1.110.Final\netty-codec-http2-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns\4.1.110.Final\netty-resolver-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver\4.1.110.Final\netty-resolver-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-dns\4.1.110.Final\netty-codec-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-native-macos\4.1.110.Final\netty-resolver-dns-native-macos-4.1.110.Final-osx-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-classes-macos\4.1.110.Final\netty-resolver-dns-classes-macos-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-epoll\4.1.110.Final\netty-transport-native-epoll-4.1.110.Final-linux-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-unix-common\4.1.110.Final\netty-transport-native-unix-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-classes-epoll\4.1.110.Final\netty-transport-classes-epoll-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-core\1.1.19\reactor-netty-core-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler-proxy\4.1.110.Final\netty-handler-proxy-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-socks\4.1.110.Final\netty-codec-socks-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webflux\6.1.8\spring-webflux-6.1.8.jar;C:\Users\ACER\.m2\repository\io\projectreactor\reactor-core\3.6.6\reactor-core-3.6.6.jar;C:\Users\ACER\.m2\repository\org\reactivestreams\reactive-streams\1.0.4\reactive-streams-1.0.4.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.3.0\spring-boot-starter-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-aop\3.3.0\spring-boot-starter-aop-3.3.0.jar;C:\Users\ACER\.m2\repository\org\aspectj\aspectjweaver\1.9.22\aspectjweaver-1.9.22.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.3.0\spring-boot-starter-jdbc-3.3.0.jar;C:\Users\ACER\.m2\repository\com\zaxxer\HikariCP\5.1.0\HikariCP-5.1.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jdbc\6.1.8\spring-jdbc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\hibernate\orm\hibernate-core\6.5.2.Final\hibernate-core-6.5.2.Final.jar;C:\Users\ACER\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\ACER\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\jboss\logging\jboss-logging\3.5.3.Final\jboss-logging-3.5.3.Final.jar;C:\Users\ACER\.m2\repository\org\hibernate\common\hibernate-commons-annotations\6.0.6.Final\hibernate-commons-annotations-6.0.6.Final.jar;C:\Users\ACER\.m2\repository\io\smallrye\jandex\3.1.2\jandex-3.1.2.jar;C:\Users\ACER\.m2\repository\com\fasterxml\classmate\1.7.0\classmate-1.7.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy\1.14.16\byte-buddy-1.14.16.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.5\jaxb-runtime-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.5\jaxb-core-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\txw2\4.0.5\txw2-4.0.5.jar;C:\Users\ACER\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\ACER\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-jpa\3.3.0\spring-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-commons\3.3.0\spring-data-commons-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-orm\6.1.8\spring-orm-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-tx\6.1.8\spring-tx-6.1.8.jar;C:\Users\ACER\.m2\repository\org\slf4j\slf4j-api\2.0.13\slf4j-api-2.0.13.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aspects\6.1.8\spring-aspects-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.3.0\spring-boot-starter-security-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aop\6.1.8\spring-aop-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-config\6.3.0\spring-security-config-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-web\6.3.0\spring-security-web-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-websocket\3.3.0\spring-boot-starter-websocket-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-messaging\6.1.8\spring-messaging-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-websocket\6.1.8\spring-websocket-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-validation\3.3.0\spring-boot-starter-validation-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.24\tomcat-embed-el-10.1.24.jar;C:\Users\ACER\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.1.Final\hibernate-validator-8.0.1.Final.jar;C:\Users\ACER\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-actuator\3.3.0\spring-boot-starter-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator-autoconfigure\3.3.0\spring-boot-actuator-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator\3.3.0\spring-boot-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-observation\1.13.0\micrometer-observation-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-commons\1.13.0\micrometer-commons-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-jakarta9\1.13.0\micrometer-jakarta9-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-core\1.13.0\micrometer-core-1.13.0.jar;C:\Users\ACER\.m2\repository\org\hdrhistogram\HdrHistogram\2.2.1\HdrHistogram-2.2.1.jar;C:\Users\ACER\.m2\repository\org\latencyutils\LatencyUtils\2.0.3\LatencyUtils-2.0.3.jar;C:\Users\ACER\.m2\repository\org\postgresql\postgresql\42.7.3\postgresql-42.7.3.jar;C:\Users\ACER\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-mail\3.3.0\spring-boot-starter-mail-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context-support\6.1.8\spring-context-support-6.1.8.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\jakarta.mail\2.0.3\jakarta.mail-2.0.3.jar;C:\Users\ACER\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\angus-activation\2.0.2\angus-activation-2.0.2.jar;C:\Users\ACER\.m2\repository\org\projectlombok\lombok\1.18.32\lombok-1.18.32.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-oauth2-client\3.3.0\spring-boot-starter-oauth2-client-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-core\6.3.0\spring-security-core-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-crypto\6.3.0\spring-security-crypto-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-client\6.3.0\spring-security-oauth2-client-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-core\6.3.0\spring-security-oauth2-core-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\oauth2-oidc-sdk\9.43.4\oauth2-oidc-sdk-9.43.4.jar;C:\Users\ACER\.m2\repository\com\github\stephenc\jcip\jcip-annotations\1.0-1\jcip-annotations-1.0-1.jar;C:\Users\ACER\.m2\repository\com\nimbusds\content-type\2.2\content-type-2.2.jar;C:\Users\ACER\.m2\repository\com\nimbusds\lang-tag\1.7\lang-tag-1.7.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-jose\6.3.0\spring-security-oauth2-jose-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\nimbus-jose-jwt\9.37.3\nimbus-jose-jwt-9.37.3.jar;C:\Users\ACER\.m2\repository\com\stripe\stripe-java\33.1.0\stripe-java-33.1.0.jar;C:\Users\ACER\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-impl\0.11.5\jjwt-impl-0.11.5.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.11.5\jjwt-jackson-0.11.5.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.17.1\jackson-databind-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.17.1\jackson-annotations-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.17.1\jackson-core-2.17.1.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.3.0\spring-boot-starter-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test\3.3.0\spring-boot-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.3.0\spring-boot-test-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\ACER\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\ACER\.m2\repository\net\minidev\json-smart\2.5.1\json-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\net\minidev\accessors-smart\2.5.1\accessors-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\org\ow2\asm\asm\9.6\asm-9.6.jar;C:\Users\ACER\.m2\repository\org\assertj\assertj-core\3.25.3\assertj-core-3.25.3.jar;C:\Users\ACER\.m2\repository\org\awaitility\awaitility\4.2.1\awaitility-4.2.1.jar;C:\Users\ACER\.m2\repository\org\hamcrest\hamcrest\2.2\hamcrest-2.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.2\junit-jupiter-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\ACER\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\ACER\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-core\5.11.0\mockito-core-5.11.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.16\byte-buddy-agent-1.14.16.jar;C:\Users\ACER\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-junit-jupiter\5.11.0\mockito-junit-jupiter-5.11.0.jar;C:\Users\ACER\.m2\repository\org\skyscreamer\jsonassert\1.5.1\jsonassert-1.5.1.jar;C:\Users\ACER\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-core\6.1.8\spring-core-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jcl\6.1.8\spring-jcl-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-test\6.1.8\spring-test-6.1.8.jar;C:\Users\ACER\.m2\repository\org\xmlunit\xmlunit-core\2.9.1\xmlunit-core-2.9.1.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-test\6.3.0\spring-security-test-6.3.0.jar;C:\Users\ACER\.m2\repository\com\h2database\h2\2.2.224\h2-2.2.224.jar;"/>
+    <property name="surefire.test.class.path" value="C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\test-classes;C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\classes;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.3.0\spring-boot-starter-web-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter\3.3.0\spring-boot-starter-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot\3.3.0\spring-boot-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.3.0\spring-boot-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.3.0\spring-boot-starter-logging-3.3.0.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-classic\1.5.6\logback-classic-1.5.6.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-core\1.5.6\logback-core-1.5.6.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.23.1\log4j-to-slf4j-2.23.1.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar;C:\Users\ACER\.m2\repository\org\slf4j\jul-to-slf4j\2.0.13\jul-to-slf4j-2.0.13.jar;C:\Users\ACER\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\ACER\.m2\repository\org\yaml\snakeyaml\2.2\snakeyaml-2.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.3.0\spring-boot-starter-json-3.3.0.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.17.1\jackson-datatype-jdk8-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.17.1\jackson-datatype-jsr310-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.17.1\jackson-module-parameter-names-2.17.1.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.3.0\spring-boot-starter-tomcat-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.24\tomcat-embed-core-10.1.24.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.24\tomcat-embed-websocket-10.1.24.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-web\6.1.8\spring-web-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-beans\6.1.8\spring-beans-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webmvc\6.1.8\spring-webmvc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context\6.1.8\spring-context-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-expression\6.1.8\spring-expression-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-webflux\3.3.0\spring-boot-starter-webflux-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-reactor-netty\3.3.0\spring-boot-starter-reactor-netty-3.3.0.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-http\1.1.19\reactor-netty-http-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http\4.1.110.Final\netty-codec-http-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-common\4.1.110.Final\netty-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-buffer\4.1.110.Final\netty-buffer-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport\4.1.110.Final\netty-transport-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec\4.1.110.Final\netty-codec-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler\4.1.110.Final\netty-handler-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http2\4.1.110.Final\netty-codec-http2-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns\4.1.110.Final\netty-resolver-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver\4.1.110.Final\netty-resolver-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-dns\4.1.110.Final\netty-codec-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-native-macos\4.1.110.Final\netty-resolver-dns-native-macos-4.1.110.Final-osx-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-classes-macos\4.1.110.Final\netty-resolver-dns-classes-macos-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-epoll\4.1.110.Final\netty-transport-native-epoll-4.1.110.Final-linux-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-unix-common\4.1.110.Final\netty-transport-native-unix-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-classes-epoll\4.1.110.Final\netty-transport-classes-epoll-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-core\1.1.19\reactor-netty-core-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler-proxy\4.1.110.Final\netty-handler-proxy-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-socks\4.1.110.Final\netty-codec-socks-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webflux\6.1.8\spring-webflux-6.1.8.jar;C:\Users\ACER\.m2\repository\io\projectreactor\reactor-core\3.6.6\reactor-core-3.6.6.jar;C:\Users\ACER\.m2\repository\org\reactivestreams\reactive-streams\1.0.4\reactive-streams-1.0.4.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.3.0\spring-boot-starter-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-aop\3.3.0\spring-boot-starter-aop-3.3.0.jar;C:\Users\ACER\.m2\repository\org\aspectj\aspectjweaver\1.9.22\aspectjweaver-1.9.22.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.3.0\spring-boot-starter-jdbc-3.3.0.jar;C:\Users\ACER\.m2\repository\com\zaxxer\HikariCP\5.1.0\HikariCP-5.1.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jdbc\6.1.8\spring-jdbc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\hibernate\orm\hibernate-core\6.5.2.Final\hibernate-core-6.5.2.Final.jar;C:\Users\ACER\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\ACER\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\jboss\logging\jboss-logging\3.5.3.Final\jboss-logging-3.5.3.Final.jar;C:\Users\ACER\.m2\repository\org\hibernate\common\hibernate-commons-annotations\6.0.6.Final\hibernate-commons-annotations-6.0.6.Final.jar;C:\Users\ACER\.m2\repository\io\smallrye\jandex\3.1.2\jandex-3.1.2.jar;C:\Users\ACER\.m2\repository\com\fasterxml\classmate\1.7.0\classmate-1.7.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy\1.14.16\byte-buddy-1.14.16.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.5\jaxb-runtime-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.5\jaxb-core-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\txw2\4.0.5\txw2-4.0.5.jar;C:\Users\ACER\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\ACER\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-jpa\3.3.0\spring-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-commons\3.3.0\spring-data-commons-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-orm\6.1.8\spring-orm-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-tx\6.1.8\spring-tx-6.1.8.jar;C:\Users\ACER\.m2\repository\org\slf4j\slf4j-api\2.0.13\slf4j-api-2.0.13.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aspects\6.1.8\spring-aspects-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.3.0\spring-boot-starter-security-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aop\6.1.8\spring-aop-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-config\6.3.0\spring-security-config-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-web\6.3.0\spring-security-web-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-websocket\3.3.0\spring-boot-starter-websocket-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-messaging\6.1.8\spring-messaging-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-websocket\6.1.8\spring-websocket-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-validation\3.3.0\spring-boot-starter-validation-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.24\tomcat-embed-el-10.1.24.jar;C:\Users\ACER\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.1.Final\hibernate-validator-8.0.1.Final.jar;C:\Users\ACER\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-actuator\3.3.0\spring-boot-starter-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator-autoconfigure\3.3.0\spring-boot-actuator-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator\3.3.0\spring-boot-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-observation\1.13.0\micrometer-observation-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-commons\1.13.0\micrometer-commons-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-jakarta9\1.13.0\micrometer-jakarta9-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-core\1.13.0\micrometer-core-1.13.0.jar;C:\Users\ACER\.m2\repository\org\hdrhistogram\HdrHistogram\2.2.1\HdrHistogram-2.2.1.jar;C:\Users\ACER\.m2\repository\org\latencyutils\LatencyUtils\2.0.3\LatencyUtils-2.0.3.jar;C:\Users\ACER\.m2\repository\org\postgresql\postgresql\42.7.3\postgresql-42.7.3.jar;C:\Users\ACER\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-mail\3.3.0\spring-boot-starter-mail-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context-support\6.1.8\spring-context-support-6.1.8.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\jakarta.mail\2.0.3\jakarta.mail-2.0.3.jar;C:\Users\ACER\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\angus-activation\2.0.2\angus-activation-2.0.2.jar;C:\Users\ACER\.m2\repository\org\projectlombok\lombok\1.18.32\lombok-1.18.32.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-oauth2-client\3.3.0\spring-boot-starter-oauth2-client-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-core\6.3.0\spring-security-core-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-crypto\6.3.0\spring-security-crypto-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-client\6.3.0\spring-security-oauth2-client-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-core\6.3.0\spring-security-oauth2-core-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\oauth2-oidc-sdk\9.43.4\oauth2-oidc-sdk-9.43.4.jar;C:\Users\ACER\.m2\repository\com\github\stephenc\jcip\jcip-annotations\1.0-1\jcip-annotations-1.0-1.jar;C:\Users\ACER\.m2\repository\com\nimbusds\content-type\2.2\content-type-2.2.jar;C:\Users\ACER\.m2\repository\com\nimbusds\lang-tag\1.7\lang-tag-1.7.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-jose\6.3.0\spring-security-oauth2-jose-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\nimbus-jose-jwt\9.37.3\nimbus-jose-jwt-9.37.3.jar;C:\Users\ACER\.m2\repository\com\stripe\stripe-java\33.1.0\stripe-java-33.1.0.jar;C:\Users\ACER\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-impl\0.11.5\jjwt-impl-0.11.5.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.11.5\jjwt-jackson-0.11.5.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.17.1\jackson-databind-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.17.1\jackson-annotations-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.17.1\jackson-core-2.17.1.jar;C:\Users\ACER\.m2\repository\com\github\librepdf\openpdf\1.3.36\openpdf-1.3.36.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.3.0\spring-boot-starter-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test\3.3.0\spring-boot-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.3.0\spring-boot-test-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\ACER\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\ACER\.m2\repository\net\minidev\json-smart\2.5.1\json-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\net\minidev\accessors-smart\2.5.1\accessors-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\org\ow2\asm\asm\9.6\asm-9.6.jar;C:\Users\ACER\.m2\repository\org\assertj\assertj-core\3.25.3\assertj-core-3.25.3.jar;C:\Users\ACER\.m2\repository\org\awaitility\awaitility\4.2.1\awaitility-4.2.1.jar;C:\Users\ACER\.m2\repository\org\hamcrest\hamcrest\2.2\hamcrest-2.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.2\junit-jupiter-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\ACER\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\ACER\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-core\5.11.0\mockito-core-5.11.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.16\byte-buddy-agent-1.14.16.jar;C:\Users\ACER\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-junit-jupiter\5.11.0\mockito-junit-jupiter-5.11.0.jar;C:\Users\ACER\.m2\repository\org\skyscreamer\jsonassert\1.5.1\jsonassert-1.5.1.jar;C:\Users\ACER\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-core\6.1.8\spring-core-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jcl\6.1.8\spring-jcl-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-test\6.1.8\spring-test-6.1.8.jar;C:\Users\ACER\.m2\repository\org\xmlunit\xmlunit-core\2.9.1\xmlunit-core-2.9.1.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-test\6.3.0\spring-security-test-6.3.0.jar;C:\Users\ACER\.m2\repository\com\h2database\h2\2.2.224\h2-2.2.224.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\ACER"/>
     <property name="user.language" value="en"/>
@@ -33,7 +33,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="FILE_LOG_CHARSET" value="windows-1252"/>
     <property name="java.awt.headless" value="true"/>
-    <property name="surefire.real.class.path" value="C:\Users\ACER\AppData\Local\Temp\surefire866523417961448286\surefirebooter-20260802222703093_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\ACER\AppData\Local\Temp\surefire3955302123978947982\surefirebooter-20260819112725004_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.17+10"/>
@@ -53,11 +53,11 @@
     <property name="user.dir" value="C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="153208"/>
+    <property name="PID" value="18344"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="CONSOLE_LOG_CHARSET" value="windows-1252"/>
     <property name="native.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot\bin;C:\Python314\Scripts\;C:\Python314\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Void\bin;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Users\ACER\AppData\Local\Microsoft\WindowsApps;C:\Users\ACER\AppData\Roaming\npm;C:\Program Files\JetBrains\IntelliJ IDEA 2025.3.1.1\bin;C:\Users\ACER\AppData\Local\Programs\Microsoft VS Code\bin;D:\Antigravity\bin;C:\Users\ACER\AppData\Local\Programs\Antigravity IDE\bin;."/>
+    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;c:\Users\ACER\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;c:\Users\ACER\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\copilotCli;C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot\bin;C:\Python314\Scripts\;C:\Python314\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Program Files\Void\bin;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Users\ACER\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Users\ACER\AppData\Local\Microsoft\WindowsApps;C:\Users\ACER\AppData\Roaming\npm;C:\Program Files\JetBrains\IntelliJ IDEA 2025.3.1.1\bin;C:\Users\ACER\AppData\Local\Programs\Microsoft VS Code\bin;D:\Antigravity\bin;C:\Users\ACER\AppData\Local\Programs\Antigravity IDE\bin;C:\Users\ACER\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Users\ACER\AppData\Local\Android\Sdk\platform-tools;C:\Users\ACER\AppData\Local\Android\Sdk\emulator;C:\Users\ACER\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\ACER\.m2\wrapper\dists\apache-maven-3.9.11-bin\6mqf5t809d9geo83kj4ttckcbc\apache-maven-3.9.11\bin;c:\Users\ACER\.vscode\extensions\vscjava.vscode-java-debug-0.59.0\bundled\scripts\noConfigScripts;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
     <property name="java.vendor" value="Eclipse Adoptium"/>
     <property name="java.vm.version" value="17.0.17+10"/>
@@ -66,9 +66,9 @@
     <property name="java.class.version" value="61.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[EternalBondAPI] "/>
   </properties>
-  <testcase name="publicEndpoint_signup_doesNotReturn401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.085">
-    <system-out><![CDATA[2026-08-02 22:27:13.823 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.eternalbond.api.security.SecurityIntegrationTest]: SecurityIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-08-02 22:27:13.841 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.eternalbond.api.EternalBondApplication for test class com.eternalbond.api.security.SecurityIntegrationTest
+  <testcase name="publicEndpoint_signup_doesNotReturn401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.057">
+    <system-out><![CDATA[2026-08-19 11:27:36.615 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.eternalbond.api.security.SecurityIntegrationTest]: SecurityIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-08-19 11:27:36.637 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.eternalbond.api.EternalBondApplication for test class com.eternalbond.api.security.SecurityIntegrationTest
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
@@ -78,147 +78,151 @@
 
  :: Spring Boot ::                (v3.3.0)
 
-2026-08-02 22:27:13.876 [main] INFO  c.e.a.s.SecurityIntegrationTest - Starting SecurityIntegrationTest using Java 17.0.17 with PID 153208 (started by ACER in C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend)
-2026-08-02 22:27:13.876 [main] DEBUG c.e.a.s.SecurityIntegrationTest - Running with Spring Boot v3.3.0, Spring v6.1.8
-2026-08-02 22:27:13.876 [main] INFO  c.e.a.s.SecurityIntegrationTest - No active profile set, falling back to 1 default profile: "default"
-2026-08-02 22:27:14.697 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-08-02 22:27:14.729 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 32 ms. Found 14 JPA repository interfaces.
-2026-08-02 22:27:15.355 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-08-02 22:27:15.362 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2026-08-02 22:27:15.381 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-08-02 22:27:15.383 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-08-02 22:27:15.408 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn13: url=jdbc:h2:mem:testdb user=POSTGRES.TWSZKJUDVXMMEQBKZFIY
-2026-08-02 22:27:15.412 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-08-02 22:27:15.419 [main] WARN  org.hibernate.dialect.Dialect - HHH000511: The 2.2.224 version for [org.hibernate.dialect.PostgreSQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 12.0.0. Check the community dialects project for available legacy versions.
-2026-08-02 22:27:15.420 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-08-02 22:27:15.717 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-08-02 22:27:15.717 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:36.673 [main] INFO  c.e.a.s.SecurityIntegrationTest - Starting SecurityIntegrationTest using Java 17.0.17 with PID 18344 (started by ACER in C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend)
+2026-08-19 11:27:36.674 [main] DEBUG c.e.a.s.SecurityIntegrationTest - Running with Spring Boot v3.3.0, Spring v6.1.8
+2026-08-19 11:27:36.674 [main] INFO  c.e.a.s.SecurityIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2026-08-19 11:27:37.631 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-08-19 11:27:37.678 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 46 ms. Found 15 JPA repository interfaces.
+2026-08-19 11:27:38.150 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-08-19 11:27:38.153 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-08-19 11:27:38.166 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-08-19 11:27:38.169 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-08-19 11:27:38.190 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn13: url=jdbc:h2:mem:testdb user=POSTGRES.TWSZKJUDVXMMEQBKZFIY
+2026-08-19 11:27:38.194 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-08-19 11:27:38.200 [main] WARN  org.hibernate.dialect.Dialect - HHH000511: The 2.2.224 version for [org.hibernate.dialect.PostgreSQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 12.0.0. Check the community dialects project for available legacy versions.
+2026-08-19 11:27:38.201 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-08-19 11:27:38.477 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-08-19 11:27:38.477 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.family_members 
        drop constraint if exists FKmbo1rlwk5ub8qo7k1l8q02vj3
 Hibernate: 
     alter table if exists public.family_members 
        drop constraint if exists FKmbo1rlwk5ub8qo7k1l8q02vj3
-2026-08-02 22:27:15.720 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.480 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.matches 
        drop constraint if exists FK90qwl66l27nhp2y6gv8maqmo6
 Hibernate: 
     alter table if exists public.matches 
        drop constraint if exists FK90qwl66l27nhp2y6gv8maqmo6
-2026-08-02 22:27:15.720 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.480 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.matches 
        drop constraint if exists FKd4g5coxlna9cnsj0a1icui4es
 Hibernate: 
     alter table if exists public.matches 
        drop constraint if exists FKd4g5coxlna9cnsj0a1icui4es
-2026-08-02 22:27:15.720 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.messages 
        drop constraint if exists FKigt65pktmh2tch9d05wyr8dc3
 Hibernate: 
     alter table if exists public.messages 
        drop constraint if exists FKigt65pktmh2tch9d05wyr8dc3
-2026-08-02 22:27:15.720 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.messages 
        drop constraint if exists FK79kgt6oyju1ma9ly4qmax5933
 Hibernate: 
     alter table if exists public.messages 
        drop constraint if exists FK79kgt6oyju1ma9ly4qmax5933
-2026-08-02 22:27:15.720 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.subscriptions 
        drop constraint if exists FK9dvq3oidaecg05k9t9sgd8ga9
 Hibernate: 
     alter table if exists public.subscriptions 
        drop constraint if exists FK9dvq3oidaecg05k9t9sgd8ga9
-2026-08-02 22:27:15.720 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.swipes 
        drop constraint if exists FKlf7k7id5saw812qad81bv8xer
 Hibernate: 
     alter table if exists public.swipes 
        drop constraint if exists FKlf7k7id5saw812qad81bv8xer
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.swipes 
        drop constraint if exists FKsjwf4myub8k0tmyyl5phupoar
 Hibernate: 
     alter table if exists public.swipes 
        drop constraint if exists FKsjwf4myub8k0tmyyl5phupoar
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists public.daily_matches cascade
+Hibernate: 
+    drop table if exists public.daily_matches cascade
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.family_members cascade
 Hibernate: 
     drop table if exists public.family_members cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.matches cascade
 Hibernate: 
     drop table if exists public.matches cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.messages cascade
 Hibernate: 
     drop table if exists public.messages cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.payments cascade
 Hibernate: 
     drop table if exists public.payments cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.481 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.product_catalog cascade
 Hibernate: 
     drop table if exists public.product_catalog cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.profile_kundali cascade
 Hibernate: 
     drop table if exists public.profile_kundali cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.profile_preferences cascade
 Hibernate: 
     drop table if exists public.profile_preferences cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.profiles cascade
 Hibernate: 
     drop table if exists public.profiles cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.subscriptions cascade
 Hibernate: 
     drop table if exists public.subscriptions cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.swipes cascade
 Hibernate: 
     drop table if exists public.swipes cascade
-2026-08-02 22:27:15.721 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.user_daily_usage cascade
 Hibernate: 
     drop table if exists public.user_daily_usage cascade
-2026-08-02 22:27:15.723 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.user_entitlements cascade
 Hibernate: 
     drop table if exists public.user_entitlements cascade
-2026-08-02 22:27:15.723 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.users cascade
 Hibernate: 
     drop table if exists public.users cascade
-2026-08-02 22:27:15.723 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     alter table if exists profile_photos_mapping 
        drop constraint if exists FKalr0iln36sqae7duqfy7k48hw
 Hibernate: 
     alter table if exists profile_photos_mapping 
        drop constraint if exists FKalr0iln36sqae7duqfy7k48hw
-2026-08-02 22:27:15.723 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists profile_photos_mapping cascade
 Hibernate: 
     drop table if exists profile_photos_mapping cascade
-2026-08-02 22:27:15.724 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.483 [main] DEBUG org.hibernate.SQL - 
     drop table if exists user_notifications cascade
 Hibernate: 
     drop table if exists user_notifications cascade
-2026-08-02 22:27:15.724 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.484 [main] DEBUG org.hibernate.SQL - 
     drop type if exists EntitlementKey cascade
 Hibernate: 
     drop type if exists EntitlementKey cascade
-2026-08-02 22:27:15.724 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.484 [main] DEBUG org.hibernate.SQL - 
     create type EntitlementKey as enum ('advanced_filters','extend_chat','extra_like','kundali_access','premium_access','profile_boost','reveal_like','undo_skip')
 Hibernate: 
     create type EntitlementKey as enum ('advanced_filters','extend_chat','extra_like','kundali_access','premium_access','profile_boost','reveal_like','undo_skip')
-2026-08-02 22:27:15.724 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.484 [main] DEBUG org.hibernate.SQL - 
     create cast (varchar as EntitlementKey) with inout as implicit
 Hibernate: 
     create cast (varchar as EntitlementKey) with inout as implicit
-2026-08-02 22:27:15.724 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 11:27:38.484 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     create cast (varchar as EntitlementKey) with inout as implicit" via JDBC [Syntax error in SQL statement "\000d\000a    create [*]cast (varchar as EntitlementKey) with inout as implicit"; expected "OR REPLACE, FORCE, VIEW, MATERIALIZED, ALIAS, SEQUENCE, USER, TRIGGER, ROLE, SCHEMA, CONSTANT, DOMAIN, TYPE, AGGREGATE, LINKED, MEMORY, CACHED, LOCAL TEMPORARY, GLOBAL TEMPORARY, TEMPORARY, TABLE, SYNONYM, UNIQUE, SPATIAL, INDEX";]
 org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
     create cast (varchar as EntitlementKey) with inout as implicit" via JDBC [Syntax error in SQL statement "\000d\000a    create [*]cast (varchar as EntitlementKey) with inout as implicit"; expected "OR REPLACE, FORCE, VIEW, MATERIALIZED, ALIAS, SEQUENCE, USER, TRIGGER, ROLE, SCHEMA, CONSTANT, DOMAIN, TYPE, AGGREGATE, LINKED, MEMORY, CACHED, LOCAL TEMPORARY, GLOBAL TEMPORARY, TEMPORARY, TABLE, SYNONYM, UNIQUE, SPATIAL, INDEX";]
@@ -361,11 +365,11 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statemen
 	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-02 22:27:15.726 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.484 [main] DEBUG org.hibernate.SQL - 
     create cast (EntitlementKey as varchar) with inout as implicit
 Hibernate: 
     create cast (EntitlementKey as varchar) with inout as implicit
-2026-08-02 22:27:15.727 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 11:27:38.485 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     create cast (EntitlementKey as varchar) with inout as implicit" via JDBC [Syntax error in SQL statement "\000d\000a    create [*]cast (EntitlementKey as varchar) with inout as implicit"; expected "OR REPLACE, FORCE, VIEW, MATERIALIZED, ALIAS, SEQUENCE, USER, TRIGGER, ROLE, SCHEMA, CONSTANT, DOMAIN, TYPE, AGGREGATE, LINKED, MEMORY, CACHED, LOCAL TEMPORARY, GLOBAL TEMPORARY, TEMPORARY, TABLE, SYNONYM, UNIQUE, SPATIAL, INDEX";]
 org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
     create cast (EntitlementKey as varchar) with inout as implicit" via JDBC [Syntax error in SQL statement "\000d\000a    create [*]cast (EntitlementKey as varchar) with inout as implicit"; expected "OR REPLACE, FORCE, VIEW, MATERIALIZED, ALIAS, SEQUENCE, USER, TRIGGER, ROLE, SCHEMA, CONSTANT, DOMAIN, TYPE, AGGREGATE, LINKED, MEMORY, CACHED, LOCAL TEMPORARY, GLOBAL TEMPORARY, TEMPORARY, TABLE, SYNONYM, UNIQUE, SPATIAL, INDEX";]
@@ -508,7 +512,31 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statemen
 	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-02 22:27:15.728 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.487 [main] DEBUG org.hibernate.SQL - 
+    create table public.daily_matches (
+        match_date date not null,
+        sort_order integer not null,
+        created_at timestamp(6) not null,
+        id varchar(255) not null,
+        recommended_profile_id varchar(255) not null,
+        user_id varchar(255) not null,
+        primary key (id),
+        constraint uq_daily_match_user_profile_date unique (user_id, recommended_profile_id, match_date),
+        constraint uq_daily_match_user_date_order unique (user_id, match_date, sort_order)
+    )
+Hibernate: 
+    create table public.daily_matches (
+        match_date date not null,
+        sort_order integer not null,
+        created_at timestamp(6) not null,
+        id varchar(255) not null,
+        recommended_profile_id varchar(255) not null,
+        user_id varchar(255) not null,
+        primary key (id),
+        constraint uq_daily_match_user_profile_date unique (user_id, recommended_profile_id, match_date),
+        constraint uq_daily_match_user_date_order unique (user_id, match_date, sort_order)
+    )
+2026-08-19 11:27:38.488 [main] DEBUG org.hibernate.SQL - 
     create table public.family_members (
         can_veto_matches boolean not null,
         is_approved boolean not null,
@@ -534,7 +562,7 @@ Hibernate:
         primary key (id),
         unique (user_id, guardian_email)
     )
-2026-08-02 22:27:15.731 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.490 [main] DEBUG org.hibernate.SQL - 
     create table public.matches (
         is_game_night boolean,
         created_at timestamp(6) not null,
@@ -558,7 +586,7 @@ Hibernate:
         primary key (id),
         unique (user_one_id, user_two_id)
     )
-2026-08-02 22:27:15.733 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.492 [main] DEBUG org.hibernate.SQL - 
     create table public.messages (
         is_read boolean not null,
         created_at timestamp(6) not null,
@@ -578,7 +606,7 @@ Hibernate:
         sender_id varchar(255) not null,
         primary key (id)
     )
-2026-08-02 22:27:15.735 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.492 [main] DEBUG org.hibernate.SQL - 
     create table public.payments (
         currency varchar(3) not null,
         amount bigint not null,
@@ -616,7 +644,7 @@ Hibernate:
         metadata jsonb,
         primary key (id)
     )
-2026-08-02 22:27:15.736 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.494 [main] DEBUG org.hibernate.SQL - 
     create table public.product_catalog (
         amount_npr integer not null,
         daily_limit integer,
@@ -640,7 +668,7 @@ Hibernate:
         description TEXT,
         primary key (id)
     )
-2026-08-02 22:27:15.739 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.495 [main] DEBUG org.hibernate.SQL - 
     create table public.profile_kundali (
         birth_date date not null,
         birth_latitude float(53) not null,
@@ -668,7 +696,7 @@ Hibernate:
         profile_id varchar not null unique,
         primary key (id)
     )
-2026-08-02 22:27:15.739 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.497 [main] DEBUG org.hibernate.SQL - 
     create table public.profile_preferences (
         is_active boolean,
         pref_age_max integer,
@@ -712,7 +740,7 @@ Hibernate:
         profile_id varchar not null,
         primary key (id)
     )
-2026-08-02 22:27:15.743 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.499 [main] DEBUG org.hibernate.SQL - 
     create table public.profiles (
         date_of_birth date,
         height_cm integer,
@@ -788,7 +816,7 @@ Hibernate:
         social_links jsonb,
         primary key (id)
     )
-2026-08-02 22:27:15.746 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.501 [main] DEBUG org.hibernate.SQL - 
     create table public.subscriptions (
         created_at timestamp(6) not null,
         expires_at timestamp(6) not null,
@@ -810,7 +838,7 @@ Hibernate:
         user_id varchar(255) not null,
         primary key (id)
     )
-2026-08-02 22:27:15.747 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.503 [main] DEBUG org.hibernate.SQL - 
     create table public.swipes (
         created_at timestamp(6) not null,
         action varchar(255) not null check (action in ('like','dislike')),
@@ -830,7 +858,7 @@ Hibernate:
         primary key (id),
         unique (swiper_id, swiped_id)
     )
-2026-08-02 22:27:15.749 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.505 [main] DEBUG org.hibernate.SQL - 
     create table public.user_daily_usage (
         extra_like_purchased boolean not null,
         likes_used integer not null,
@@ -854,7 +882,7 @@ Hibernate:
         primary key (id),
         unique (user_id, usage_date)
     )
-2026-08-02 22:27:15.751 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.505 [main] DEBUG org.hibernate.SQL - 
     create table public.user_entitlements (
         is_active boolean not null,
         is_consumed boolean not null,
@@ -862,6 +890,8 @@ Hibernate:
         expires_at timestamp(6),
         granted_at timestamp(6) not null,
         id uuid not null,
+        grant_period varchar(32),
+        grant_type varchar(32),
         granted_by_product varchar(64),
         payment_id varchar(64),
         user_id varchar(64) not null,
@@ -877,6 +907,8 @@ Hibernate:
         expires_at timestamp(6),
         granted_at timestamp(6) not null,
         id uuid not null,
+        grant_period varchar(32),
+        grant_type varchar(32),
         granted_by_product varchar(64),
         payment_id varchar(64),
         user_id varchar(64) not null,
@@ -884,7 +916,7 @@ Hibernate:
         metadata jsonb,
         primary key (id)
     )
-2026-08-02 22:27:15.751 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 11:27:38.505 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     create table public.user_entitlements (
         is_active boolean not null,
         is_consumed boolean not null,
@@ -892,6 +924,8 @@ Hibernate:
         expires_at timestamp(6),
         granted_at timestamp(6) not null,
         id uuid not null,
+        grant_period varchar(32),
+        grant_type varchar(32),
         granted_by_product varchar(64),
         payment_id varchar(64),
         user_id varchar(64) not null,
@@ -907,6 +941,8 @@ org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
         expires_at timestamp(6),
         granted_at timestamp(6) not null,
         id uuid not null,
+        grant_period varchar(32),
+        grant_type varchar(32),
         granted_by_product varchar(64),
         payment_id varchar(64),
         user_id varchar(64) not null,
@@ -1041,6 +1077,8 @@ Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Unknown data type: "ENTITLE
         expires_at timestamp(6),
         granted_at timestamp(6) not null,
         id uuid not null,
+        grant_period varchar(32),
+        grant_type varchar(32),
         granted_by_product varchar(64),
         payment_id varchar(64),
         user_id varchar(64) not null,
@@ -1072,14 +1110,16 @@ Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Unknown data type: "ENTITLE
 	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 117 common frames omitted
-2026-08-02 22:27:15.754 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.508 [main] DEBUG org.hibernate.SQL - 
     create table public.users (
         verified boolean not null,
         created_at timestamp(6) not null,
+        reset_token_expiry timestamp(6),
         email varchar(255) not null unique,
         full_name varchar(255) not null,
         id varchar(255) not null,
         password varchar(255) not null,
+        reset_token varchar(255),
         verification_token varchar(255),
         primary key (id)
     )
@@ -1087,14 +1127,16 @@ Hibernate:
     create table public.users (
         verified boolean not null,
         created_at timestamp(6) not null,
+        reset_token_expiry timestamp(6),
         email varchar(255) not null unique,
         full_name varchar(255) not null,
         id varchar(255) not null,
         password varchar(255) not null,
+        reset_token varchar(255),
         verification_token varchar(255),
         primary key (id)
     )
-2026-08-02 22:27:15.756 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.510 [main] DEBUG org.hibernate.SQL - 
     create table profile_photos_mapping (
         photo_url varchar(255),
         profile_id varchar(255) not null
@@ -1104,13 +1146,14 @@ Hibernate:
         photo_url varchar(255),
         profile_id varchar(255) not null
     )
-2026-08-02 22:27:15.757 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.511 [main] DEBUG org.hibernate.SQL - 
     create table user_notifications (
         is_read boolean not null,
         created_at timestamp(6) not null,
         id uuid not null,
         body text not null,
         title varchar(255) not null,
+        transaction_id varchar(255),
         type varchar(255) not null,
         user_id varchar(255) not null,
         metadata jsonb,
@@ -1123,12 +1166,13 @@ Hibernate:
         id uuid not null,
         body text not null,
         title varchar(255) not null,
+        transaction_id varchar(255),
         type varchar(255) not null,
         user_id varchar(255) not null,
         metadata jsonb,
         primary key (id)
     )
-2026-08-02 22:27:15.758 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.514 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.family_members 
        add constraint FKmbo1rlwk5ub8qo7k1l8q02vj3 
        foreign key (user_id) 
@@ -1138,7 +1182,7 @@ Hibernate:
        add constraint FKmbo1rlwk5ub8qo7k1l8q02vj3 
        foreign key (user_id) 
        references public.profiles
-2026-08-02 22:27:15.762 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.517 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.matches 
        add constraint FK90qwl66l27nhp2y6gv8maqmo6 
        foreign key (user_one_id) 
@@ -1148,7 +1192,7 @@ Hibernate:
        add constraint FK90qwl66l27nhp2y6gv8maqmo6 
        foreign key (user_one_id) 
        references public.profiles
-2026-08-02 22:27:15.764 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.518 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.matches 
        add constraint FKd4g5coxlna9cnsj0a1icui4es 
        foreign key (user_two_id) 
@@ -1158,7 +1202,7 @@ Hibernate:
        add constraint FKd4g5coxlna9cnsj0a1icui4es 
        foreign key (user_two_id) 
        references public.profiles
-2026-08-02 22:27:15.766 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.520 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.messages 
        add constraint FKigt65pktmh2tch9d05wyr8dc3 
        foreign key (match_id) 
@@ -1168,7 +1212,7 @@ Hibernate:
        add constraint FKigt65pktmh2tch9d05wyr8dc3 
        foreign key (match_id) 
        references public.matches
-2026-08-02 22:27:15.768 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.523 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.messages 
        add constraint FK79kgt6oyju1ma9ly4qmax5933 
        foreign key (sender_id) 
@@ -1178,7 +1222,7 @@ Hibernate:
        add constraint FK79kgt6oyju1ma9ly4qmax5933 
        foreign key (sender_id) 
        references public.profiles
-2026-08-02 22:27:15.769 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.525 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.subscriptions 
        add constraint FK9dvq3oidaecg05k9t9sgd8ga9 
        foreign key (user_id) 
@@ -1188,7 +1232,7 @@ Hibernate:
        add constraint FK9dvq3oidaecg05k9t9sgd8ga9 
        foreign key (user_id) 
        references public.profiles
-2026-08-02 22:27:15.771 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.527 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.swipes 
        add constraint FKlf7k7id5saw812qad81bv8xer 
        foreign key (swiped_id) 
@@ -1198,7 +1242,7 @@ Hibernate:
        add constraint FKlf7k7id5saw812qad81bv8xer 
        foreign key (swiped_id) 
        references public.profiles
-2026-08-02 22:27:15.772 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.529 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.swipes 
        add constraint FKsjwf4myub8k0tmyyl5phupoar 
        foreign key (swiper_id) 
@@ -1208,7 +1252,7 @@ Hibernate:
        add constraint FKsjwf4myub8k0tmyyl5phupoar 
        foreign key (swiper_id) 
        references public.profiles
-2026-08-02 22:27:15.773 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 11:27:38.531 [main] DEBUG org.hibernate.SQL - 
     alter table if exists profile_photos_mapping 
        add constraint FKalr0iln36sqae7duqfy7k48hw 
        foreign key (profile_id) 
@@ -1218,21 +1262,298 @@ Hibernate:
        add constraint FKalr0iln36sqae7duqfy7k48hw 
        foreign key (profile_id) 
        references public.profiles
-2026-08-02 22:27:15.774 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-08-02 22:27:15.949 [main] INFO  c.e.a.a.client.AstrologyApiClient - AstrologyApiClient initialised — base URL: https://json.freeastrologyapi.com
-2026-08-02 22:27:16.746 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-08-02 22:27:16.824 [main] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
-2026-08-02 22:27:17.274 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoints beneath base path '/actuator'
-2026-08-02 22:27:17.437 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5b36d706, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@29607281, org.springframework.security.web.context.SecurityContextHolderFilter@2d62a5cc, org.springframework.security.web.header.HeaderWriterFilter@49eb9a66, org.springframework.web.filter.CorsFilter@238122dd, org.springframework.security.web.authentication.logout.LogoutFilter@79f9d0bc, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@1680a499, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@4fadc462, com.eternalbond.api.filter.JwtAuthFilter@3204f493, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@3cbaeedd, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@7201a392, org.springframework.security.web.session.ConcurrentSessionFilter@52d2a313, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@514df93c, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2f2de6e0, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1f62c433, org.springframework.security.web.session.SessionManagementFilter@3128baef, org.springframework.security.web.access.ExceptionTranslationFilter@66728302, org.springframework.security.web.access.intercept.AuthorizationFilter@4a5637d7]
-2026-08-02 22:27:18.046 [main] DEBUG c.e.api.filter.JwtAuthFilter - Filter 'jwtAuthFilter' configured for use
-2026-08-02 22:27:18.046 [main] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
-2026-08-02 22:27:18.046 [main] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
-2026-08-02 22:27:18.048 [main] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 2 ms
-2026-08-02 22:27:18.142 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
-2026-08-02 22:27:18.142 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@72c3d4b8]]
-2026-08-02 22:27:18.142 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
-2026-08-02 22:27:18.156 [main] INFO  c.e.a.s.SecurityIntegrationTest - Started SecurityIntegrationTest in 4.309 seconds (process running for 14.92)
-2026-08-02 22:27:18.310 [main] ERROR c.e.a.e.GlobalExceptionHandler - Unhandled internal server exception
+2026-08-19 11:27:38.533 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-08-19 11:27:38.680 [main] INFO  c.e.a.a.client.AstrologyApiClient - AstrologyApiClient initialised — base URL: https://json.freeastrologyapi.com
+2026-08-19 11:27:39.462 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-08-19 11:27:39.540 [main] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-08-19 11:27:39.996 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoints beneath base path '/actuator'
+2026-08-19 11:27:40.132 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6e7e9cab, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@52b4e063, org.springframework.security.web.context.SecurityContextHolderFilter@1b7e5425, org.springframework.security.web.header.HeaderWriterFilter@12848ea8, org.springframework.web.filter.CorsFilter@6a556ae0, org.springframework.security.web.authentication.logout.LogoutFilter@6d6d3814, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@26669943, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@3bb4ade3, com.eternalbond.api.filter.JwtAuthFilter@5c58fb97, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@1c536321, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@6707b9c3, org.springframework.security.web.session.ConcurrentSessionFilter@3dbb0cb4, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@24c0ff64, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1b78ce4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7d06fa4c, org.springframework.security.web.session.SessionManagementFilter@2c9d03ee, org.springframework.security.web.access.ExceptionTranslationFilter@704c925a, org.springframework.security.web.access.intercept.AuthorizationFilter@3de86254]
+2026-08-19 11:27:40.877 [main] DEBUG c.e.api.filter.JwtAuthFilter - Filter 'jwtAuthFilter' configured for use
+2026-08-19 11:27:40.878 [main] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-08-19 11:27:40.878 [main] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-08-19 11:27:40.880 [main] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 2 ms
+2026-08-19 11:27:40.981 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
+2026-08-19 11:27:40.982 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@18aca796]]
+2026-08-19 11:27:40.983 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
+2026-08-19 11:27:40.995 [main] INFO  c.e.a.s.SecurityIntegrationTest - Started SecurityIntegrationTest in 4.35 seconds (process running for 15.85)
+2026-08-19 11:27:41.043 [MessageBroker-1] DEBUG org.hibernate.SQL - 
+    select
+        distinct ue1_0.user_id 
+    from
+        public.user_entitlements ue1_0 
+    where
+        ue1_0.entitlement_key='premium_access' 
+        and ue1_0.is_active=true 
+        and ue1_0.is_consumed=false 
+        and (
+            ue1_0.expires_at is null 
+            or ue1_0.expires_at>?
+        )
+Hibernate: 
+    select
+        distinct ue1_0.user_id 
+    from
+        public.user_entitlements ue1_0 
+    where
+        ue1_0.entitlement_key='premium_access' 
+        and ue1_0.is_active=true 
+        and ue1_0.is_consumed=false 
+        and (
+            ue1_0.expires_at is null 
+            or ue1_0.expires_at>?
+        )
+2026-08-19 11:27:41.045 [MessageBroker-1] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 42102, SQLState: 42S02
+2026-08-19 11:27:41.045 [MessageBroker-1] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table "USER_ENTITLEMENTS" not found; SQL statement:
+select distinct ue1_0.user_id from public.user_entitlements ue1_0 where ue1_0.entitlement_key='premium_access' and ue1_0.is_active=true and ue1_0.is_consumed=false and (ue1_0.expires_at is null or ue1_0.expires_at>?) [42102-224]
+2026-08-19 11:27:41.048 [MessageBroker-2] DEBUG org.hibernate.SQL - 
+    update
+        public.user_entitlements ue1_0 
+    set
+        is_active=false 
+    where
+        ue1_0.is_active=true 
+        and ue1_0.expires_at is not null 
+        and ue1_0.expires_at<?
+Hibernate: 
+    update
+        public.user_entitlements ue1_0 
+    set
+        is_active=false 
+    where
+        ue1_0.is_active=true 
+        and ue1_0.expires_at is not null 
+        and ue1_0.expires_at<?
+2026-08-19 11:27:41.050 [MessageBroker-2] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 42102, SQLState: 42S02
+2026-08-19 11:27:41.050 [MessageBroker-2] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table "USER_ENTITLEMENTS" not found; SQL statement:
+update public.user_entitlements ue1_0 set is_active=false where ue1_0.is_active=true and ue1_0.expires_at is not null and ue1_0.expires_at<? [42102-224]
+2026-08-19 11:27:41.060 [MessageBroker-2] ERROR o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.dao.InvalidDataAccessResourceUsageException: could not prepare statement [Table "USER_ENTITLEMENTS" not found; SQL statement:
+update public.user_entitlements ue1_0 set is_active=false where ue1_0.is_active=true and ue1_0.expires_at is not null and ue1_0.expires_at<? [42102-224]] [update public.user_entitlements ue1_0 set is_active=false where ue1_0.is_active=true and ue1_0.expires_at is not null and ue1_0.expires_at<?]; SQL [update public.user_entitlements ue1_0 set is_active=false where ue1_0.is_active=true and ue1_0.expires_at is not null and ue1_0.expires_at<?]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:277)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:152)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy218.expireStaleEntitlements(Unknown Source)
+	at com.eternalbond.api.service.EntitlementServiceImpl.expireStaleEntitlements(EntitlementServiceImpl.java:288)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:354)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:768)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:392)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:768)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:720)
+	at com.eternalbond.api.service.EntitlementServiceImpl$$SpringCGLIB$$0.expireStaleEntitlements(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:499)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: org.hibernate.exception.SQLGrammarException: could not prepare statement [Table "USER_ENTITLEMENTS" not found; SQL statement:
+update public.user_entitlements ue1_0 set is_active=false where ue1_0.is_active=true and ue1_0.expires_at is not null and ue1_0.expires_at<? [42102-224]] [update public.user_entitlements ue1_0 set is_active=false where ue1_0.is_active=true and ue1_0.expires_at is not null and ue1_0.expires_at<?]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:66)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:194)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl.prepareStatement(StatementPreparerImpl.java:79)
+	at org.hibernate.query.sqm.internal.SimpleUpdateQueryPlan.lambda$executeUpdate$0(SimpleUpdateQueryPlan.java:95)
+	at org.hibernate.sql.exec.internal.StandardJdbcMutationExecutor.execute(StandardJdbcMutationExecutor.java:67)
+	at org.hibernate.query.sqm.internal.SimpleUpdateQueryPlan.executeUpdate(SimpleUpdateQueryPlan.java:89)
+	at org.hibernate.query.sqm.internal.QuerySqmImpl.doExecuteUpdate(QuerySqmImpl.java:666)
+	at org.hibernate.query.sqm.internal.QuerySqmImpl.executeUpdate(QuerySqmImpl.java:639)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$ModifyingExecution.doExecute(JpaQueryExecution.java:266)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:92)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:152)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:140)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:164)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:143)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:392)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
+	... 38 common frames omitted
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ENTITLEMENTS" not found; SQL statement:
+update public.user_entitlements ue1_0 set is_active=false where ue1_0.is_active=true and ue1_0.expires_at is not null and ue1_0.expires_at<? [42102-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:8064)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:8045)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:8029)
+	at org.h2.command.Parser.readTableOrView(Parser.java:8024)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7990)
+	at org.h2.command.Parser.readSimpleTableFilter(Parser.java:1094)
+	at org.h2.command.Parser.parseUpdate(Parser.java:1018)
+	at org.h2.command.Parser.parsePrepared(Parser.java:765)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:93)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:316)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:328)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$1.doPrepare(StatementPreparerImpl.java:94)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:183)
+	... 60 common frames omitted
+2026-08-19 11:27:41.060 [MessageBroker-1] ERROR o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.dao.InvalidDataAccessResourceUsageException: could not prepare statement [Table "USER_ENTITLEMENTS" not found; SQL statement:
+select distinct ue1_0.user_id from public.user_entitlements ue1_0 where ue1_0.entitlement_key='premium_access' and ue1_0.is_active=true and ue1_0.is_consumed=false and (ue1_0.expires_at is null or ue1_0.expires_at>?) [42102-224]] [select distinct ue1_0.user_id from public.user_entitlements ue1_0 where ue1_0.entitlement_key='premium_access' and ue1_0.is_active=true and ue1_0.is_consumed=false and (ue1_0.expires_at is null or ue1_0.expires_at>?)]; SQL [select distinct ue1_0.user_id from public.user_entitlements ue1_0 where ue1_0.entitlement_key='premium_access' and ue1_0.is_active=true and ue1_0.is_consumed=false and (ue1_0.expires_at is null or ue1_0.expires_at>?)]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:277)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:152)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy218.findAllActivePremiumUserIds(Unknown Source)
+	at com.eternalbond.api.service.EntitlementServiceImpl.grantRecurringProfileBoosts(EntitlementServiceImpl.java:303)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:354)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:768)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:392)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:768)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:720)
+	at com.eternalbond.api.service.EntitlementServiceImpl$$SpringCGLIB$$0.grantRecurringProfileBoosts(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:499)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: org.hibernate.exception.SQLGrammarException: could not prepare statement [Table "USER_ENTITLEMENTS" not found; SQL statement:
+select distinct ue1_0.user_id from public.user_entitlements ue1_0 where ue1_0.entitlement_key='premium_access' and ue1_0.is_active=true and ue1_0.is_consumed=false and (ue1_0.expires_at is null or ue1_0.expires_at>?) [42102-224]] [select distinct ue1_0.user_id from public.user_entitlements ue1_0 where ue1_0.entitlement_key='premium_access' and ue1_0.is_active=true and ue1_0.is_consumed=false and (ue1_0.expires_at is null or ue1_0.expires_at>?)]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:66)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:194)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl.prepareQueryStatement(StatementPreparerImpl.java:155)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.lambda$list$0(JdbcSelectExecutor.java:85)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:231)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:167)
+	at org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl.advanceNext(JdbcValuesResultSetImpl.java:265)
+	at org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl.processNext(JdbcValuesResultSetImpl.java:145)
+	at org.hibernate.sql.results.jdbc.internal.AbstractJdbcValues.next(AbstractJdbcValues.java:19)
+	at org.hibernate.sql.results.internal.RowProcessingStateStandardImpl.next(RowProcessingStateStandardImpl.java:67)
+	at org.hibernate.sql.results.spi.ListResultsConsumer.consume(ListResultsConsumer.java:204)
+	at org.hibernate.sql.results.spi.ListResultsConsumer.consume(ListResultsConsumer.java:33)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:211)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:83)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:76)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:65)
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.lambda$new$2(ConcreteSqmSelectQueryPlan.java:139)
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.withCacheableSqmInterpretation(ConcreteSqmSelectQueryPlan.java:382)
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.performList(ConcreteSqmSelectQueryPlan.java:302)
+	at org.hibernate.query.sqm.internal.QuerySqmImpl.doList(QuerySqmImpl.java:526)
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:423)
+	at org.hibernate.query.Query.getResultList(Query.java:120)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$CollectionExecution.doExecute(JpaQueryExecution.java:129)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:92)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:152)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:140)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:164)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:143)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:392)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
+	... 38 common frames omitted
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ENTITLEMENTS" not found; SQL statement:
+select distinct ue1_0.user_id from public.user_entitlements ue1_0 where ue1_0.entitlement_key='premium_access' and ue1_0.is_active=true and ue1_0.is_consumed=false and (ue1_0.expires_at is null or ue1_0.expires_at>?) [42102-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:8064)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:8045)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:8029)
+	at org.h2.command.Parser.readTableOrView(Parser.java:8024)
+	at org.h2.command.Parser.readTablePrimary(Parser.java:1788)
+	at org.h2.command.Parser.readTableReference(Parser.java:2268)
+	at org.h2.command.Parser.parseSelectFromPart(Parser.java:2718)
+	at org.h2.command.Parser.parseSelect(Parser.java:2824)
+	at org.h2.command.Parser.parseQueryPrimary(Parser.java:2708)
+	at org.h2.command.Parser.parseQueryTerm(Parser.java:2564)
+	at org.h2.command.Parser.parseQueryExpressionBody(Parser.java:2543)
+	at org.h2.command.Parser.parseQueryExpressionBodyAndEndOfQuery(Parser.java:2536)
+	at org.h2.command.Parser.parseQueryExpression(Parser.java:2529)
+	at org.h2.command.Parser.parseQuery(Parser.java:2498)
+	at org.h2.command.Parser.parsePrepared(Parser.java:627)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:93)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:316)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:328)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$5.doPrepare(StatementPreparerImpl.java:153)
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:183)
+	... 74 common frames omitted
+2026-08-19 11:27:41.130 [main] ERROR c.e.a.e.GlobalExceptionHandler - Unhandled internal server exception
 org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' is not supported
 	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.handleNoMatch(RequestMappingInfoHandlerMapping.java:267)
 	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.lookupHandlerMethod(AbstractHandlerMethodMapping.java:441)
@@ -1451,30 +1772,30 @@ org.springframework.web.HttpRequestMethodNotSupportedException: Request method '
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
 ]]></system-out>
   </testcase>
-  <testcase name="protectedEndpoint_basicAuthScheme_returns401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.02">
-    <system-out><![CDATA[2026-08-02 22:27:18.347 [main] WARN  c.e.a.e.GlobalExceptionHandler - User lookup failure: User not found with ID: anonymousUser
+  <testcase name="protectedEndpoint_basicAuthScheme_returns401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.021">
+    <system-out><![CDATA[2026-08-19 11:27:41.157 [main] WARN  c.e.a.e.GlobalExceptionHandler - User lookup failure: User not found with ID: anonymousUser
 ]]></system-out>
   </testcase>
-  <testcase name="protectedEndpoint_noJwt_returns401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.011">
-    <system-out><![CDATA[2026-08-02 22:27:18.363 [main] WARN  c.e.a.e.GlobalExceptionHandler - User lookup failure: User not found with ID: anonymousUser
+  <testcase name="protectedEndpoint_noJwt_returns401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.013">
+    <system-out><![CDATA[2026-08-19 11:27:41.174 [main] WARN  c.e.a.e.GlobalExceptionHandler - User lookup failure: User not found with ID: anonymousUser
 ]]></system-out>
   </testcase>
-  <testcase name="protectedEndpoint_expiredJwt_returns401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.02">
-    <system-out><![CDATA[2026-08-02 22:27:18.379 [main] WARN  c.e.api.filter.JwtAuthFilter - JWT authentication error: JWT expired at 2026-08-02T16:42:17Z. Current time: 2026-08-02T16:42:18Z, a difference of 1379 milliseconds.  Allowed clock skew: 0 milliseconds.
-2026-08-02 22:27:18.382 [main] WARN  c.e.a.e.GlobalExceptionHandler - User lookup failure: User not found with ID: anonymousUser
+  <testcase name="protectedEndpoint_expiredJwt_returns401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.016">
+    <system-out><![CDATA[2026-08-19 11:27:41.190 [main] WARN  c.e.api.filter.JwtAuthFilter - JWT authentication error: JWT expired at 2026-08-19T05:42:40Z. Current time: 2026-08-19T05:42:41Z, a difference of 1189 milliseconds.  Allowed clock skew: 0 milliseconds.
+2026-08-19 11:27:41.192 [main] WARN  c.e.a.e.GlobalExceptionHandler - User lookup failure: User not found with ID: anonymousUser
 ]]></system-out>
   </testcase>
-  <testcase name="protectedEndpoint_validJwt_returns200" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.026">
-    <system-out><![CDATA[2026-08-02 22:27:18.404 [main] DEBUG c.e.api.filter.JwtAuthFilter - Authenticated user ID uid-001 via JWT token
+  <testcase name="protectedEndpoint_validJwt_returns200" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.03">
+    <system-out><![CDATA[2026-08-19 11:27:41.215 [main] DEBUG c.e.api.filter.JwtAuthFilter - Authenticated user ID uid-001 via JWT token
 ]]></system-out>
   </testcase>
-  <testcase name="protectedEndpoint_invalidJwt_returns401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.013">
-    <system-out><![CDATA[2026-08-02 22:27:18.423 [main] WARN  c.e.api.filter.JwtAuthFilter - JWT authentication error: JWT strings must contain exactly 2 period characters. Found: 3
-2026-08-02 22:27:18.427 [main] WARN  c.e.a.e.GlobalExceptionHandler - User lookup failure: User not found with ID: anonymousUser
+  <testcase name="protectedEndpoint_invalidJwt_returns401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.012">
+    <system-out><![CDATA[2026-08-19 11:27:41.234 [main] WARN  c.e.api.filter.JwtAuthFilter - JWT authentication error: JWT strings must contain exactly 2 period characters. Found: 3
+2026-08-19 11:27:41.238 [main] WARN  c.e.a.e.GlobalExceptionHandler - User lookup failure: User not found with ID: anonymousUser
 ]]></system-out>
   </testcase>
-  <testcase name="publicEndpoint_signin_doesNotReturn401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.024">
-    <system-out><![CDATA[2026-08-02 22:27:18.438 [main] ERROR c.e.a.e.GlobalExceptionHandler - Unhandled internal server exception
+  <testcase name="publicEndpoint_signin_doesNotReturn401" classname="com.eternalbond.api.security.SecurityIntegrationTest" time="0.013">
+    <system-out><![CDATA[2026-08-19 11:27:41.248 [main] ERROR c.e.a.e.GlobalExceptionHandler - Unhandled internal server exception
 org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' is not supported
 	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.handleNoMatch(RequestMappingInfoHandlerMapping.java:267)
 	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.lookupHandlerMethod(AbstractHandlerMethodMapping.java:441)
