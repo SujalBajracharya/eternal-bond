@@ -30,9 +30,33 @@ export interface EntitlementResponse {
   lockedInPricingEnabled: boolean;
   profileBoostActive: boolean;
   profileBoostExpiresAt: number | null;
+  profileBoostsAvailable: number;
+  profileBoostGrants: ProfileBoostGrant[];
   pendingUndoSkips: number;
   pendingChatExtensions: number;
   pendingRevealLikes: number;
+  pendingPriorityInterests: number;
+}
+
+export interface ProfileBoostGrant {
+  grantType: string | null;
+  grantPeriod: string | null;
+  available: boolean;
+  active: boolean;
+  expiresAt: string | null;
+}
+
+export interface PriorityInterestActivationResponse {
+  targetProfileId: string;
+  expiresAt: string;
+  priorityInterestsRemaining: number;
+}
+
+export class MonetizationApiError extends Error {
+  constructor(public readonly status: number, message: string) {
+    super(message);
+    this.name = "MonetizationApiError";
+  }
 }
 
 export interface CheckoutRequest {
@@ -57,6 +81,22 @@ function getHeaders(token?: string): HeadersInit {
   return headers;
 }
 
+async function throwApiError(response: Response, fallback: string): Promise<never> {
+  const errData = await response.json().catch(() => ({}));
+  const message =
+    errData.message ||
+    (response.status === 401
+      ? "Your session has expired. Please sign in again."
+      : response.status === 404
+        ? "That Premium benefit is not available right now."
+        : response.status === 409
+          ? "This Premium action is already active or was already used."
+          : response.status === 429
+            ? "Today's allowance has already been used."
+            : fallback);
+  throw new MonetizationApiError(response.status, message);
+}
+
 /**
  * Fetches the user's current entitlements snapshot.
  */
@@ -68,7 +108,7 @@ export async function getEntitlements(token: string): Promise<EntitlementRespons
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch user entitlements");
+    return throwApiError(response, "Failed to fetch user entitlements");
   }
   return response.json();
 }
@@ -85,9 +125,44 @@ export async function consumeEntitlement(token: string, entitlementKey: string):
   });
 
   if (!response.ok) {
-    const errData = await response.json().catch(() => ({}));
-    throw new Error(errData.message || `Failed to consume entitlement ${entitlementKey}`);
+    return throwApiError(response, `Failed to consume entitlement ${entitlementKey}`);
   }
+  return response.json();
+}
+
+/** Activates one available recurring Profile Boost. */
+export async function activateProfileBoost(token: string): Promise<EntitlementResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/monetize/profile-boost/activate`, {
+    method: "POST",
+    headers: getHeaders(token),
+    body: JSON.stringify({}),
+  });
+  if (!response.ok) return throwApiError(response, "Unable to activate Profile Boost.");
+  return response.json();
+}
+
+/** Consumes one daily free Reveal Like for free users. */
+export async function consumeFreeReveal(token: string): Promise<EntitlementResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/monetize/reveal-like/consume`, {
+    method: "POST",
+    headers: getHeaders(token),
+    body: JSON.stringify({}),
+  });
+  if (!response.ok) return throwApiError(response, "Unable to use today's free reveal.");
+  return response.json();
+}
+
+/** Activates one purchased Priority Interest for a target profile. */
+export async function activatePriorityInterest(
+  token: string,
+  targetProfileId: string,
+): Promise<PriorityInterestActivationResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/monetize/priority-interest/activate`, {
+    method: "POST",
+    headers: getHeaders(token),
+    body: JSON.stringify({ targetProfileId }),
+  });
+  if (!response.ok) return throwApiError(response, "Unable to send Priority Interest.");
   return response.json();
 }
 
@@ -106,11 +181,7 @@ export async function createCheckoutSession(token: string, request: CheckoutRequ
       throw new Error("Your session has expired. Please sign in and try again.");
     }
     throw new Error(errData.message || "Unable to start secure checkout. Please try again.");
-  }
-  const data = await response.json();
-  const checkoutUrl = data.checkoutUrl ?? data.url;
-  if (typeof checkoutUrl !== "string" || !checkoutUrl) {
-    throw new Error("Checkout is temporarily unavailable. Please try again.");
+      return throwApiError(response, "Unable to start secure checkout. Please try again.");
   }
   return { checkoutUrl };
 }
@@ -127,8 +198,7 @@ export async function extendChat(token: string, matchId: string): Promise<{ succ
   });
 
   if (!response.ok) {
-    const errData = await response.json().catch(() => ({}));
-    throw new Error(errData.message || "Failed to extend chat");
+    return throwApiError(response, "Failed to extend chat");
   }
   return response.json();
 }

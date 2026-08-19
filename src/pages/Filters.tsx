@@ -238,7 +238,12 @@ export default function Filters() {
   const [familyAssisted, setFamilyAssisted] = useState(false);
 
   const { user, session } = useAuth();
-  const { entitlements } = useEntitlements();
+  const {
+    entitlements,
+    loading: entitlementLoading,
+    error: entitlementError,
+    refresh: refreshEntitlements,
+  } = useEntitlements();
   // Derive premium state from the backend entitlement snapshot.
   // Do NOT duplicate subscription logic here — the backend is authoritative.
   const isPremium = entitlements?.advancedFiltersEnabled === true;
@@ -947,6 +952,16 @@ export default function Filters() {
       </header>
 
       <main className="relative mx-auto max-w-6xl px-5 pt-8 z-10">
+        {entitlementLoading && !entitlements && (
+          <div className="mb-5 rounded-2xl border border-border/60 bg-card/80 px-4 py-3 text-sm text-muted-foreground">
+            Checking Premium filter access…
+          </div>
+        )}
+        {entitlementError && (
+          <div className="mb-5 rounded-2xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+            Premium access could not be refreshed. <button className="underline" onClick={refreshEntitlements}>Try again</button>
+          </div>
+        )}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Section: Summary & Presets */}
           <div className="lg:col-span-3 space-y-6">

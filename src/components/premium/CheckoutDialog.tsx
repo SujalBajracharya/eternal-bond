@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { fmt } from "@/lib/pricing";
 import { useAuth } from "@/hooks/use-auth";
-import { createCheckoutSession } from "@/api/monetization";
+import { createCheckoutSession, MonetizationApiError } from "@/api/monetization";
 
 type Stage = "review" | "processing" | "failed";
 
@@ -20,6 +20,7 @@ interface Props {
   cadence?: string;
   appliesWhen: string;
   receiptLabel: string;
+  context?: Record<string, string>;
 }
 
 export function CheckoutDialog({
@@ -31,6 +32,7 @@ export function CheckoutDialog({
   price,
   cadence,
   appliesWhen,
+  context,
 }: Props) {
   const [stage, setStage] = React.useState<Stage>("review");
   const { session } = useAuth();
@@ -61,11 +63,17 @@ export function CheckoutDialog({
     try {
       const checkout = await createCheckoutSession(session.access_token, {
         productId: mapProductId(productId),
+        context,
       });
       window.location.assign(checkout.checkoutUrl);
     } catch (err: any) {
       console.error("Unable to create checkout session:", err);
-      toast.error(err.message || "Unable to start secure checkout. Please try again.");
+      const catalogUnavailable = productId === "priority-interest"
+        && err instanceof MonetizationApiError
+        && err.status === 502;
+      toast.error(catalogUnavailable
+        ? "Priority Interest checkout is not configured yet."
+        : err.message || "Unable to start secure checkout. Please try again.");
       setStage("failed");
     }
   };

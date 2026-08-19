@@ -55,6 +55,8 @@ import { toast } from "sonner";
 import ReportMessageDialog from "@/components/ReportMessageDialog";
 import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
 import { useEntitlements } from "@/hooks/useEntitlements";
+import { extendChat } from "@/api/monetization";
+import { CheckoutDialog } from "@/components/premium/CheckoutDialog";
 
 type MsgStatus = "sent" | "delivered" | "read";
 
@@ -82,6 +84,7 @@ type Partner = {
   photo: string;
   status: string;
   verified: boolean;
+  expiresAt: string | null;
   expiresInHours: number;
   bio: string;
   gallery: string[];
@@ -132,7 +135,7 @@ function ExpiringPill({ hours }: { hours: number }) {
       )}
     >
       <Hourglass className="h-3 w-3" />
-      Closes in {hours}h
+      {hours <= 0 ? "Expired" : `Closes in ${hours}h`}
     </span>
   );
 }
@@ -296,7 +299,7 @@ export default function Chat() {
   const navigate = useNavigate();
   const { id: matchId } = useParams();
   const { session } = useAuth();
-  const { entitlements } = useEntitlements();
+  const { entitlements, refresh: refreshEntitlements } = useEntitlements();
   const canSeeReadReceipts = entitlements?.readReceiptsEnabled === true;
 
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -317,6 +320,8 @@ export default function Chat() {
   const [nicknameInput, setNicknameInput] = useState("");
   const [savingNickname, setSavingNickname] = useState(false);
   const [reportingMessage, setReportingMessage] = useState<Msg | null>(null);
+  const [extendingChat, setExtendingChat] = useState(false);
+  const [extendCheckoutOpen, setExtendCheckoutOpen] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const bubbleRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -390,6 +395,7 @@ export default function Chat() {
           photo: profile.avatar_url || match1, // match1 fallback
           status: `${familyTypeLabel} • ${profile.kyc_status === "verified" ? "Verified" : "Unverified"}`,
           verified: profile.kyc_status === "verified",
+          expiresAt: match.expires_at,
           expiresInHours,
           bio: profile.bio || "Looking for a lifetime connection",
           gallery: gallery.length > 0 ? gallery : [match1],
@@ -548,6 +554,49 @@ export default function Chat() {
       supabase.removeChannel(subscription);
     };
   }, [session, matchId]);
+
+  const handleExtendChat = async () => {
+    if (!session?.access_token || !matchId || extendingChat) return;
+    setExtendingChat(true);
+    try {
+      const result = await extendChat(session.access_token, matchId);
+      const nextExpiry = result.newExpiry === "permanent" ? null : result.newExpiry;
+      const nextHours = nextExpiry
+        ? Math.max(0, Math.ceil((new Date(nextExpiry).getTime() - Date.now()) / (1000 * 60 * 60)))
+        : 0;
+      setPartner((currentPartner) => currentPartner
+        ? { ...currentPartner, expiresAt: nextExpiry, expiresInHours: nextHours }
+        : currentPartner);
+      await refreshEntitlements();
+      toast.success("Chat extended", {
+        description: nextExpiry ? "You have 24 more hours to continue the conversation." : "This chat no longer expires.",
+      });
+    } catch (err: any) {
+      toast.error("Could not extend this chat", {
+        description: err.message || "Please try again.",
+      });
+    } finally {
+      setExtendingChat(false);
+    }
+  };
+
+  useEffect(() => {
+    const pendingMatchId = sessionStorage.getItem("eb_pending_extend_chat_match_id");
+    if (
+      !pendingMatchId ||
+      pendingMatchId !== matchId ||
+      !partner ||
+      (entitlements?.pendingChatExtensions ?? 0) <= 0 ||
+      extendingChat
+    ) {
+      return;
+    }
+
+    sessionStorage.removeItem("eb_pending_extend_chat_match_id");
+    void handleExtendChat();
+    // The pending match id and refreshed entitlement guard this post-checkout action.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchId, partner?.id, entitlements?.pendingChatExtensions, extendingChat]);
 
   const hits = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -801,7 +850,33 @@ export default function Chat() {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <ExpiringPill hours={partner.expiresInHours} />
+            {entitlements?.chatExpiryDisabled || !partner.expiresAt ? (
+              <Badge variant="outline" className="text-[10px] rounded-full border-sage/30 text-sage-foreground bg-sage/10">
+                No expiry
+              </Badge>
+            ) : (
+              <ExpiringPill hours={partner.expiresInHours} />
+            )}
+
+            {!entitlements?.chatExpiryDisabled && partner.expiresAt && partner.expiresInHours <= 24 && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="rounded-full text-[10px] px-2.5 h-8"
+                disabled={extendingChat}
+                onClick={() => {
+                  if ((entitlements?.pendingChatExtensions ?? 0) > 0) {
+                    void handleExtendChat();
+                  } else {
+                    sessionStorage.setItem("eb_pending_extend_chat_match_id", matchId || "");
+                    setExtendCheckoutOpen(true);
+                  }
+                }}
+              >
+                {extendingChat && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
+                {extendingChat ? "Extending…" : "Extend Chat"}
+              </Button>
+            )}
 
             <Button
               variant="ghost"
@@ -1268,10 +1343,22 @@ export default function Chat() {
           </Button>
         </div>
         <p className="text-center text-[10.5px] text-muted-foreground/70 pb-2">
-          Replies typically within a day · Closes in {partner.expiresInHours}h
-          if quiet
+          Replies typically within a day · {entitlements?.chatExpiryDisabled || !partner.expiresAt ? "This chat does not expire" : `Closes in ${partner.expiresInHours}h if quiet`}
+          {entitlements?.pendingChatExtensions ? ` · ${entitlements.pendingChatExtensions} extension${entitlements.pendingChatExtensions === 1 ? "" : "s"} available` : ""}
         </p>
       </div>
+
+      <CheckoutDialog
+        open={extendCheckoutOpen}
+        onOpenChange={setExtendCheckoutOpen}
+        productId="extend-chat"
+        title="Extend this chat"
+        description="Give this conversation more room to breathe."
+        price={99}
+        appliesWhen="Your chat is extended after payment is verified."
+        receiptLabel="Chat extension purchased"
+        context={{ conversationId: matchId || "" }}
+      />
     </div>
   );
 }

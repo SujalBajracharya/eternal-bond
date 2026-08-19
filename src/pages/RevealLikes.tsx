@@ -7,6 +7,7 @@ import { useEntitlements } from "@/hooks/useEntitlements";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { consumeFreeReveal } from "@/api/monetization";
 
 type Admirer = {
   id: string;
@@ -20,7 +21,13 @@ const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
 
 export default function RevealLikes() {
-  const { entitlements, refresh: refreshEntitlements } = useEntitlements();
+  const {
+    entitlements,
+    loading: entitlementLoading,
+    error: entitlementError,
+    refresh: refreshEntitlements,
+    consume,
+  } = useEntitlements();
   const { session } = useAuth();
   const isPremium = entitlements?.premium === true;
 
@@ -29,6 +36,7 @@ export default function RevealLikes() {
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
   const [pending, setPending] = useState<Admirer | null>(null);
   const [subscribeOpen, setSubscribeOpen] = useState(false);
+  const [revealingId, setRevealingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAdmirers = async () => {
@@ -83,19 +91,41 @@ export default function RevealLikes() {
   }, [isPremium, admirers]);
 
   const doReveal = async (a: Admirer) => {
+    if (revealingId) return;
     if (isPremium) {
       setRevealed((r) => new Set(r).add(a.id));
       return;
     }
-    if (entitlements?.canRevealFree) {
-      setRevealed((r) => new Set(r).add(a.id));
-      await refreshEntitlements();
-      toast.success(`Revealed ${a.name}`, {
-        description: "You used today's free reveal.",
-      });
+
+    if (!session?.access_token) {
+      toast.error("Please sign in to reveal an admirer.");
       return;
     }
-    setPending(a);
+
+    if (!entitlements?.canRevealFree && !(entitlements?.pendingRevealLikes ?? 0)) {
+      setPending(a);
+      return;
+    }
+
+    setRevealingId(a.id);
+    try {
+      if (entitlements.canRevealFree) {
+        await consumeFreeReveal(session.access_token);
+      } else {
+        await consume("reveal_like");
+      }
+      await refreshEntitlements();
+      setRevealed((r) => new Set(r).add(a.id));
+      toast.success(`Revealed ${a.name}`, {
+        description: isPremium ? "Premium reveal unlocked." : "Reveal confirmed.",
+      });
+    } catch (err: any) {
+      toast.error("Could not reveal this admirer", {
+        description: err.message || "Your reveal was not consumed.",
+      });
+    } finally {
+      setRevealingId(null);
+    }
   };
 
   return (
@@ -132,6 +162,15 @@ export default function RevealLikes() {
             : `${admirers.length} ${admirers.length === 1 ? "person has" : "people have"} liked your profile. Reveal them one at a time, or unlock all with Premium.`}
         </p>
 
+        {entitlementError && (
+          <div className="mb-6 rounded-2xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-center text-sm text-destructive">
+            Premium access could not be refreshed. <button className="underline" onClick={refreshEntitlements}>Try again</button>
+          </div>
+        )}
+        {entitlementLoading && !entitlements && (
+          <div className="mb-6 text-center text-xs text-muted-foreground">Checking your Premium access…</div>
+        )}
+
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
             <Loader2 className="h-8 w-8 animate-spin text-primary mb-3" />
@@ -162,6 +201,7 @@ export default function RevealLikes() {
                 <button
                   key={a.id}
                   onClick={() => !isRevealed && doReveal(a)}
+                  disabled={!!revealingId}
                   className={cn(
                     "group relative aspect-[3/4] rounded-2xl overflow-hidden border border-border/60 bg-card/80 backdrop-blur text-left transition-all",
                     !isRevealed &&
@@ -182,8 +222,9 @@ export default function RevealLikes() {
                       <div className="h-11 w-11 rounded-full bg-white/20 backdrop-blur flex items-center justify-center mb-2">
                         <Lock className="h-5 w-5" />
                       </div>
-                      <div className="text-xs uppercase tracking-wider font-medium">
-                        Tap to reveal
+                      <div className="text-xs uppercase tracking-wider font-medium flex items-center gap-2">
+                        {revealingId === a.id && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                        {revealingId === a.id ? "Revealing…" : "Tap to reveal"}
                       </div>
                     </div>
                   )}

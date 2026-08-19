@@ -10,6 +10,13 @@ export default function PaymentSuccess() {
 
   // Detect if this was a one-time undo-skip purchase
   const isUndoPurchase = !!sessionStorage.getItem("eb_pending_undo_profile_id");
+  const pendingPriorityTarget = sessionStorage.getItem("eb_pending_priority_interest_profile_id");
+  const pendingExtendMatch = sessionStorage.getItem("eb_pending_extend_chat_match_id");
+  const returnPath = pendingPriorityTarget
+    ? "/today"
+    : pendingExtendMatch
+      ? `/chat/${pendingExtendMatch}`
+      : "/today";
 
   useEffect(() => {
     let cancelled = false;
@@ -71,7 +78,7 @@ export default function PaymentSuccess() {
               Your purchase is confirmed. It will appear in your account shortly.
             </p>
             <Button asChild className="mt-6 rounded-full">
-              <Link to="/today">Back to matches</Link>
+              <Link to={returnPath}>{pendingExtendMatch ? "Return to chat" : "Back to matches"}</Link>
             </Button>
           </>
         )}

@@ -39,6 +39,7 @@ import ReportPhotoDialog from "@/components/ReportPhotoDialog";
 import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
 import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 import { FullProfileData } from "@/components/matches/FullProfileDialog";
+import { activatePriorityInterest as activatePriorityInterestApi } from "@/api/monetization";
 
 type GalleryItem = { url: string; blurred?: boolean };
 
@@ -162,6 +163,10 @@ const DailyMatches = () => {
   const [celebrate, setCelebrate] = useState<Match | null>(null);
   const [galleryIdx, setGalleryIdx] = useState(0);
   const [reportPhotoUrl, setReportPhotoUrl] = useState<string | null>(null);
+  const [priorityCheckoutOpen, setPriorityCheckoutOpen] = useState(false);
+  const [priorityTargetId, setPriorityTargetId] = useState<string | null>(null);
+  const [priorityActivatingId, setPriorityActivatingId] = useState<string | null>(null);
+  const [prioritySentIds, setPrioritySentIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     document.title = "Today's Matches — EternalBond";
@@ -471,6 +476,38 @@ const DailyMatches = () => {
     await performUndo(lastSkippedIndex);
   };
 
+  const activatePriorityInterest = async (targetProfileId: string) => {
+    if (!session?.access_token || priorityActivatingId) return;
+    if (targetProfileId === session.user?.id) {
+      toast.error("You cannot send Priority Interest to yourself.");
+      return;
+    }
+
+    if ((entitlements?.pendingPriorityInterests ?? 0) <= 0) {
+      setPriorityTargetId(targetProfileId);
+      sessionStorage.setItem("eb_pending_priority_interest_profile_id", targetProfileId);
+      setPriorityCheckoutOpen(true);
+      return;
+    }
+
+    setPriorityActivatingId(targetProfileId);
+    try {
+      await activatePriorityInterestApi(session.access_token, targetProfileId);
+      await refreshEntitlements();
+      setPrioritySentIds((previous) => new Set(previous).add(targetProfileId));
+      sessionStorage.removeItem("eb_pending_priority_interest_profile_id");
+      toast.success("Priority Interest sent", {
+        description: "Your profile will stand out in their daily matches.",
+      });
+    } catch (err: any) {
+      toast.error("Could not send Priority Interest", {
+        description: err.message || "Please try again.",
+      });
+    } finally {
+      setPriorityActivatingId(null);
+    }
+  };
+
   // After returning from Stripe, auto-restore the skipped profile when
   // the entitlement is granted and matches are loaded.
   useEffect(() => {
@@ -489,6 +526,15 @@ const DailyMatches = () => {
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matches, entitlements]);
+
+  useEffect(() => {
+    const pendingTarget = sessionStorage.getItem("eb_pending_priority_interest_profile_id");
+    if (!pendingTarget || !matches.some((match) => match.id === pendingTarget)) return;
+    if ((entitlements?.pendingPriorityInterests ?? 0) <= 0 || priorityActivatingId) return;
+    void activatePriorityInterest(pendingTarget);
+    // The session-stored target and pending entitlement guard this effect after checkout.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matches, entitlements?.pendingPriorityInterests, priorityActivatingId]);
 
   const greet = () => {
     const h = new Date().getHours();
@@ -956,6 +1002,26 @@ const DailyMatches = () => {
                           </button>
                         </div>
 
+                        <button
+                          onClick={() => current && void activatePriorityInterest(current.id)}
+                          disabled={priorityActivatingId === current.id || prioritySentIds.has(current.id)}
+                          className="w-full h-10 rounded-full border border-primary/25 bg-primary/5 hover:bg-primary/10 text-xs font-medium text-primary-deep transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+                        >
+                          {priorityActivatingId === current.id && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                          {prioritySentIds.has(current.id)
+                            ? "Priority Interest sent"
+                            : priorityActivatingId === current.id
+                              ? "Sending…"
+                              : (entitlements?.pendingPriorityInterests ?? 0) > 0
+                                ? "Send Priority Interest"
+                                : "Get Priority Interest"}
+                          {!prioritySentIds.has(current.id) && (entitlements?.pendingPriorityInterests ?? 0) > 0 && (
+                            <span className="text-[10px] bg-primary/10 px-2 py-0.5 rounded-full">
+                              {entitlements?.pendingPriorityInterests} left
+                            </span>
+                          )}
+                        </button>
+
                         {/* Undo skip button */}
                         {lastSkippedIndex !== null && (
                           <button
@@ -1083,6 +1149,18 @@ const DailyMatches = () => {
               ? "Extra Like purchased"
               : "Undo Skip purchased"
           }
+        />
+
+        <CheckoutDialog
+          open={priorityCheckoutOpen}
+          onOpenChange={setPriorityCheckoutOpen}
+          productId="priority-interest"
+          title="Priority Interest"
+          description="Stand out in this profile's daily matches for 24 hours."
+          price={149}
+          appliesWhen="Your Priority Interest becomes available after payment is verified."
+          receiptLabel="Priority Interest purchased"
+          context={{ targetProfileId: priorityTargetId || current?.id || "" }}
         />
 
         <ScrollToTopButton />
