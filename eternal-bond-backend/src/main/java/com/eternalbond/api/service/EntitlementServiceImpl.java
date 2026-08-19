@@ -1,6 +1,7 @@
 package com.eternalbond.api.service;
 
 import com.eternalbond.api.dto.EntitlementResponse;
+import com.eternalbond.api.dto.ProfileBoostGrantResponse;
 import com.eternalbond.api.exception.LimitExceededException;
 import com.eternalbond.api.exception.ResourceNotFoundException;
 import com.eternalbond.api.model.EntitlementKey;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,6 +40,7 @@ public class EntitlementServiceImpl implements EntitlementService {
     private static final int PREMIUM_BONUS_LIKES = 3;   // 3 base + 3 = 6 total
     // Premium users get unlimited reveals — we use Integer.MAX_VALUE as a sentinel
     private static final int PREMIUM_DAILY_REVEALS = Integer.MAX_VALUE;
+    private static final int FREE_DAILY_REVEALS = 1;
 
     private final UserEntitlementRepository entitlementRepo;
     private final UserDailyUsageRepository  dailyUsageRepo;
@@ -70,14 +74,17 @@ public class EntitlementServiceImpl implements EntitlementService {
         int likesRemaining    = Math.max(0, effectiveLimit - usage.getLikesUsed());
         boolean canLike       = likesRemaining > 0;
 
-        int dailyRevealLimit  = premium ? PREMIUM_DAILY_REVEALS : 0;
+        int dailyRevealLimit  = premium ? PREMIUM_DAILY_REVEALS : FREE_DAILY_REVEALS;
         // For premium users, reveals are unlimited (MAX_VALUE sentinel means no cap)
         int revealsRemaining  = premium ? Integer.MAX_VALUE : Math.max(0, dailyRevealLimit - usage.getRevealsUsed());
         boolean canRevealFree = premium || revealsRemaining > 0;
 
-        // Profile boost: check if there's an active non-expired profile_boost entitlement
-        List<UserEntitlement> boosts = entitlementRepo.findActiveEntitlements(
-                userId, EntitlementKey.profile_boost, LocalDateTime.now());
+        // Profile boosts have an explicit activation state so recurring grants can remain available.
+        LocalDateTime now = LocalDateTime.now();
+        List<UserEntitlement> boosts = entitlementRepo.findActiveProfileBoosts(userId, now);
+        List<UserEntitlement> availableBoosts = entitlementRepo.findAvailableProfileBoosts(userId, now);
+        List<UserEntitlement> boostGrants = new ArrayList<>(availableBoosts);
+        boostGrants.addAll(boosts);
         boolean boostActive          = !boosts.isEmpty();
         Long    boostExpiresAt       = boostActive
                 ? toEpochMs(boosts.get(0).getExpiresAt())
@@ -108,10 +115,21 @@ public class EntitlementServiceImpl implements EntitlementService {
                 .lockedInPricingEnabled(yearly)
                 .profileBoostActive(boostActive)
                 .profileBoostExpiresAt(boostExpiresAt)
+                .profileBoostsAvailable(availableBoosts.size())
+                .profileBoostGrants(boostGrants.stream()
+                    .map(boost -> ProfileBoostGrantResponse.builder()
+                        .grantType(boost.getGrantType())
+                        .grantPeriod(boost.getGrantPeriod())
+                        .available(availableBoosts.contains(boost))
+                        .active(boosts.contains(boost))
+                        .expiresAt(boost.getExpiresAt())
+                        .build())
+                    .toList())
                 // Pending single-use counts
                 .pendingUndoSkips(countUnconsumed(userId, EntitlementKey.undo_skip))
                 .pendingChatExtensions(countUnconsumed(userId, EntitlementKey.extend_chat))
                 .pendingRevealLikes(countUnconsumed(userId, EntitlementKey.reveal_like))
+                .pendingPriorityInterests(countUnconsumed(userId, EntitlementKey.priority_interest))
                 .build();
     }
 
@@ -121,6 +139,29 @@ public class EntitlementServiceImpl implements EntitlementService {
     @Transactional(readOnly = true)
     public boolean hasActivePremium(String userId) {
         return entitlementRepo.hasPremiumAccess(userId, LocalDateTime.now());
+    }
+
+    @Override
+    public EntitlementResponse activateProfileBoost(String userId) {
+        LocalDateTime now = LocalDateTime.now();
+        if (!hasActivePremium(userId)) {
+            throw new IllegalArgumentException("An active Premium subscription is required to activate this Profile Boost.");
+        }
+        if (!entitlementRepo.findActiveProfileBoosts(userId, now).isEmpty()) {
+            throw new IllegalArgumentException("A Profile Boost is already active.");
+        }
+
+        UserEntitlement boost = entitlementRepo.findFirstAvailableProfileBoostForUpdate(userId, now)
+                .orElseThrow(() -> new ResourceNotFoundException("No Profile Boost is available to activate."));
+
+        boost.setActivatedAt(now);
+        boost.setExpiresAt(now.plusHours(24));
+        try {
+            entitlementRepo.saveAndFlush(boost);
+        } catch (DataIntegrityViolationException ex) {
+            throw new IllegalArgumentException("A Profile Boost is already active.", ex);
+        }
+        return getEntitlements(userId);
     }
 
     @Override
@@ -195,8 +236,19 @@ public class EntitlementServiceImpl implements EntitlementService {
     }
 
     @Override
-    public void consumeFreeReveal(String userId) {
-        dailyUsageRepo.incrementRevealsUsed(userId, LocalDate.now());
+    public EntitlementResponse consumeFreeReveal(String userId) {
+        if (hasActivePremium(userId)) {
+            return getEntitlements(userId);
+        }
+
+        LocalDate today = LocalDate.now(ZoneOffset.UTC);
+        getOrCreateTodayUsage(userId);
+        int updated = dailyUsageRepo.incrementRevealsUsedIfAvailable(
+                userId, today, FREE_DAILY_REVEALS);
+        if (updated == 0) {
+            throw new LimitExceededException("Today's free Reveal Like has already been used.");
+        }
+        return getEntitlements(userId);
     }
 
     // ── Entitlement Granting ──────────────────────────────────────────────────
@@ -234,15 +286,17 @@ public class EntitlementServiceImpl implements EntitlementService {
             }
         }
 
+        LocalDateTime grantedAt = LocalDateTime.now();
         UserEntitlement entitlement = UserEntitlement.builder()
                 .userId(userId)
                 .entitlementKey(key)
                 .grantedByProduct(productId)
                 .paymentId(paymentId)
-                .grantedAt(LocalDateTime.now())
+                .grantedAt(grantedAt)
                 .expiresAt(expiresAt)
                 .consumed(false)
                 .active(true)
+                .activatedAt("profile_boost".equals(productId) ? grantedAt : null)
                 .metadata(metadataJson)
                 .build();
 
@@ -326,11 +380,12 @@ public class EntitlementServiceImpl implements EntitlementService {
                 .entitlementKey(EntitlementKey.profile_boost)
                 .grantedByProduct(product)
                 .grantedAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusHours(24))
+                .expiresAt(null)
                 .consumed(false)
                 .active(true)
                 .grantType(grantType)
                 .grantPeriod(grantPeriod)
+                .activatedAt(null)
                 .build());
         log.info("Granted {} profile boost {} to user {}", grantType, grantPeriod, userId);
     }
@@ -346,6 +401,7 @@ public class EntitlementServiceImpl implements EntitlementService {
             case "extra_like"      -> EntitlementKey.extra_like;
             case "undo_skip"       -> EntitlementKey.undo_skip;
             case "reveal_like"     -> EntitlementKey.reveal_like;
+            case "priority_interest" -> EntitlementKey.priority_interest;
             case "extend_chat"     -> EntitlementKey.extend_chat;
             case "profile_boost"   -> EntitlementKey.profile_boost;
             case "premium_monthly",

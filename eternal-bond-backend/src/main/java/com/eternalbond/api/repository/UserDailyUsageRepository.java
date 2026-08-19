@@ -38,6 +38,21 @@ public interface UserDailyUsageRepository extends JpaRepository<UserDailyUsage, 
         """)
     void incrementRevealsUsed(@Param("userId") String userId, @Param("date") LocalDate date);
 
+        /** Atomically consumes one free reveal only while the daily allowance remains. */
+        @Modifying
+        @Query("""
+                UPDATE UserDailyUsage u
+                SET u.revealsUsed = u.revealsUsed + 1
+                WHERE u.userId = :userId
+                    AND u.usageDate = :date
+                    AND u.revealsUsed < :dailyLimit
+                """)
+        int incrementRevealsUsedIfAvailable(
+                        @Param("userId") String userId,
+                        @Param("date") LocalDate date,
+                        @Param("dailyLimit") int dailyLimit
+        );
+
     /**
      * Mark that the user has purchased an extra like today (once-per-day gate).
      */

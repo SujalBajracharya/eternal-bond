@@ -8,6 +8,7 @@ import com.eternalbond.api.model.ProfilePreferences;
 import com.eternalbond.api.repository.DailyMatchRepository;
 import com.eternalbond.api.repository.ProfilePreferencesRepository;
 import com.eternalbond.api.repository.ProfileRepository;
+import com.eternalbond.api.repository.PriorityInterestRepository;
 import com.eternalbond.api.repository.SwipeRepository;
 import com.eternalbond.api.repository.UserEntitlementRepository;
 import org.slf4j.Logger;
@@ -34,17 +35,20 @@ public class ProfileService {
     private final DailyMatchRepository dailyMatchRepository;
     private final SwipeRepository swipeRepository;
     private final UserEntitlementRepository userEntitlementRepository;
+    private final PriorityInterestRepository priorityInterestRepository;
 
     public ProfileService(ProfileRepository profileRepository,
             ProfilePreferencesRepository profilePreferencesRepository,
             DailyMatchRepository dailyMatchRepository,
             SwipeRepository swipeRepository,
-            UserEntitlementRepository userEntitlementRepository) {
+            UserEntitlementRepository userEntitlementRepository,
+            PriorityInterestRepository priorityInterestRepository) {
         this.profileRepository = profileRepository;
         this.profilePreferencesRepository = profilePreferencesRepository;
         this.dailyMatchRepository = dailyMatchRepository;
         this.swipeRepository = swipeRepository;
         this.userEntitlementRepository = userEntitlementRepository;
+        this.priorityInterestRepository = priorityInterestRepository;
     }
 
     @Transactional(readOnly = true)
@@ -166,7 +170,7 @@ public class ProfileService {
             candidates = applyPreferencesFilter(candidates, pref);
         }
 
-        Set<String> premiumCandidateIds = activePremiumProfileIds(candidates);
+        Set<String> premiumCandidateIds = activePriorityProfileIds(userId, candidates);
         candidates.sort(Comparator.comparing(
             profile -> !premiumCandidateIds.contains(profile.getId())));
 
@@ -255,7 +259,7 @@ public class ProfileService {
                 .collect(Collectors.toList());
 
         Set<String> swipedIds = swipeRepository.findSwipedIdsBySwiperIdAndSwipedIds(userId, ids);
-        Set<String> premiumIds = activePremiumIds(ids);
+        Set<String> premiumIds = activePriorityIds(userId, ids);
 
         Map<String, Profile> profileMap = profileRepository.findAllById(ids).stream()
                 .collect(Collectors.toMap(Profile::getId, p -> p));
@@ -268,8 +272,18 @@ public class ProfileService {
                 .collect(Collectors.toList());
     }
 
-    private Set<String> activePremiumProfileIds(Collection<Profile> profiles) {
-        return activePremiumIds(profiles.stream().map(Profile::getId).collect(Collectors.toList()));
+    private Set<String> activePriorityProfileIds(String targetUserId, Collection<Profile> profiles) {
+        return activePriorityIds(targetUserId,
+                profiles.stream().map(Profile::getId).collect(Collectors.toList()));
+    }
+
+    private Set<String> activePriorityIds(String targetUserId, Collection<String> profileIds) {
+        Set<String> priorityIds = activePremiumIds(profileIds);
+        if (!profileIds.isEmpty()) {
+            priorityIds.addAll(priorityInterestRepository.findActiveSenderIdsForTarget(
+                    targetUserId, profileIds, LocalDateTime.now()));
+        }
+        return priorityIds;
     }
 
     private Set<String> activePremiumIds(Collection<String> profileIds) {

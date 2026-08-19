@@ -3,6 +3,7 @@ package com.eternalbond.api.repository;
 import com.eternalbond.api.model.EntitlementKey;
 import com.eternalbond.api.model.UserEntitlement;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import jakarta.persistence.LockModeType;
 
 @Repository
 public interface UserEntitlementRepository extends JpaRepository<UserEntitlement, UUID> {
@@ -31,6 +33,57 @@ public interface UserEntitlementRepository extends JpaRepository<UserEntitlement
     List<UserEntitlement> findActiveEntitlements(
             @Param("userId") String userId,
             @Param("key") EntitlementKey key,
+            @Param("now") LocalDateTime now
+    );
+
+    /** Active Profile Boosts, including purchased boosts and activated recurring grants. */
+    @Query("""
+        SELECT e FROM UserEntitlement e
+        WHERE e.userId = :userId
+          AND e.entitlementKey = 'profile_boost'
+          AND e.active = true
+          AND e.consumed = false
+          AND (e.activatedAt IS NOT NULL OR e.grantType IS NULL)
+          AND (e.expiresAt IS NULL OR e.expiresAt > :now)
+        ORDER BY e.grantedAt DESC
+        """)
+    List<UserEntitlement> findActiveProfileBoosts(
+            @Param("userId") String userId,
+            @Param("now") LocalDateTime now
+    );
+
+    /** Recurring grants that are available but have not been activated. */
+    @Query("""
+        SELECT e FROM UserEntitlement e
+        WHERE e.userId = :userId
+          AND e.entitlementKey = 'profile_boost'
+          AND e.active = true
+          AND e.consumed = false
+          AND e.grantType IS NOT NULL
+          AND e.activatedAt IS NULL
+          AND (e.expiresAt IS NULL OR e.expiresAt > :now)
+        ORDER BY e.grantedAt ASC
+        """)
+    List<UserEntitlement> findAvailableProfileBoosts(
+            @Param("userId") String userId,
+            @Param("now") LocalDateTime now
+    );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+        SELECT e FROM UserEntitlement e
+        WHERE e.userId = :userId
+          AND e.entitlementKey = 'profile_boost'
+          AND e.active = true
+          AND e.consumed = false
+          AND e.grantType IS NOT NULL
+          AND e.activatedAt IS NULL
+          AND (e.expiresAt IS NULL OR e.expiresAt > :now)
+        ORDER BY e.grantedAt ASC
+        LIMIT 1
+        """)
+    Optional<UserEntitlement> findFirstAvailableProfileBoostForUpdate(
+            @Param("userId") String userId,
             @Param("now") LocalDateTime now
     );
 
@@ -89,6 +142,37 @@ public interface UserEntitlementRepository extends JpaRepository<UserEntitlement
         LIMIT 1
         """)
     Optional<UserEntitlement> findFirstUnconsumed(
+            @Param("userId") String userId,
+            @Param("key") EntitlementKey key,
+            @Param("now") LocalDateTime now
+    );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+        SELECT e FROM UserEntitlement e
+        WHERE e.userId = :userId
+          AND e.entitlementKey = :key
+          AND e.active = true
+          AND e.consumed = false
+          AND (e.expiresAt IS NULL OR e.expiresAt > :now)
+        ORDER BY e.grantedAt ASC
+        LIMIT 1
+        """)
+    Optional<UserEntitlement> findFirstUnconsumedForUpdate(
+            @Param("userId") String userId,
+            @Param("key") EntitlementKey key,
+            @Param("now") LocalDateTime now
+    );
+
+    @Query("""
+        SELECT COUNT(e) FROM UserEntitlement e
+        WHERE e.userId = :userId
+          AND e.entitlementKey = :key
+          AND e.active = true
+          AND e.consumed = false
+          AND (e.expiresAt IS NULL OR e.expiresAt > :now)
+        """)
+    long countAvailableEntitlements(
             @Param("userId") String userId,
             @Param("key") EntitlementKey key,
             @Param("now") LocalDateTime now

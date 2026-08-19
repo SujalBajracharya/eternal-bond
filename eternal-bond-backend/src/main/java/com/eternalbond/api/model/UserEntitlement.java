@@ -88,6 +88,10 @@ public class UserEntitlement {
     @Column(name = "grant_type", length = 32)
     private String grantType;
 
+    /** Set when a recurring Profile Boost is activated by the user. */
+    @Column(name = "activated_at")
+    private LocalDateTime activatedAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

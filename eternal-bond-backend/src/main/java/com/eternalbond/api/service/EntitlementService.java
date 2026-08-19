@@ -34,6 +34,9 @@ public interface EntitlementService {
     /** Returns the user's current plan tier: "free", "premium_monthly", or "premium_yearly". */
     String getCurrentTier(String userId);
 
+    /** Activates one available recurring Profile Boost for the user. */
+    EntitlementResponse activateProfileBoost(String userId);
+
     // ── Daily Likes ───────────────────────────────────────────────
 
     /**
@@ -67,7 +70,7 @@ public interface EntitlementService {
     /**
      * Records that the user consumed one free daily reveal.
      */
-    void consumeFreeReveal(String userId);
+    EntitlementResponse consumeFreeReveal(String userId);
 
     // ── Entitlement Granting ──────────────────────────────────────
 

@@ -93,6 +93,6 @@ public class ProfileDto {
 
     private Boolean openToRelocate;
 
-    /** True when this profile has an active Premium priority-interest badge. */
+    /** True when this profile has an active Premium or Priority Interest badge. */
     private boolean priorityBadge;
 }

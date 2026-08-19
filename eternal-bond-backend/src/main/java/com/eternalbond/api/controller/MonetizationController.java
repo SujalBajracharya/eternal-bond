@@ -3,10 +3,13 @@ package com.eternalbond.api.controller;
 import com.eternalbond.api.dto.CheckoutRequest;
 import com.eternalbond.api.dto.CheckoutResponse;
 import com.eternalbond.api.dto.EntitlementResponse;
+import com.eternalbond.api.dto.PriorityInterestActivationResponse;
+import com.eternalbond.api.service.PriorityInterestService;
 import com.eternalbond.api.service.MonetizationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -25,9 +28,13 @@ import java.util.Map;
 public class MonetizationController {
 
     private final MonetizationService monetizationService;
+    private final PriorityInterestService priorityInterestService;
 
-    public MonetizationController(MonetizationService monetizationService) {
+    public MonetizationController(
+            MonetizationService monetizationService,
+            PriorityInterestService priorityInterestService) {
         this.monetizationService = monetizationService;
+        this.priorityInterestService = priorityInterestService;
     }
 
     /**
@@ -48,6 +55,30 @@ public class MonetizationController {
     @GetMapping("/entitlements")
     public ResponseEntity<EntitlementResponse> getEntitlements() {
         return ResponseEntity.ok(monetizationService.getEntitlements());
+    }
+
+    /** Activates one available recurring Profile Boost for the authenticated user. */
+    @PostMapping("/profile-boost/activate")
+    public ResponseEntity<EntitlementResponse> activateProfileBoost() {
+        return ResponseEntity.ok(monetizationService.activateProfileBoost());
+    }
+
+    /** Consumes one daily free Reveal Like for the authenticated user. */
+    @PostMapping("/reveal-like/consume")
+    public ResponseEntity<EntitlementResponse> consumeFreeReveal() {
+        return ResponseEntity.ok(monetizationService.consumeFreeReveal());
+    }
+
+    /** Activates one purchased Priority Interest for a target profile. */
+    @PostMapping("/priority-interest/activate")
+    public ResponseEntity<PriorityInterestActivationResponse> activatePriorityInterest(
+            @AuthenticationPrincipal String userId,
+            @RequestBody Map<String, String> body) {
+        String targetProfileId = body.get("targetProfileId");
+        if (targetProfileId == null || targetProfileId.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(priorityInterestService.activate(userId, targetProfileId));
     }
 
     /**

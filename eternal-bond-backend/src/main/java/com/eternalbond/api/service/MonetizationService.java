@@ -191,6 +191,16 @@ public class MonetizationService {
         return entitlementService.getEntitlements(userId);
     }
 
+    /** Consumes the authenticated user's daily free Reveal Like allowance. */
+    public EntitlementResponse consumeFreeReveal() {
+        return entitlementService.consumeFreeReveal(resolveAuthenticatedUserId());
+    }
+
+    /** Activates one available recurring Profile Boost for the authenticated user. */
+    public EntitlementResponse activateProfileBoost() {
+        return entitlementService.activateProfileBoost(resolveAuthenticatedUserId());
+    }
+
     /**
      * Marks a single-use entitlement as consumed.
      * Called by the frontend after the user actually uses the purchased action.
@@ -441,6 +451,8 @@ public class MonetizationService {
                     "3 extra curated matches have been added to your Today's list."};
             case "reveal_like"     -> new String[]{"👁️ Like Reveal purchased",
                     "Your purchase unlocks one admirer reveal. Visit your Likes tab to see who it is."};
+                case "priority_interest" -> new String[]{"✨ Priority Interest ready",
+                    "Your Priority Interest is ready to send from Daily Matches."};
             case "extend_chat"     -> new String[]{"💬 Chat Extended",
                     "Your conversation has been extended by 7 days. Keep the connection going!"};
             case "profile_boost"   -> new String[]{"🚀 Profile Boost active",

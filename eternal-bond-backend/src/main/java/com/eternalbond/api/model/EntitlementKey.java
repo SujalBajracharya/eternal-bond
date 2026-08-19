@@ -18,6 +18,9 @@ public enum EntitlementKey {
     /** Reveal one user who liked the current user (single-use, consumed on use) */
     reveal_like,
 
+    /** Priority Interest sent to one target profile (single-use, consumed on use) */
+    priority_interest,
+
     /** Active premium subscription (time-bounded) */
     premium_access,
 

@@ -2,6 +2,8 @@ package com.eternalbond.api.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 /**
  * Complete entitlement snapshot returned to the frontend.
  * This is the single source of truth for what a user can do right now.
@@ -85,6 +87,13 @@ public class EntitlementResponse {
     /** If boost is active, when it expires (epoch ms) */
     private Long profileBoostExpiresAt;
 
+    /** Number of recurring Profile Boost grants available to activate. */
+    private int profileBoostsAvailable;
+
+    /** Available and active Profile Boost grants, including their periods. */
+    @Builder.Default
+    private List<ProfileBoostGrantResponse> profileBoostGrants = List.of();
+
     // ── Unconsumed single-use entitlements ─────────────────────────
     /** Number of unconsumed undo_skip entitlements (from pay-per-action) */
     private int pendingUndoSkips;
@@ -94,4 +103,7 @@ public class EntitlementResponse {
 
     /** Number of unconsumed reveal_like entitlements */
     private int pendingRevealLikes;
+    
+        /** Number of unconsumed priority_interest entitlements. */
+        private int pendingPriorityInterests;
 }

@@ -8,6 +8,7 @@ import com.eternalbond.api.model.ProfilePreferences;
 import com.eternalbond.api.repository.DailyMatchRepository;
 import com.eternalbond.api.repository.ProfilePreferencesRepository;
 import com.eternalbond.api.repository.ProfileRepository;
+import com.eternalbond.api.repository.PriorityInterestRepository;
 import com.eternalbond.api.repository.SwipeRepository;
 import com.eternalbond.api.repository.UserEntitlementRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,7 @@ class ProfileServiceTest {
     @Mock private ProfilePreferencesRepository profilePreferencesRepository;
     @Mock private DailyMatchRepository dailyMatchRepository;
     @Mock private SwipeRepository swipeRepository;
+        @Mock private PriorityInterestRepository priorityInterestRepository;
         @Mock private UserEntitlementRepository userEntitlementRepository;
 
     @InjectMocks
