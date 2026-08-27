@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Eye, Lock, Heart, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CheckoutDialog } from "@/components/premium/CheckoutDialog";
@@ -37,6 +37,7 @@ export default function RevealLikes() {
   const [pending, setPending] = useState<Admirer | null>(null);
   const [subscribeOpen, setSubscribeOpen] = useState(false);
   const [revealingId, setRevealingId] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAdmirers = async () => {
@@ -128,6 +129,45 @@ export default function RevealLikes() {
     }
   };
 
+  const decide = async (profileId: string, action: "like" | "dislike") => {
+    if (!session?.access_token) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/swipes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          profileId: profileId,
+          action: action,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server error: ${res.status}`);
+      }
+
+      const result = await res.json();
+      
+      setAdmirers((prev) => prev.filter((a) => a.id !== profileId));
+      
+      if (action === "like" && result.isMatch) {
+        toast.success("It's a Match!", {
+          description: "You matched with an admirer.",
+        });
+      } else if (action === "like") {
+         toast.success("Liked back!");
+      } else {
+         toast.success("Passed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to register decision. Please try again.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-blush">
       <header className="px-6 py-5 max-w-5xl mx-auto flex items-center gap-3">
@@ -198,14 +238,12 @@ export default function RevealLikes() {
             {admirers.map((a) => {
               const isRevealed = revealed.has(a.id);
               return (
-                <button
+                <div
                   key={a.id}
-                  onClick={() => !isRevealed && doReveal(a)}
-                  disabled={!!revealingId}
                   className={cn(
                     "group relative aspect-[3/4] rounded-2xl overflow-hidden border border-border/60 bg-card/80 backdrop-blur text-left transition-all",
                     !isRevealed &&
-                      "hover:shadow-[var(--shadow-card)] cursor-pointer",
+                      "hover:shadow-[var(--shadow-card)]"
                   )}
                 >
                   <img
@@ -217,33 +255,65 @@ export default function RevealLikes() {
                     )}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                  {!isRevealed && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-3 text-center">
-                      <div className="h-11 w-11 rounded-full bg-white/20 backdrop-blur flex items-center justify-center mb-2">
-                        <Lock className="h-5 w-5" />
+                  {!isRevealed ? (
+                    <button 
+                      className="absolute inset-0 w-full h-full text-left cursor-pointer z-10"
+                      onClick={() => doReveal(a)}
+                      disabled={!!revealingId}
+                    >
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-3 text-center">
+                        <div className="h-11 w-11 rounded-full bg-white/20 backdrop-blur flex items-center justify-center mb-2">
+                          <Lock className="h-5 w-5" />
+                        </div>
+                        <div className="text-xs uppercase tracking-wider font-medium flex items-center gap-2">
+                          {revealingId === a.id && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                          {revealingId === a.id ? "Revealing…" : "Tap to reveal"}
+                        </div>
                       </div>
-                      <div className="text-xs uppercase tracking-wider font-medium flex items-center gap-2">
-                        {revealingId === a.id && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                        {revealingId === a.id ? "Revealing…" : "Tap to reveal"}
+                      <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                        <div className="text-xs opacity-80 flex items-center gap-1">
+                          <Heart className="h-3 w-3 fill-white" /> Liked your
+                          profile
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                    {isRevealed ? (
-                      <>
+                    </button>
+                  ) : (
+                    <div className="absolute bottom-0 left-0 right-0 p-3 text-white z-10 flex flex-col gap-2">
+                      <div>
                         <div className="font-[Fraunces] text-lg leading-tight">
                           {a.name}, {a.age}
                         </div>
                         <div className="text-xs opacity-80">{a.city}</div>
-                      </>
-                    ) : (
-                      <div className="text-xs opacity-80 flex items-center gap-1">
-                        <Heart className="h-3 w-3 fill-white" /> Liked your
-                        profile
                       </div>
-                    )}
-                  </div>
-                </button>
+                      <div className="grid grid-cols-2 gap-2 mt-1">
+                        <Button 
+                          variant="default"
+                          size="sm"
+                          className="h-8 text-xs bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-medium"
+                          onClick={() => decide(a.id, "like")}
+                        >
+                          Like Back
+                        </Button>
+                        <Button 
+                          variant="outline"
+                          size="sm" 
+                          className="h-8 text-xs bg-black/20 hover:bg-black/40 text-white border-white/30 rounded-full font-medium backdrop-blur-sm"
+                          onClick={() => decide(a.id, "dislike")}
+                        >
+                          Reject
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="col-span-2 h-8 text-xs rounded-full bg-black/30 hover:bg-black/50 text-white font-medium backdrop-blur-sm border border-white/10"
+                          onClick={() => navigate(`/profile/${a.id}`)}
+                        >
+                          View Profile
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
