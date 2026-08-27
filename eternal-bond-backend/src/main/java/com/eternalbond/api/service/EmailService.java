@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -64,6 +67,29 @@ public class EmailService {
         } catch (MailException ex) {
             logger.error("Failed to send password reset email to {}: {}", toEmail, ex.getMessage(), ex);
             throw new EmailSendingException("Failed to send password reset email.", ex);
+        }
+    }
+
+    public void sendPurchaseConfirmationEmail(String toEmail, String userName, byte[] pdfAttachment) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(toEmail);
+            helper.setSubject("Purchase Confirmation");
+            helper.setText("Hello " + userName + ",\n\n" +
+                    "Thank you for your purchase.\n\n" +
+                    "Please find your purchase receipt/invoice attached to this email.\n\n" +
+                    "Regards,\n" +
+                    "EternalBond");
+            helper.setFrom(fromEmail);
+            helper.addAttachment("PurchaseReceipt.pdf", new ByteArrayResource(pdfAttachment));
+
+            mailSender.send(message);
+            logger.info("Purchase confirmation email successfully sent to {}", toEmail);
+        } catch (Exception ex) {
+            logger.error("Failed to send purchase confirmation email to {}: {}", toEmail, ex.getMessage(), ex);
+            throw new EmailSendingException("Failed to send purchase confirmation email.", ex);
         }
     }
 }

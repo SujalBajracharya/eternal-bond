@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.eternalbond.api.repository.UserRepositoryTest" time="4.886" tests="9" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.eternalbond.api.repository.UserRepositoryTest" time="6.091" tests="9" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\ACER\AppData\Local\Temp\surefire18218950150800341733\surefirebooter-20260819115830318_3.jar C:\Users\ACER\AppData\Local\Temp\surefire18218950150800341733 2026-08-19T11-58-30_135-jvmRun1 surefire-20260819115830318_1tmp surefire_0-20260819115830318_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\ACER\AppData\Local\Temp\surefire10715205345991648581\surefirebooter-20260819121926860_3.jar C:\Users\ACER\AppData\Local\Temp\surefire10715205345991648581 2026-08-19T12-19-26_609-jvmRun1 surefire-20260819121926860_1tmp surefire_0-20260819121926860_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\test-classes;C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend\target\classes;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.3.0\spring-boot-starter-web-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter\3.3.0\spring-boot-starter-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot\3.3.0\spring-boot-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.3.0\spring-boot-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.3.0\spring-boot-starter-logging-3.3.0.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-classic\1.5.6\logback-classic-1.5.6.jar;C:\Users\ACER\.m2\repository\ch\qos\logback\logback-core\1.5.6\logback-core-1.5.6.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.23.1\log4j-to-slf4j-2.23.1.jar;C:\Users\ACER\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar;C:\Users\ACER\.m2\repository\org\slf4j\jul-to-slf4j\2.0.13\jul-to-slf4j-2.0.13.jar;C:\Users\ACER\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\ACER\.m2\repository\org\yaml\snakeyaml\2.2\snakeyaml-2.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.3.0\spring-boot-starter-json-3.3.0.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.17.1\jackson-datatype-jdk8-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.17.1\jackson-datatype-jsr310-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.17.1\jackson-module-parameter-names-2.17.1.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.3.0\spring-boot-starter-tomcat-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.24\tomcat-embed-core-10.1.24.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.24\tomcat-embed-websocket-10.1.24.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-web\6.1.8\spring-web-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-beans\6.1.8\spring-beans-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webmvc\6.1.8\spring-webmvc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context\6.1.8\spring-context-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-expression\6.1.8\spring-expression-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-webflux\3.3.0\spring-boot-starter-webflux-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-reactor-netty\3.3.0\spring-boot-starter-reactor-netty-3.3.0.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-http\1.1.19\reactor-netty-http-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http\4.1.110.Final\netty-codec-http-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-common\4.1.110.Final\netty-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-buffer\4.1.110.Final\netty-buffer-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport\4.1.110.Final\netty-transport-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec\4.1.110.Final\netty-codec-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler\4.1.110.Final\netty-handler-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-http2\4.1.110.Final\netty-codec-http2-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns\4.1.110.Final\netty-resolver-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver\4.1.110.Final\netty-resolver-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-dns\4.1.110.Final\netty-codec-dns-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-native-macos\4.1.110.Final\netty-resolver-dns-native-macos-4.1.110.Final-osx-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-resolver-dns-classes-macos\4.1.110.Final\netty-resolver-dns-classes-macos-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-epoll\4.1.110.Final\netty-transport-native-epoll-4.1.110.Final-linux-x86_64.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-native-unix-common\4.1.110.Final\netty-transport-native-unix-common-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-transport-classes-epoll\4.1.110.Final\netty-transport-classes-epoll-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\projectreactor\netty\reactor-netty-core\1.1.19\reactor-netty-core-1.1.19.jar;C:\Users\ACER\.m2\repository\io\netty\netty-handler-proxy\4.1.110.Final\netty-handler-proxy-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\io\netty\netty-codec-socks\4.1.110.Final\netty-codec-socks-4.1.110.Final.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-webflux\6.1.8\spring-webflux-6.1.8.jar;C:\Users\ACER\.m2\repository\io\projectreactor\reactor-core\3.6.6\reactor-core-3.6.6.jar;C:\Users\ACER\.m2\repository\org\reactivestreams\reactive-streams\1.0.4\reactive-streams-1.0.4.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.3.0\spring-boot-starter-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-aop\3.3.0\spring-boot-starter-aop-3.3.0.jar;C:\Users\ACER\.m2\repository\org\aspectj\aspectjweaver\1.9.22\aspectjweaver-1.9.22.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.3.0\spring-boot-starter-jdbc-3.3.0.jar;C:\Users\ACER\.m2\repository\com\zaxxer\HikariCP\5.1.0\HikariCP-5.1.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jdbc\6.1.8\spring-jdbc-6.1.8.jar;C:\Users\ACER\.m2\repository\org\hibernate\orm\hibernate-core\6.5.2.Final\hibernate-core-6.5.2.Final.jar;C:\Users\ACER\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\ACER\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\jboss\logging\jboss-logging\3.5.3.Final\jboss-logging-3.5.3.Final.jar;C:\Users\ACER\.m2\repository\org\hibernate\common\hibernate-commons-annotations\6.0.6.Final\hibernate-commons-annotations-6.0.6.Final.jar;C:\Users\ACER\.m2\repository\io\smallrye\jandex\3.1.2\jandex-3.1.2.jar;C:\Users\ACER\.m2\repository\com\fasterxml\classmate\1.7.0\classmate-1.7.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy\1.14.16\byte-buddy-1.14.16.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.5\jaxb-runtime-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.5\jaxb-core-4.0.5.jar;C:\Users\ACER\.m2\repository\org\glassfish\jaxb\txw2\4.0.5\txw2-4.0.5.jar;C:\Users\ACER\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\ACER\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\ACER\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-jpa\3.3.0\spring-data-jpa-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\data\spring-data-commons\3.3.0\spring-data-commons-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-orm\6.1.8\spring-orm-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-tx\6.1.8\spring-tx-6.1.8.jar;C:\Users\ACER\.m2\repository\org\slf4j\slf4j-api\2.0.13\slf4j-api-2.0.13.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aspects\6.1.8\spring-aspects-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.3.0\spring-boot-starter-security-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-aop\6.1.8\spring-aop-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-config\6.3.0\spring-security-config-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-web\6.3.0\spring-security-web-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-websocket\3.3.0\spring-boot-starter-websocket-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-messaging\6.1.8\spring-messaging-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-websocket\6.1.8\spring-websocket-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-validation\3.3.0\spring-boot-starter-validation-3.3.0.jar;C:\Users\ACER\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.24\tomcat-embed-el-10.1.24.jar;C:\Users\ACER\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.1.Final\hibernate-validator-8.0.1.Final.jar;C:\Users\ACER\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-actuator\3.3.0\spring-boot-starter-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator-autoconfigure\3.3.0\spring-boot-actuator-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-actuator\3.3.0\spring-boot-actuator-3.3.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-observation\1.13.0\micrometer-observation-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-commons\1.13.0\micrometer-commons-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-jakarta9\1.13.0\micrometer-jakarta9-1.13.0.jar;C:\Users\ACER\.m2\repository\io\micrometer\micrometer-core\1.13.0\micrometer-core-1.13.0.jar;C:\Users\ACER\.m2\repository\org\hdrhistogram\HdrHistogram\2.2.1\HdrHistogram-2.2.1.jar;C:\Users\ACER\.m2\repository\org\latencyutils\LatencyUtils\2.0.3\LatencyUtils-2.0.3.jar;C:\Users\ACER\.m2\repository\org\postgresql\postgresql\42.7.3\postgresql-42.7.3.jar;C:\Users\ACER\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-mail\3.3.0\spring-boot-starter-mail-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-context-support\6.1.8\spring-context-support-6.1.8.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\jakarta.mail\2.0.3\jakarta.mail-2.0.3.jar;C:\Users\ACER\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\ACER\.m2\repository\org\eclipse\angus\angus-activation\2.0.2\angus-activation-2.0.2.jar;C:\Users\ACER\.m2\repository\org\projectlombok\lombok\1.18.32\lombok-1.18.32.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-oauth2-client\3.3.0\spring-boot-starter-oauth2-client-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-core\6.3.0\spring-security-core-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-crypto\6.3.0\spring-security-crypto-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-client\6.3.0\spring-security-oauth2-client-6.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-core\6.3.0\spring-security-oauth2-core-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\oauth2-oidc-sdk\9.43.4\oauth2-oidc-sdk-9.43.4.jar;C:\Users\ACER\.m2\repository\com\github\stephenc\jcip\jcip-annotations\1.0-1\jcip-annotations-1.0-1.jar;C:\Users\ACER\.m2\repository\com\nimbusds\content-type\2.2\content-type-2.2.jar;C:\Users\ACER\.m2\repository\com\nimbusds\lang-tag\1.7\lang-tag-1.7.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-oauth2-jose\6.3.0\spring-security-oauth2-jose-6.3.0.jar;C:\Users\ACER\.m2\repository\com\nimbusds\nimbus-jose-jwt\9.37.3\nimbus-jose-jwt-9.37.3.jar;C:\Users\ACER\.m2\repository\com\stripe\stripe-java\33.1.0\stripe-java-33.1.0.jar;C:\Users\ACER\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-impl\0.11.5\jjwt-impl-0.11.5.jar;C:\Users\ACER\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.11.5\jjwt-jackson-0.11.5.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.17.1\jackson-databind-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.17.1\jackson-annotations-2.17.1.jar;C:\Users\ACER\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.17.1\jackson-core-2.17.1.jar;C:\Users\ACER\.m2\repository\com\github\librepdf\openpdf\1.3.36\openpdf-1.3.36.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.3.0\spring-boot-starter-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test\3.3.0\spring-boot-test-3.3.0.jar;C:\Users\ACER\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.3.0\spring-boot-test-autoconfigure-3.3.0.jar;C:\Users\ACER\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\ACER\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\ACER\.m2\repository\net\minidev\json-smart\2.5.1\json-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\net\minidev\accessors-smart\2.5.1\accessors-smart-2.5.1.jar;C:\Users\ACER\.m2\repository\org\ow2\asm\asm\9.6\asm-9.6.jar;C:\Users\ACER\.m2\repository\org\assertj\assertj-core\3.25.3\assertj-core-3.25.3.jar;C:\Users\ACER\.m2\repository\org\awaitility\awaitility\4.2.1\awaitility-4.2.1.jar;C:\Users\ACER\.m2\repository\org\hamcrest\hamcrest\2.2\hamcrest-2.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.2\junit-jupiter-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\ACER\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\ACER\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\ACER\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-core\5.11.0\mockito-core-5.11.0.jar;C:\Users\ACER\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.16\byte-buddy-agent-1.14.16.jar;C:\Users\ACER\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\ACER\.m2\repository\org\mockito\mockito-junit-jupiter\5.11.0\mockito-junit-jupiter-5.11.0.jar;C:\Users\ACER\.m2\repository\org\skyscreamer\jsonassert\1.5.1\jsonassert-1.5.1.jar;C:\Users\ACER\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-core\6.1.8\spring-core-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-jcl\6.1.8\spring-jcl-6.1.8.jar;C:\Users\ACER\.m2\repository\org\springframework\spring-test\6.1.8\spring-test-6.1.8.jar;C:\Users\ACER\.m2\repository\org\xmlunit\xmlunit-core\2.9.1\xmlunit-core-2.9.1.jar;C:\Users\ACER\.m2\repository\org\springframework\security\spring-security-test\6.3.0\spring-security-test-6.3.0.jar;C:\Users\ACER\.m2\repository\com\h2database\h2\2.2.224\h2-2.2.224.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -33,7 +33,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="FILE_LOG_CHARSET" value="windows-1252"/>
     <property name="java.awt.headless" value="true"/>
-    <property name="surefire.real.class.path" value="C:\Users\ACER\AppData\Local\Temp\surefire18218950150800341733\surefirebooter-20260819115830318_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\ACER\AppData\Local\Temp\surefire10715205345991648581\surefirebooter-20260819121926860_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.17+10"/>
@@ -52,7 +52,7 @@
     <property name="user.dir" value="C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="18624"/>
+    <property name="PID" value="132"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="CONSOLE_LOG_CHARSET" value="windows-1252"/>
     <property name="native.encoding" value="Cp1252"/>
@@ -65,9 +65,9 @@
     <property name="java.class.version" value="61.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[EternalBondAPI] "/>
   </properties>
-  <testcase name="save_duplicateEmail_throwsConstraintViolation" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.304">
-    <system-out><![CDATA[2026-08-19 11:58:37.115 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.eternalbond.api.repository.UserRepositoryTest]: UserRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-08-19 11:58:37.151 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.eternalbond.api.EternalBondApplication for test class com.eternalbond.api.repository.UserRepositoryTest
+  <testcase name="save_duplicateEmail_throwsConstraintViolation" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.294">
+    <system-out><![CDATA[2026-08-19 12:19:35.571 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.eternalbond.api.repository.UserRepositoryTest]: UserRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-08-19 12:19:35.621 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.eternalbond.api.EternalBondApplication for test class com.eternalbond.api.repository.UserRepositoryTest
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
@@ -77,155 +77,155 @@
 
  :: Spring Boot ::                (v3.3.0)
 
-2026-08-19 11:58:37.192 [main] INFO  c.e.a.repository.UserRepositoryTest - Starting UserRepositoryTest using Java 17.0.17 with PID 18624 (started by ACER in C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend)
-2026-08-19 11:58:37.192 [main] DEBUG c.e.a.repository.UserRepositoryTest - Running with Spring Boot v3.3.0, Spring v6.1.8
-2026-08-19 11:58:37.192 [main] INFO  c.e.a.repository.UserRepositoryTest - No active profile set, falling back to 1 default profile: "default"
-2026-08-19 11:58:37.477 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-08-19 11:58:37.605 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 118 ms. Found 16 JPA repository interfaces.
-2026-08-19 11:58:37.677 [main] INFO  o.s.b.t.a.j.TestDatabaseAutoConfiguration$EmbeddedDataSourceBeanFactoryPostProcessor - Replacing 'dataSource' DataSource bean with embedded version
-2026-08-19 11:58:37.751 [main] INFO  o.s.j.d.e.EmbeddedDatabaseFactory - Starting embedded database: url='jdbc:h2:mem:130e3c30-a450-40fe-b503-2076497ae368;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
-2026-08-19 11:58:38.079 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-08-19 11:58:38.174 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.2.Final
-2026-08-19 11:58:38.231 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2026-08-19 11:58:38.448 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-08-19 11:58:38.518 [main] WARN  org.hibernate.dialect.Dialect - HHH000511: The 2.2.224 version for [org.hibernate.dialect.PostgreSQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 12.0.0. Check the community dialects project for available legacy versions.
-2026-08-19 11:58:38.526 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-08-19 11:58:39.968 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-08-19 11:58:39.984 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:35.678 [main] INFO  c.e.a.repository.UserRepositoryTest - Starting UserRepositoryTest using Java 17.0.17 with PID 132 (started by ACER in C:\Users\ACER\OneDrive - Virinchi College\Desktop\SUJALLLL\eternal-bond\eternal-bond-backend)
+2026-08-19 12:19:35.679 [main] DEBUG c.e.a.repository.UserRepositoryTest - Running with Spring Boot v3.3.0, Spring v6.1.8
+2026-08-19 12:19:35.679 [main] INFO  c.e.a.repository.UserRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+2026-08-19 12:19:36.068 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-08-19 12:19:36.233 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 153 ms. Found 16 JPA repository interfaces.
+2026-08-19 12:19:36.333 [main] INFO  o.s.b.t.a.j.TestDatabaseAutoConfiguration$EmbeddedDataSourceBeanFactoryPostProcessor - Replacing 'dataSource' DataSource bean with embedded version
+2026-08-19 12:19:36.430 [main] INFO  o.s.j.d.e.EmbeddedDatabaseFactory - Starting embedded database: url='jdbc:h2:mem:6b33d1c5-8a1b-4f52-becf-c18570f8522c;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2026-08-19 12:19:36.888 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-08-19 12:19:36.996 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.2.Final
+2026-08-19 12:19:37.073 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-08-19 12:19:37.415 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-08-19 12:19:37.514 [main] WARN  org.hibernate.dialect.Dialect - HHH000511: The 2.2.224 version for [org.hibernate.dialect.PostgreSQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 12.0.0. Check the community dialects project for available legacy versions.
+2026-08-19 12:19:37.525 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-08-19 12:19:39.132 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-08-19 12:19:39.150 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.family_members 
        drop constraint if exists FKmbo1rlwk5ub8qo7k1l8q02vj3
 Hibernate: 
     alter table if exists public.family_members 
        drop constraint if exists FKmbo1rlwk5ub8qo7k1l8q02vj3
-2026-08-19 11:58:39.988 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.154 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.matches 
        drop constraint if exists FK90qwl66l27nhp2y6gv8maqmo6
 Hibernate: 
     alter table if exists public.matches 
        drop constraint if exists FK90qwl66l27nhp2y6gv8maqmo6
-2026-08-19 11:58:39.988 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.154 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.matches 
        drop constraint if exists FKd4g5coxlna9cnsj0a1icui4es
 Hibernate: 
     alter table if exists public.matches 
        drop constraint if exists FKd4g5coxlna9cnsj0a1icui4es
-2026-08-19 11:58:39.988 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.155 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.messages 
        drop constraint if exists FKigt65pktmh2tch9d05wyr8dc3
 Hibernate: 
     alter table if exists public.messages 
        drop constraint if exists FKigt65pktmh2tch9d05wyr8dc3
-2026-08-19 11:58:39.989 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.155 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.messages 
        drop constraint if exists FK79kgt6oyju1ma9ly4qmax5933
 Hibernate: 
     alter table if exists public.messages 
        drop constraint if exists FK79kgt6oyju1ma9ly4qmax5933
-2026-08-19 11:58:39.989 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.155 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.subscriptions 
        drop constraint if exists FK9dvq3oidaecg05k9t9sgd8ga9
 Hibernate: 
     alter table if exists public.subscriptions 
        drop constraint if exists FK9dvq3oidaecg05k9t9sgd8ga9
-2026-08-19 11:58:39.989 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.155 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.swipes 
        drop constraint if exists FKlf7k7id5saw812qad81bv8xer
 Hibernate: 
     alter table if exists public.swipes 
        drop constraint if exists FKlf7k7id5saw812qad81bv8xer
-2026-08-19 11:58:39.989 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.155 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.swipes 
        drop constraint if exists FKsjwf4myub8k0tmyyl5phupoar
 Hibernate: 
     alter table if exists public.swipes 
        drop constraint if exists FKsjwf4myub8k0tmyyl5phupoar
-2026-08-19 11:58:39.990 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.156 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.daily_matches cascade
 Hibernate: 
     drop table if exists public.daily_matches cascade
-2026-08-19 11:58:39.990 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.157 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.family_members cascade
 Hibernate: 
     drop table if exists public.family_members cascade
-2026-08-19 11:58:39.990 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.158 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.matches cascade
 Hibernate: 
     drop table if exists public.matches cascade
-2026-08-19 11:58:39.990 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.159 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.messages cascade
 Hibernate: 
     drop table if exists public.messages cascade
-2026-08-19 11:58:39.991 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.159 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.payments cascade
 Hibernate: 
     drop table if exists public.payments cascade
-2026-08-19 11:58:39.991 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.159 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.priority_interests cascade
 Hibernate: 
     drop table if exists public.priority_interests cascade
-2026-08-19 11:58:39.991 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.160 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.product_catalog cascade
 Hibernate: 
     drop table if exists public.product_catalog cascade
-2026-08-19 11:58:39.991 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.160 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.profile_kundali cascade
 Hibernate: 
     drop table if exists public.profile_kundali cascade
-2026-08-19 11:58:39.991 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.160 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.profile_preferences cascade
 Hibernate: 
     drop table if exists public.profile_preferences cascade
-2026-08-19 11:58:39.991 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.160 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.profiles cascade
 Hibernate: 
     drop table if exists public.profiles cascade
-2026-08-19 11:58:39.991 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.160 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.subscriptions cascade
 Hibernate: 
     drop table if exists public.subscriptions cascade
-2026-08-19 11:58:39.992 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.161 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.swipes cascade
 Hibernate: 
     drop table if exists public.swipes cascade
-2026-08-19 11:58:39.992 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.161 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.user_daily_usage cascade
 Hibernate: 
     drop table if exists public.user_daily_usage cascade
-2026-08-19 11:58:39.992 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.161 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.user_entitlements cascade
 Hibernate: 
     drop table if exists public.user_entitlements cascade
-2026-08-19 11:58:39.992 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.162 [main] DEBUG org.hibernate.SQL - 
     drop table if exists public.users cascade
 Hibernate: 
     drop table if exists public.users cascade
-2026-08-19 11:58:39.992 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.162 [main] DEBUG org.hibernate.SQL - 
     alter table if exists profile_photos_mapping 
        drop constraint if exists FKalr0iln36sqae7duqfy7k48hw
 Hibernate: 
     alter table if exists profile_photos_mapping 
        drop constraint if exists FKalr0iln36sqae7duqfy7k48hw
-2026-08-19 11:58:39.992 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.162 [main] DEBUG org.hibernate.SQL - 
     drop table if exists profile_photos_mapping cascade
 Hibernate: 
     drop table if exists profile_photos_mapping cascade
-2026-08-19 11:58:39.993 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.162 [main] DEBUG org.hibernate.SQL - 
     drop table if exists user_notifications cascade
 Hibernate: 
     drop table if exists user_notifications cascade
-2026-08-19 11:58:39.993 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.163 [main] DEBUG org.hibernate.SQL - 
     drop type if exists EntitlementKey cascade
 Hibernate: 
     drop type if exists EntitlementKey cascade
-2026-08-19 11:58:39.996 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.167 [main] DEBUG org.hibernate.SQL - 
     create type EntitlementKey as enum ('advanced_filters','extend_chat','extra_like','kundali_access','premium_access','priority_interest','profile_boost','reveal_like','undo_skip')
 Hibernate: 
     create type EntitlementKey as enum ('advanced_filters','extend_chat','extra_like','kundali_access','premium_access','priority_interest','profile_boost','reveal_like','undo_skip')
-2026-08-19 11:58:39.998 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.169 [main] DEBUG org.hibernate.SQL - 
     create cast (varchar as EntitlementKey) with inout as implicit
 Hibernate: 
     create cast (varchar as EntitlementKey) with inout as implicit
-2026-08-19 11:58:39.999 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.171 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     create cast (varchar as EntitlementKey) with inout as implicit" via JDBC [Syntax error in SQL statement "\000d\000a    create [*]cast (varchar as EntitlementKey) with inout as implicit"; expected "OR REPLACE, FORCE, VIEW, MATERIALIZED, ALIAS, SEQUENCE, USER, TRIGGER, ROLE, SCHEMA, CONSTANT, DOMAIN, TYPE, AGGREGATE, LINKED, MEMORY, CACHED, LOCAL TEMPORARY, GLOBAL TEMPORARY, TEMPORARY, TABLE, SYNONYM, UNIQUE, SPATIAL, INDEX";]
 org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
     create cast (varchar as EntitlementKey) with inout as implicit" via JDBC [Syntax error in SQL statement "\000d\000a    create [*]cast (varchar as EntitlementKey) with inout as implicit"; expected "OR REPLACE, FORCE, VIEW, MATERIALIZED, ALIAS, SEQUENCE, USER, TRIGGER, ROLE, SCHEMA, CONSTANT, DOMAIN, TYPE, AGGREGATE, LINKED, MEMORY, CACHED, LOCAL TEMPORARY, GLOBAL TEMPORARY, TEMPORARY, TABLE, SYNONYM, UNIQUE, SPATIAL, INDEX";]
@@ -366,11 +366,11 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statemen
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.002 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.174 [main] DEBUG org.hibernate.SQL - 
     create cast (EntitlementKey as varchar) with inout as implicit
 Hibernate: 
     create cast (EntitlementKey as varchar) with inout as implicit
-2026-08-19 11:58:40.003 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.175 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     create cast (EntitlementKey as varchar) with inout as implicit" via JDBC [Syntax error in SQL statement "\000d\000a    create [*]cast (EntitlementKey as varchar) with inout as implicit"; expected "OR REPLACE, FORCE, VIEW, MATERIALIZED, ALIAS, SEQUENCE, USER, TRIGGER, ROLE, SCHEMA, CONSTANT, DOMAIN, TYPE, AGGREGATE, LINKED, MEMORY, CACHED, LOCAL TEMPORARY, GLOBAL TEMPORARY, TEMPORARY, TABLE, SYNONYM, UNIQUE, SPATIAL, INDEX";]
 org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
     create cast (EntitlementKey as varchar) with inout as implicit" via JDBC [Syntax error in SQL statement "\000d\000a    create [*]cast (EntitlementKey as varchar) with inout as implicit"; expected "OR REPLACE, FORCE, VIEW, MATERIALIZED, ALIAS, SEQUENCE, USER, TRIGGER, ROLE, SCHEMA, CONSTANT, DOMAIN, TYPE, AGGREGATE, LINKED, MEMORY, CACHED, LOCAL TEMPORARY, GLOBAL TEMPORARY, TEMPORARY, TABLE, SYNONYM, UNIQUE, SPATIAL, INDEX";]
@@ -511,7 +511,7 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statemen
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.007 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.181 [main] DEBUG org.hibernate.SQL - 
     create table public.daily_matches (
         match_date date not null,
         sort_order integer not null,
@@ -535,7 +535,7 @@ Hibernate:
         constraint uq_daily_match_user_profile_date unique (user_id, recommended_profile_id, match_date),
         constraint uq_daily_match_user_date_order unique (user_id, match_date, sort_order)
     )
-2026-08-19 11:58:40.014 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.190 [main] DEBUG org.hibernate.SQL - 
     create table public.family_members (
         can_veto_matches boolean not null,
         is_approved boolean not null,
@@ -561,7 +561,7 @@ Hibernate:
         primary key (id),
         unique (user_id, guardian_email)
     )
-2026-08-19 11:58:40.019 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.197 [main] DEBUG org.hibernate.SQL - 
     create table public.matches (
         is_game_night boolean,
         created_at timestamp(6) not null,
@@ -585,7 +585,7 @@ Hibernate:
         primary key (id),
         unique (user_one_id, user_two_id)
     )
-2026-08-19 11:58:40.020 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.199 [main] DEBUG org.hibernate.SQL - 
     create table public.messages (
         is_read boolean not null,
         created_at timestamp(6) not null,
@@ -605,7 +605,7 @@ Hibernate:
         sender_id varchar(255) not null,
         primary key (id)
     )
-2026-08-19 11:58:40.022 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.200 [main] DEBUG org.hibernate.SQL - 
     create table public.payments (
         currency varchar(3) not null,
         amount bigint not null,
@@ -643,7 +643,7 @@ Hibernate:
         metadata jsonb,
         primary key (id)
     )
-2026-08-19 11:58:40.023 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.201 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     create table public.payments (
         currency varchar(3) not null,
         amount bigint not null,
@@ -841,7 +841,7 @@ Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Unknown data type: "JSONB";
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 117 common frames omitted
-2026-08-19 11:58:40.025 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.202 [main] DEBUG org.hibernate.SQL - 
     create table public.priority_interests (
         created_at timestamp(6) not null,
         expires_at timestamp(6),
@@ -865,7 +865,7 @@ Hibernate:
         constraint uq_priority_interest_entitlement unique (entitlement_id),
         constraint uq_priority_interest_sender_target unique (sender_id, target_id)
     )
-2026-08-19 11:58:40.031 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.207 [main] DEBUG org.hibernate.SQL - 
     create table public.product_catalog (
         amount_npr integer not null,
         daily_limit integer,
@@ -889,7 +889,7 @@ Hibernate:
         description TEXT,
         primary key (id)
     )
-2026-08-19 11:58:40.033 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.208 [main] DEBUG org.hibernate.SQL - 
     create table public.profile_kundali (
         birth_date date not null,
         birth_latitude float(53) not null,
@@ -917,7 +917,7 @@ Hibernate:
         profile_id varchar not null unique,
         primary key (id)
     )
-2026-08-19 11:58:40.035 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.210 [main] DEBUG org.hibernate.SQL - 
     create table public.profile_preferences (
         is_active boolean,
         pref_age_max integer,
@@ -961,7 +961,7 @@ Hibernate:
         profile_id varchar not null,
         primary key (id)
     )
-2026-08-19 11:58:40.037 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.214 [main] DEBUG org.hibernate.SQL - 
     create table public.profiles (
         date_of_birth date,
         height_cm integer,
@@ -1037,7 +1037,7 @@ Hibernate:
         social_links jsonb,
         primary key (id)
     )
-2026-08-19 11:58:40.038 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.215 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     create table public.profiles (
         date_of_birth date,
         height_cm integer,
@@ -1292,7 +1292,7 @@ Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Unknown data type: "JSONB";
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 117 common frames omitted
-2026-08-19 11:58:40.039 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.217 [main] DEBUG org.hibernate.SQL - 
     create table public.subscriptions (
         created_at timestamp(6) not null,
         expires_at timestamp(6) not null,
@@ -1314,7 +1314,7 @@ Hibernate:
         user_id varchar(255) not null,
         primary key (id)
     )
-2026-08-19 11:58:40.041 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.220 [main] DEBUG org.hibernate.SQL - 
     create table public.swipes (
         created_at timestamp(6) not null,
         action varchar(255) not null check (action in ('like','dislike')),
@@ -1334,7 +1334,7 @@ Hibernate:
         primary key (id),
         unique (swiper_id, swiped_id)
     )
-2026-08-19 11:58:40.043 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.223 [main] DEBUG org.hibernate.SQL - 
     create table public.user_daily_usage (
         extra_like_purchased boolean not null,
         likes_used integer not null,
@@ -1358,7 +1358,7 @@ Hibernate:
         primary key (id),
         unique (user_id, usage_date)
     )
-2026-08-19 11:58:40.045 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.225 [main] DEBUG org.hibernate.SQL - 
     create table public.user_entitlements (
         is_active boolean not null,
         is_consumed boolean not null,
@@ -1394,7 +1394,7 @@ Hibernate:
         metadata jsonb,
         primary key (id)
     )
-2026-08-19 11:58:40.046 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.226 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     create table public.user_entitlements (
         is_active boolean not null,
         is_consumed boolean not null,
@@ -1589,7 +1589,7 @@ Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Unknown data type: "ENTITLE
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 117 common frames omitted
-2026-08-19 11:58:40.048 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.228 [main] DEBUG org.hibernate.SQL - 
     create table public.users (
         verified boolean not null,
         created_at timestamp(6) not null,
@@ -1615,7 +1615,7 @@ Hibernate:
         verification_token varchar(255),
         primary key (id)
     )
-2026-08-19 11:58:40.050 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.230 [main] DEBUG org.hibernate.SQL - 
     create table profile_photos_mapping (
         photo_url varchar(255),
         profile_id varchar(255) not null
@@ -1625,7 +1625,7 @@ Hibernate:
         photo_url varchar(255),
         profile_id varchar(255) not null
     )
-2026-08-19 11:58:40.052 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.231 [main] DEBUG org.hibernate.SQL - 
     create table user_notifications (
         is_read boolean not null,
         created_at timestamp(6) not null,
@@ -1651,7 +1651,7 @@ Hibernate:
         metadata jsonb,
         primary key (id)
     )
-2026-08-19 11:58:40.053 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.232 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     create table user_notifications (
         is_read boolean not null,
         created_at timestamp(6) not null,
@@ -1831,7 +1831,7 @@ Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Unknown data type: "JSONB";
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 117 common frames omitted
-2026-08-19 11:58:40.053 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.234 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.family_members 
        add constraint FKmbo1rlwk5ub8qo7k1l8q02vj3 
        foreign key (user_id) 
@@ -1841,7 +1841,7 @@ Hibernate:
        add constraint FKmbo1rlwk5ub8qo7k1l8q02vj3 
        foreign key (user_id) 
        references public.profiles
-2026-08-19 11:58:40.054 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.235 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     alter table if exists public.family_members 
        add constraint FKmbo1rlwk5ub8qo7k1l8q02vj3 
        foreign key (user_id) 
@@ -1987,7 +1987,7 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PROFILES" not found; 
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.054 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.236 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.matches 
        add constraint FK90qwl66l27nhp2y6gv8maqmo6 
        foreign key (user_one_id) 
@@ -1997,7 +1997,7 @@ Hibernate:
        add constraint FK90qwl66l27nhp2y6gv8maqmo6 
        foreign key (user_one_id) 
        references public.profiles
-2026-08-19 11:58:40.055 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.237 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     alter table if exists public.matches 
        add constraint FK90qwl66l27nhp2y6gv8maqmo6 
        foreign key (user_one_id) 
@@ -2143,7 +2143,7 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PROFILES" not found; 
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.055 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.239 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.matches 
        add constraint FKd4g5coxlna9cnsj0a1icui4es 
        foreign key (user_two_id) 
@@ -2153,7 +2153,7 @@ Hibernate:
        add constraint FKd4g5coxlna9cnsj0a1icui4es 
        foreign key (user_two_id) 
        references public.profiles
-2026-08-19 11:58:40.055 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.239 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     alter table if exists public.matches 
        add constraint FKd4g5coxlna9cnsj0a1icui4es 
        foreign key (user_two_id) 
@@ -2299,7 +2299,7 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PROFILES" not found; 
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.056 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.240 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.messages 
        add constraint FKigt65pktmh2tch9d05wyr8dc3 
        foreign key (match_id) 
@@ -2309,7 +2309,7 @@ Hibernate:
        add constraint FKigt65pktmh2tch9d05wyr8dc3 
        foreign key (match_id) 
        references public.matches
-2026-08-19 11:58:40.067 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.252 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.messages 
        add constraint FK79kgt6oyju1ma9ly4qmax5933 
        foreign key (sender_id) 
@@ -2319,7 +2319,7 @@ Hibernate:
        add constraint FK79kgt6oyju1ma9ly4qmax5933 
        foreign key (sender_id) 
        references public.profiles
-2026-08-19 11:58:40.067 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.253 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     alter table if exists public.messages 
        add constraint FK79kgt6oyju1ma9ly4qmax5933 
        foreign key (sender_id) 
@@ -2465,7 +2465,7 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PROFILES" not found; 
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.068 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.254 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.subscriptions 
        add constraint FK9dvq3oidaecg05k9t9sgd8ga9 
        foreign key (user_id) 
@@ -2475,7 +2475,7 @@ Hibernate:
        add constraint FK9dvq3oidaecg05k9t9sgd8ga9 
        foreign key (user_id) 
        references public.profiles
-2026-08-19 11:58:40.068 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.255 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     alter table if exists public.subscriptions 
        add constraint FK9dvq3oidaecg05k9t9sgd8ga9 
        foreign key (user_id) 
@@ -2621,7 +2621,7 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PROFILES" not found; 
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.069 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.255 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.swipes 
        add constraint FKlf7k7id5saw812qad81bv8xer 
        foreign key (swiped_id) 
@@ -2631,7 +2631,7 @@ Hibernate:
        add constraint FKlf7k7id5saw812qad81bv8xer 
        foreign key (swiped_id) 
        references public.profiles
-2026-08-19 11:58:40.069 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.256 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     alter table if exists public.swipes 
        add constraint FKlf7k7id5saw812qad81bv8xer 
        foreign key (swiped_id) 
@@ -2777,7 +2777,7 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PROFILES" not found; 
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.070 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.257 [main] DEBUG org.hibernate.SQL - 
     alter table if exists public.swipes 
        add constraint FKsjwf4myub8k0tmyyl5phupoar 
        foreign key (swiper_id) 
@@ -2787,7 +2787,7 @@ Hibernate:
        add constraint FKsjwf4myub8k0tmyyl5phupoar 
        foreign key (swiper_id) 
        references public.profiles
-2026-08-19 11:58:40.070 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.258 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     alter table if exists public.swipes 
        add constraint FKsjwf4myub8k0tmyyl5phupoar 
        foreign key (swiper_id) 
@@ -2933,7 +2933,7 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PROFILES" not found; 
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.071 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.259 [main] DEBUG org.hibernate.SQL - 
     alter table if exists profile_photos_mapping 
        add constraint FKalr0iln36sqae7duqfy7k48hw 
        foreign key (profile_id) 
@@ -2943,7 +2943,7 @@ Hibernate:
        add constraint FKalr0iln36sqae7duqfy7k48hw 
        foreign key (profile_id) 
        references public.profiles
-2026-08-19 11:58:40.071 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+2026-08-19 12:19:39.259 [main] WARN  o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
     alter table if exists profile_photos_mapping 
        add constraint FKalr0iln36sqae7duqfy7k48hw 
        foreign key (profile_id) 
@@ -3089,10 +3089,10 @@ Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PROFILES" not found; 
 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
 	... 116 common frames omitted
-2026-08-19 11:58:40.076 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-08-19 11:58:40.641 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-08-19 11:58:41.497 [main] INFO  c.e.a.repository.UserRepositoryTest - Started UserRepositoryTest in 4.338 seconds (process running for 11.055)
-2026-08-19 11:58:41.651 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:39.266 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-08-19 12:19:39.779 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-08-19 12:19:41.139 [main] INFO  c.e.a.repository.UserRepositoryTest - Started UserRepositoryTest in 5.507 seconds (process running for 14.107)
+2026-08-19 12:19:41.299 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3118,7 +3118,7 @@ Hibernate:
         u1_0.verified 
     from
         public.users u1_0
-2026-08-19 11:58:41.764 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.404 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3132,16 +3132,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.767 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.677950300]
-2026-08-19 11:58:41.768 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.769 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
-2026-08-19 11:58:41.769 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
-2026-08-19 11:58:41.769 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.769 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.769 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.769 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
-2026-08-19 11:58:41.769 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [ff0c173e-f82a-43fc-8e1a-e4a937f25d92]
-2026-08-19 11:58:41.774 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.406 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.325325800]
+2026-08-19 12:19:41.408 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.408 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
+2026-08-19 12:19:41.408 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
+2026-08-19 12:19:41.408 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.408 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.408 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.408 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
+2026-08-19 12:19:41.408 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [e78b31ea-c7b5-444d-83ed-a1bee17321a1]
+2026-08-19 12:19:41.412 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3155,22 +3155,22 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.775 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.745961500]
-2026-08-19 11:58:41.775 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.775 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Another User]
-2026-08-19 11:58:41.775 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hash2]
-2026-08-19 11:58:41.775 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.775 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.775 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.775 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [false]
-2026-08-19 11:58:41.775 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [40f781a1-1f6e-4e5b-b3d5-3711e6543b47]
-2026-08-19 11:58:41.777 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 23505, SQLState: 23505
-2026-08-19 11:58:41.777 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unique index or primary key violation: "PUBLIC.CONSTRAINT_INDEX_4 ON PUBLIC.USERS(EMAIL NULLS FIRST) VALUES ( /* 1 */ 'sujal@example.com' )"; SQL statement:
+2026-08-19 12:19:41.412 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.390699300]
+2026-08-19 12:19:41.412 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.413 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Another User]
+2026-08-19 12:19:41.413 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hash2]
+2026-08-19 12:19:41.413 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.413 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.413 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.413 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [false]
+2026-08-19 12:19:41.413 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [ad3b5faa-58b0-48ff-9e1a-1099d1846400]
+2026-08-19 12:19:41.415 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 23505, SQLState: 23505
+2026-08-19 12:19:41.415 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unique index or primary key violation: "PUBLIC.CONSTRAINT_INDEX_4 ON PUBLIC.USERS(EMAIL NULLS FIRST) VALUES ( /* 1 */ 'sujal@example.com' )"; SQL statement:
 insert into public.users (created_at,email,full_name,password,reset_token,reset_token_expiry,verification_token,verified,id) values (?,?,?,?,?,?,?,?,?) [23505-224]
 ]]></system-out>
   </testcase>
   <testcase name="existsByEmail_registered_returnsTrue" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.042">
-    <system-out><![CDATA[2026-08-19 11:58:41.812 [main] DEBUG org.hibernate.SQL - 
+    <system-out><![CDATA[2026-08-19 12:19:41.445 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3196,7 +3196,7 @@ Hibernate:
         u1_0.verified 
     from
         public.users u1_0
-2026-08-19 11:58:41.835 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.473 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3210,16 +3210,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.836 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.814501900]
-2026-08-19 11:58:41.837 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.837 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
-2026-08-19 11:58:41.837 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
-2026-08-19 11:58:41.837 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.837 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.837 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.837 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
-2026-08-19 11:58:41.837 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [7a9b954f-f477-4f89-afa9-3da2606b36b7]
-2026-08-19 11:58:41.838 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.473 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.447699900]
+2026-08-19 12:19:41.473 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.473 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
+2026-08-19 12:19:41.473 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
+2026-08-19 12:19:41.473 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.473 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.473 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.473 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
+2026-08-19 12:19:41.474 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [ebfad903-f085-45bb-84be-5dd3d72b20d4]
+2026-08-19 12:19:41.475 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id 
     from
@@ -3237,12 +3237,12 @@ Hibernate:
         u1_0.email=? 
     fetch
         first ? rows only
-2026-08-19 11:58:41.839 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.839 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:INTEGER) <- [1]
+2026-08-19 12:19:41.475 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.475 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:INTEGER) <- [1]
 ]]></system-out>
   </testcase>
-  <testcase name="existsByEmail_notRegistered_returnsFalse" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.011">
-    <system-out><![CDATA[2026-08-19 11:58:41.855 [main] DEBUG org.hibernate.SQL - 
+  <testcase name="existsByEmail_notRegistered_returnsFalse" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.015">
+    <system-out><![CDATA[2026-08-19 12:19:41.488 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3268,7 +3268,7 @@ Hibernate:
         u1_0.verified 
     from
         public.users u1_0
-2026-08-19 11:58:41.858 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.492 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3282,16 +3282,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.859 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.856491]
-2026-08-19 11:58:41.859 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.859 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
-2026-08-19 11:58:41.859 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
-2026-08-19 11:58:41.859 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.859 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.859 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.859 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
-2026-08-19 11:58:41.859 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [ed5c47d4-c0ff-47d2-8b32-503ec755841e]
-2026-08-19 11:58:41.860 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.493 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.490222900]
+2026-08-19 12:19:41.493 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.493 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
+2026-08-19 12:19:41.493 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
+2026-08-19 12:19:41.493 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.493 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.494 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.494 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
+2026-08-19 12:19:41.494 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [0ee8dd9f-12a3-47dd-8394-8a6ee815d4b7]
+2026-08-19 12:19:41.494 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id 
     from
@@ -3309,12 +3309,12 @@ Hibernate:
         u1_0.email=? 
     fetch
         first ? rows only
-2026-08-19 11:58:41.860 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [ghost@example.com]
-2026-08-19 11:58:41.860 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:INTEGER) <- [1]
+2026-08-19 12:19:41.495 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [ghost@example.com]
+2026-08-19 12:19:41.495 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:INTEGER) <- [1]
 ]]></system-out>
   </testcase>
-  <testcase name="findByEmail_notExists_returnsEmpty" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.015">
-    <system-out><![CDATA[2026-08-19 11:58:41.866 [main] DEBUG org.hibernate.SQL - 
+  <testcase name="findByEmail_notExists_returnsEmpty" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.019">
+    <system-out><![CDATA[2026-08-19 12:19:41.505 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3340,7 +3340,7 @@ Hibernate:
         u1_0.verified 
     from
         public.users u1_0
-2026-08-19 11:58:41.871 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.510 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3354,16 +3354,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.871 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.868497800]
-2026-08-19 11:58:41.871 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.871 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
-2026-08-19 11:58:41.871 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
-2026-08-19 11:58:41.871 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.871 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.871 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.871 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
-2026-08-19 11:58:41.871 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [b0a0c0be-8e81-4dfa-9f08-d15f05737b71]
-2026-08-19 11:58:41.872 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.511 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.507236200]
+2026-08-19 12:19:41.511 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.512 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
+2026-08-19 12:19:41.512 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
+2026-08-19 12:19:41.512 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.512 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.512 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.512 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
+2026-08-19 12:19:41.512 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [420bc652-23ba-4fab-800b-86875d45ae90]
+2026-08-19 12:19:41.513 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3393,11 +3393,11 @@ Hibernate:
         public.users u1_0 
     where
         u1_0.email=?
-2026-08-19 11:58:41.872 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [nobody@example.com]
+2026-08-19 12:19:41.514 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [nobody@example.com]
 ]]></system-out>
   </testcase>
-  <testcase name="findByEmail_exists_returnsUser" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.023">
-    <system-out><![CDATA[2026-08-19 11:58:41.884 [main] DEBUG org.hibernate.SQL - 
+  <testcase name="findByEmail_exists_returnsUser" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.021">
+    <system-out><![CDATA[2026-08-19 12:19:41.525 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3423,7 +3423,7 @@ Hibernate:
         u1_0.verified 
     from
         public.users u1_0
-2026-08-19 11:58:41.889 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.529 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3437,16 +3437,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.890 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.886017600]
-2026-08-19 11:58:41.890 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.890 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
-2026-08-19 11:58:41.890 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
-2026-08-19 11:58:41.890 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.890 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.890 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.890 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
-2026-08-19 11:58:41.890 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [e9448b73-688b-46b6-92bc-8bbd8d18d25d]
-2026-08-19 11:58:41.891 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.530 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.527225700]
+2026-08-19 12:19:41.531 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.531 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
+2026-08-19 12:19:41.531 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
+2026-08-19 12:19:41.531 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.531 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.531 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.531 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
+2026-08-19 12:19:41.531 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [370b9b55-5f5c-4f87-a606-bf67e0430db2]
+2026-08-19 12:19:41.532 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3476,11 +3476,11 @@ Hibernate:
         public.users u1_0 
     where
         u1_0.email=?
-2026-08-19 11:58:41.892 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.533 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [sujal@example.com]
 ]]></system-out>
   </testcase>
-  <testcase name="findByVerificationToken_unknownToken_returnsEmpty" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.012">
-    <system-out><![CDATA[2026-08-19 11:58:41.908 [main] DEBUG org.hibernate.SQL - 
+  <testcase name="findByVerificationToken_unknownToken_returnsEmpty" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.016">
+    <system-out><![CDATA[2026-08-19 12:19:41.548 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3506,7 +3506,7 @@ Hibernate:
         u1_0.verified 
     from
         public.users u1_0
-2026-08-19 11:58:41.912 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.553 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3520,16 +3520,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.912 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.910016300]
-2026-08-19 11:58:41.912 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.912 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
-2026-08-19 11:58:41.912 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
-2026-08-19 11:58:41.912 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.912 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.912 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.912 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
-2026-08-19 11:58:41.912 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [3d514150-6669-4aff-9efc-babd7b025fd2]
-2026-08-19 11:58:41.913 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.554 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.550230900]
+2026-08-19 12:19:41.554 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.554 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
+2026-08-19 12:19:41.554 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
+2026-08-19 12:19:41.554 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.554 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.554 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.555 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
+2026-08-19 12:19:41.555 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [afbcf38b-9e08-4f9b-bff4-b89b855a0f56]
+2026-08-19 12:19:41.555 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3559,11 +3559,11 @@ Hibernate:
         public.users u1_0 
     where
         u1_0.verification_token=?
-2026-08-19 11:58:41.913 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [nonexistent-token]
+2026-08-19 12:19:41.556 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [nonexistent-token]
 ]]></system-out>
   </testcase>
-  <testcase name="findByVerificationToken_validToken_returnsUser" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.015">
-    <system-out><![CDATA[2026-08-19 11:58:41.921 [main] DEBUG org.hibernate.SQL - 
+  <testcase name="findByVerificationToken_validToken_returnsUser" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.017">
+    <system-out><![CDATA[2026-08-19 12:19:41.565 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3589,7 +3589,7 @@ Hibernate:
         u1_0.verified 
     from
         public.users u1_0
-2026-08-19 11:58:41.925 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.570 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3603,16 +3603,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.925 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.923020400]
-2026-08-19 11:58:41.925 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.925 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
-2026-08-19 11:58:41.925 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
-2026-08-19 11:58:41.925 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.925 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.925 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.926 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
-2026-08-19 11:58:41.926 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [96c40188-22f1-47f4-a608-1bc1505f61c9]
-2026-08-19 11:58:41.926 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.571 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.567240900]
+2026-08-19 12:19:41.571 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.571 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
+2026-08-19 12:19:41.571 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
+2026-08-19 12:19:41.571 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.571 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.571 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.571 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
+2026-08-19 12:19:41.571 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [81e39a67-c3fa-46f2-bcb0-652997713d78]
+2026-08-19 12:19:41.572 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3626,16 +3626,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.926 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.923020400]
-2026-08-19 11:58:41.926 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [pending@example.com]
-2026-08-19 11:58:41.926 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Pending User]
-2026-08-19 11:58:41.926 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hash]
-2026-08-19 11:58:41.926 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.926 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.927 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [my-unique-verify-token-abc123]
-2026-08-19 11:58:41.927 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [false]
-2026-08-19 11:58:41.927 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [bfb3e671-f519-40a3-b75d-6c0aa995fc56]
-2026-08-19 11:58:41.927 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.572 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.568238]
+2026-08-19 12:19:41.573 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [pending@example.com]
+2026-08-19 12:19:41.573 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Pending User]
+2026-08-19 12:19:41.573 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hash]
+2026-08-19 12:19:41.573 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.573 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.573 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [my-unique-verify-token-abc123]
+2026-08-19 12:19:41.573 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [false]
+2026-08-19 12:19:41.573 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [95bf0d01-f4c3-4dcc-8fcd-9228a6203ce3]
+2026-08-19 12:19:41.574 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3665,11 +3665,11 @@ Hibernate:
         public.users u1_0 
     where
         u1_0.verification_token=?
-2026-08-19 11:58:41.928 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [my-unique-verify-token-abc123]
+2026-08-19 12:19:41.575 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [my-unique-verify-token-abc123]
 ]]></system-out>
   </testcase>
-  <testcase name="delete_removesUser" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.045">
-    <system-out><![CDATA[2026-08-19 11:58:41.935 [main] DEBUG org.hibernate.SQL - 
+  <testcase name="delete_removesUser" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.058">
+    <system-out><![CDATA[2026-08-19 12:19:41.583 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3695,7 +3695,7 @@ Hibernate:
         u1_0.verified 
     from
         public.users u1_0
-2026-08-19 11:58:41.950 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.606 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3709,16 +3709,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.951 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.937019200]
-2026-08-19 11:58:41.951 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.951 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
-2026-08-19 11:58:41.951 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
-2026-08-19 11:58:41.951 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.951 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.951 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.951 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
-2026-08-19 11:58:41.951 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [dde85713-26f6-418a-b4ba-2e422f79c4e9]
-2026-08-19 11:58:41.954 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.606 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.585754300]
+2026-08-19 12:19:41.607 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.607 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
+2026-08-19 12:19:41.607 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
+2026-08-19 12:19:41.607 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.607 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.607 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.607 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
+2026-08-19 12:19:41.607 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [ac9320fb-2983-479c-9a6b-218d443c4187]
+2026-08-19 12:19:41.611 [main] DEBUG org.hibernate.SQL - 
     delete 
     from
         public.users 
@@ -3730,8 +3730,8 @@ Hibernate:
         public.users 
     where
         id=?
-2026-08-19 11:58:41.954 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [dde85713-26f6-418a-b4ba-2e422f79c4e9]
-2026-08-19 11:58:41.957 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.611 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [ac9320fb-2983-479c-9a6b-218d443c4187]
+2026-08-19 12:19:41.615 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3761,8 +3761,8 @@ Hibernate:
         public.users u1_0 
     where
         u1_0.email=?
-2026-08-19 11:58:41.958 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.970 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.616 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.628 [main] DEBUG org.hibernate.SQL - 
     select
         count(*) 
     from
@@ -3774,8 +3774,8 @@ Hibernate:
         public.users u1_0
 ]]></system-out>
   </testcase>
-  <testcase name="save_persistsUserWithId" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.013">
-    <system-out><![CDATA[2026-08-19 11:58:41.982 [main] DEBUG org.hibernate.SQL - 
+  <testcase name="save_persistsUserWithId" classname="com.eternalbond.api.repository.UserRepositoryTest" time="0.016">
+    <system-out><![CDATA[2026-08-19 12:19:41.642 [main] DEBUG org.hibernate.SQL - 
     select
         u1_0.id,
         u1_0.created_at,
@@ -3801,7 +3801,7 @@ Hibernate:
         u1_0.verified 
     from
         public.users u1_0
-2026-08-19 11:58:41.987 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.649 [main] DEBUG org.hibernate.SQL - 
     insert 
     into
         public.users
@@ -3815,16 +3815,16 @@ Hibernate:
         (created_at, email, full_name, password, reset_token, reset_token_expiry, verification_token, verified, id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, ?)
-2026-08-19 11:58:41.988 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T11:58:41.984533600]
-2026-08-19 11:58:41.988 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
-2026-08-19 11:58:41.988 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
-2026-08-19 11:58:41.988 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
-2026-08-19 11:58:41.988 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
-2026-08-19 11:58:41.988 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
-2026-08-19 11:58:41.988 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
-2026-08-19 11:58:41.988 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
-2026-08-19 11:58:41.988 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [afbb61ce-9e7e-427f-8530-80afaa71c987]
-2026-08-19 11:58:41.989 [main] DEBUG org.hibernate.SQL - 
+2026-08-19 12:19:41.649 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (1:TIMESTAMP) <- [2026-08-19T12:19:41.645136]
+2026-08-19 12:19:41.650 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (2:VARCHAR) <- [sujal@example.com]
+2026-08-19 12:19:41.650 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (3:VARCHAR) <- [Sujal Bajracharya]
+2026-08-19 12:19:41.650 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (4:VARCHAR) <- [$2a$10$hashedpassword]
+2026-08-19 12:19:41.650 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (5:VARCHAR) <- [null]
+2026-08-19 12:19:41.650 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (6:TIMESTAMP) <- [null]
+2026-08-19 12:19:41.650 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (7:VARCHAR) <- [null]
+2026-08-19 12:19:41.650 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (8:BOOLEAN) <- [true]
+2026-08-19 12:19:41.650 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter (9:VARCHAR) <- [5b4dcb6a-a6f0-403e-b2a5-b384533e092a]
+2026-08-19 12:19:41.651 [main] DEBUG org.hibernate.SQL - 
     select
         count(*) 
     from

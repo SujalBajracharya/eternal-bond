@@ -18,6 +18,9 @@ import com.eternalbond.api.repository.ProductCatalogRepository;
 import com.eternalbond.api.repository.UserNotificationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.eternalbond.api.repository.UserRepository;
+import com.eternalbond.api.model.User;
+import java.util.concurrent.CompletableFuture;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
@@ -62,6 +65,9 @@ public class MonetizationService {
     private final MatchRepository           matchRepository;
     private final UserNotificationRepository notificationRepository;
     private final ObjectMapper              objectMapper;
+    private final UserRepository            userRepository;
+    private final EmailService              emailService;
+    private final TransactionService        transactionService;
     private final String                    webhookSigningSecret;
 
     public MonetizationService(
@@ -71,6 +77,9 @@ public class MonetizationService {
             MatchRepository matchRepository,
             UserNotificationRepository notificationRepository,
             ObjectMapper objectMapper,
+            UserRepository userRepository,
+            EmailService emailService,
+            TransactionService transactionService,
             @Value("${stripe.webhook-secret:}") String webhookSigningSecret) {
         this.productCatalogRepo   = productCatalogRepo;
         this.paymentRepository    = paymentRepository;
@@ -78,6 +87,9 @@ public class MonetizationService {
         this.matchRepository      = matchRepository;
         this.notificationRepository = notificationRepository;
         this.objectMapper         = objectMapper;
+        this.userRepository       = userRepository;
+        this.emailService         = emailService;
+        this.transactionService   = transactionService;
         this.webhookSigningSecret = webhookSigningSecret;
     }
 
@@ -274,7 +286,7 @@ public class MonetizationService {
         );
         log.info("Simulated payment success for payment {} and granted entitlement", payment.getId());
 
-        saveNotification(payment.getUserId(), payment.getProductId(), payment.getAmount(), payment.getId());
+        saveNotification(payment.getUserId(), payment.getProductId(), payment.getAmount(), payment);
     }
 
     // ── Private: Webhook Handlers ─────────────────────────────────────────────
@@ -333,7 +345,7 @@ public class MonetizationService {
         log.info("Entitlement {} granted to user {} after payment {} succeeded",
                 granted.getEntitlementKey(), userId, payment.getId());
 
-        saveNotification(userId, productId, payment.getAmount(), payment.getId());
+        saveNotification(userId, productId, payment.getAmount(), payment);
     }
 
     /**
@@ -397,7 +409,7 @@ public class MonetizationService {
         );
         log.info("Checkout Session {} completed; entitlement granted for user {}", checkoutSession.getId(), userId);
 
-        saveNotification(userId, productId, checkoutSession.getAmountTotal(), payment.getId());
+        saveNotification(userId, productId, checkoutSession.getAmountTotal(), payment);
     }
 
     private void handlePaymentFailed(Event event) {
@@ -415,7 +427,8 @@ public class MonetizationService {
     /**
      * Persists a purchase notification for the user's Notifications page.
      */
-    private void saveNotification(String userId, String productId, Long amountPaisa, String transactionId) {
+    private void saveNotification(String userId, String productId, Long amountPaisa, Payment payment) {
+        String transactionId = payment.getId();
         if (!StringUtils.hasText(userId) || !StringUtils.hasText(productId)) {
             log.warn("Cannot save notification: missing userId ({}) or productId ({})", userId, productId);
             return;
@@ -436,9 +449,30 @@ public class MonetizationService {
                     .build()
             );
             log.info("Saved purchase notification for user {} product {}", userId, productId);
+            
+            // Trigger purchase confirmation email asynchronously
+            CompletableFuture.runAsync(() -> sendPurchaseEmail(userId, payment));
         } catch (Exception ex) {
             log.error("Failed to save purchase notification for user {} product {}: {}",
                     userId, productId, ex.getMessage(), ex);
+        }
+    }
+
+    private void sendPurchaseEmail(String userId, Payment payment) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                log.warn("Could not find user {} to send purchase email", userId);
+                return;
+            }
+            if (payment == null) {
+                log.warn("Payment object is null. Cannot generate PDF for email.");
+                return;
+            }
+            byte[] pdfAttachment = transactionService.generateReceiptPdf(payment);
+            emailService.sendPurchaseConfirmationEmail(user.getEmail(), user.getFullName(), pdfAttachment);
+        } catch (Exception ex) {
+            log.error("Failed to generate PDF or send purchase confirmation email to user {}: {}", userId, ex.getMessage(), ex);
         }
     }
 

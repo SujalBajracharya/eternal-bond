@@ -176,12 +176,15 @@ export async function createCheckoutSession(token: string, request: CheckoutRequ
   });
 
   if (!response.ok) {
-    const errData = await response.json().catch(() => ({}));
-    if (response.status === 401 || response.status === 403) {
-      throw new Error("Your session has expired. Please sign in and try again.");
-    }
-    throw new Error(errData.message || "Unable to start secure checkout. Please try again.");
-      return throwApiError(response, "Unable to start secure checkout. Please try again.");
+    return throwApiError(response, "Unable to start secure checkout. Please try again.");
+  }
+
+  const data = await response.json().catch(() => null) as
+    | { checkoutUrl?: unknown; url?: unknown; checkout_url?: unknown }
+    | null;
+  const checkoutUrl = data?.checkoutUrl ?? data?.url ?? data?.checkout_url;
+  if (typeof checkoutUrl !== "string" || !checkoutUrl.trim()) {
+    throw new Error("Checkout started but no valid Stripe Checkout URL was returned.");
   }
   return { checkoutUrl };
 }
