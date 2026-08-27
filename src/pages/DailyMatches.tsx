@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 
 import {
   Heart,
@@ -40,6 +40,7 @@ import NavbarAuthenticated from "@/components/userSide/NavbarAuthenticated";
 import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 import { FullProfileData } from "@/components/matches/FullProfileDialog";
 import { activatePriorityInterest as activatePriorityInterestApi } from "@/api/monetization";
+import { useAdmin } from "@/hooks/use-admin";
 
 type GalleryItem = { url: string; blurred?: boolean };
 
@@ -137,6 +138,7 @@ const getFamilyDetails = (dto: any) => {
 
 const DailyMatches = () => {
   const { session } = useAuth();
+  const { isAdmin, loading: adminLoading } = useAdmin();
   const {
     entitlements,
     consume,
@@ -165,8 +167,12 @@ const DailyMatches = () => {
   const [reportPhotoUrl, setReportPhotoUrl] = useState<string | null>(null);
   const [priorityCheckoutOpen, setPriorityCheckoutOpen] = useState(false);
   const [priorityTargetId, setPriorityTargetId] = useState<string | null>(null);
-  const [priorityActivatingId, setPriorityActivatingId] = useState<string | null>(null);
-  const [prioritySentIds, setPrioritySentIds] = useState<Set<string>>(new Set());
+  const [priorityActivatingId, setPriorityActivatingId] = useState<
+    string | null
+  >(null);
+  const [prioritySentIds, setPrioritySentIds] = useState<Set<string>>(
+    new Set(),
+  );
 
   useEffect(() => {
     document.title = "Today's Matches — EternalBond";
@@ -485,7 +491,10 @@ const DailyMatches = () => {
 
     if ((entitlements?.pendingPriorityInterests ?? 0) <= 0) {
       setPriorityTargetId(targetProfileId);
-      sessionStorage.setItem("eb_pending_priority_interest_profile_id", targetProfileId);
+      sessionStorage.setItem(
+        "eb_pending_priority_interest_profile_id",
+        targetProfileId,
+      );
       setPriorityCheckoutOpen(true);
       return;
     }
@@ -528,9 +537,16 @@ const DailyMatches = () => {
   }, [matches, entitlements]);
 
   useEffect(() => {
-    const pendingTarget = sessionStorage.getItem("eb_pending_priority_interest_profile_id");
-    if (!pendingTarget || !matches.some((match) => match.id === pendingTarget)) return;
-    if ((entitlements?.pendingPriorityInterests ?? 0) <= 0 || priorityActivatingId) return;
+    const pendingTarget = sessionStorage.getItem(
+      "eb_pending_priority_interest_profile_id",
+    );
+    if (!pendingTarget || !matches.some((match) => match.id === pendingTarget))
+      return;
+    if (
+      (entitlements?.pendingPriorityInterests ?? 0) <= 0 ||
+      priorityActivatingId
+    )
+      return;
     void activatePriorityInterest(pendingTarget);
     // The session-stored target and pending entitlement guard this effect after checkout.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -562,6 +578,10 @@ const DailyMatches = () => {
         gallery: current.gallery,
       }
     : null;
+
+  if (!adminLoading && isAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
 
   return (
     <>
@@ -1003,23 +1023,33 @@ const DailyMatches = () => {
                         </div>
 
                         <button
-                          onClick={() => current && void activatePriorityInterest(current.id)}
-                          disabled={priorityActivatingId === current.id || prioritySentIds.has(current.id)}
+                          onClick={() =>
+                            current && void activatePriorityInterest(current.id)
+                          }
+                          disabled={
+                            priorityActivatingId === current.id ||
+                            prioritySentIds.has(current.id)
+                          }
                           className="w-full h-10 rounded-full border border-primary/25 bg-primary/5 hover:bg-primary/10 text-xs font-medium text-primary-deep transition-all flex items-center justify-center gap-2 disabled:opacity-60"
                         >
-                          {priorityActivatingId === current.id && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                          {priorityActivatingId === current.id && (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          )}
                           {prioritySentIds.has(current.id)
                             ? "Priority Interest sent"
                             : priorityActivatingId === current.id
                               ? "Sending…"
-                              : (entitlements?.pendingPriorityInterests ?? 0) > 0
+                              : (entitlements?.pendingPriorityInterests ?? 0) >
+                                  0
                                 ? "Send Priority Interest"
                                 : "Get Priority Interest"}
-                          {!prioritySentIds.has(current.id) && (entitlements?.pendingPriorityInterests ?? 0) > 0 && (
-                            <span className="text-[10px] bg-primary/10 px-2 py-0.5 rounded-full">
-                              {entitlements?.pendingPriorityInterests} left
-                            </span>
-                          )}
+                          {!prioritySentIds.has(current.id) &&
+                            (entitlements?.pendingPriorityInterests ?? 0) >
+                              0 && (
+                              <span className="text-[10px] bg-primary/10 px-2 py-0.5 rounded-full">
+                                {entitlements?.pendingPriorityInterests} left
+                              </span>
+                            )}
                         </button>
 
                         {/* Undo skip button */}

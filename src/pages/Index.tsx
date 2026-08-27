@@ -10,10 +10,13 @@ import Footer from "@/components/landing/Footer";
 import { useRevealAll } from "@/hooks/use-reveal";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { useAdmin } from "@/hooks/use-admin";
+import { Navigate } from "react-router-dom";
 import Home from "./Home";
 
 const Index = () => {
   const { user, loading } = useAuth();
+  const { isAdmin, loading: adminLoading } = useAdmin();
   useRevealAll();
 
   useEffect(() => {
@@ -28,7 +31,10 @@ const Index = () => {
     m.setAttribute("content", desc);
   }, []);
 
-  if (!loading && user) return <Home />;
+  if (!loading && user) {
+    if (!adminLoading && isAdmin) return <Navigate to="/admin" replace />;
+    return <Home />;
+  }
 
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">

@@ -17,9 +17,21 @@ export async function resolvePostAuthDestination(): Promise<string> {
     return "/verify-email";
   }
 
+  // ADMIN CHECK
+  const { data: roleData } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id)
+    .eq("role", "admin")
+    .maybeSingle();
+
+  if (roleData) {
+    return "/admin";
+  }
+
   // If local storage says they completed onboarding, bypass DB check to ensure they go to home
   if (localStorage.getItem("onboardingCompleted") === "true") {
-    return "/";
+    return "/today";
   }
 
   const { data } = await supabase
@@ -32,5 +44,5 @@ export async function resolvePostAuthDestination(): Promise<string> {
   
   // They completed it in the DB, so set local flag for future
   localStorage.setItem("onboardingCompleted", "true");
-  return "/";
+  return "/today";
 }
