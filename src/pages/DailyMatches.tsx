@@ -149,6 +149,7 @@ const DailyMatches = () => {
   const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
+  const [localLikesRemaining, setLocalLikesRemaining] = useState<number | null>(null);
   const [lastSkippedIndex, setLastSkippedIndex] = useState<number | null>(null);
   const [undoCheckoutOpen, setUndoCheckoutOpen] = useState(false);
   const [checkoutIntent, setCheckoutIntent] = useState<
@@ -173,6 +174,15 @@ const DailyMatches = () => {
   const [prioritySentIds, setPrioritySentIds] = useState<Set<string>>(
     new Set(),
   );
+
+  // Sync localLikesRemaining whenever entitlements refresh (login, post-swipe 429, etc.)
+  useEffect(() => {
+    if (entitlements?.likesRemainingToday !== undefined) {
+      setLocalLikesRemaining(
+        entitlements.premium ? null : entitlements.likesRemainingToday,
+      );
+    }
+  }, [entitlements?.likesRemainingToday, entitlements?.premium]);
 
   useEffect(() => {
     document.title = "Today's Matches — EternalBond";
@@ -394,6 +404,13 @@ const DailyMatches = () => {
 
       const result = await res.json();
       setDecisions((prev) => ({ ...prev, [current.id]: d }));
+
+      // Optimistically decrement remaining likes counter
+      if (d === "interested") {
+        setLocalLikesRemaining((prev) =>
+          prev !== null ? Math.max(0, prev - 1) : prev,
+        );
+      }
 
       if (d === "interested" && result.isMatch) {
         setTimeout(() => {
@@ -684,6 +701,33 @@ const DailyMatches = () => {
                         <Heart className="h-3.5 w-3.5 text-primary" />
                         {interestedCount} marked interested
                       </div>
+
+                      {/* Remaining likes — only shown for non-premium users */}
+                      {localLikesRemaining !== null && (
+                        <div className="mt-3 pt-3 border-t border-border/40">
+                          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">
+                            Likes remaining today
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {Array.from({
+                              length: entitlements?.dailyLikeLimit ?? 5,
+                            }).map((_, i) => (
+                              <Heart
+                                key={i}
+                                className={cn(
+                                  "h-3.5 w-3.5 transition-all duration-300",
+                                  i < localLikesRemaining
+                                    ? "text-primary fill-primary"
+                                    : "text-muted-foreground/30 fill-muted-foreground/30",
+                                )}
+                              />
+                            ))}
+                            <span className="ml-1 text-xs tabular-nums text-muted-foreground">
+                              {localLikesRemaining} left
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
