@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.eternalbond.api.controller.AuthControllerTest
--------------------------------------------------------------------------------
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.391 s -- in com.eternalbond.api.controller.AuthControllerTest

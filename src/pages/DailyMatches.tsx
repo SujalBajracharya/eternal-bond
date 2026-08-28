@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, Navigate } from "react-router-dom";
+import { Link, useNavigate, Navigate, useSearchParams } from "react-router-dom";
 
 import {
   Heart,
@@ -158,6 +158,12 @@ const DailyMatches = () => {
   const [expanded, setExpanded] = useState(false);
   const [feedback, setFeedback] = useState<Decision | null>(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isFiltered = searchParams.get("filtered") === "true";
+  // Filtered results live here — completely separate from the daily batch.
+  // The `matches` state (daily batch) is NEVER modified when filters are active.
+  const [filteredMatches, setFilteredMatches] = useState<Match[] | null>(null);
+  const [filteredLoading, setFilteredLoading] = useState(false);
   const [animKey, setAnimKey] = useState(0);
   const [mascotState, setMascotState] = useState<"idle" | "wink" | "beat">(
     "idle",
@@ -326,8 +332,107 @@ const DailyMatches = () => {
     fetchDailyMatches();
   }, [session]);
 
-  const total = matches.length;
-  const current = matches[index];
+  // ── Filtered search — separate from daily batch ───────────────────────────
+  // When ?filtered=true is in the URL we call /api/profiles/search which uses
+  // the user's saved preferences against the full eligible pool (up to 5).
+  // The daily batch stored in `matches` is NEVER touched.
+  useEffect(() => {
+    if (!isFiltered || !session?.access_token) {
+      setFilteredMatches(null);
+      return;
+    }
+    const fetchFiltered = async () => {
+      try {
+        setFilteredLoading(true);
+        const API_BASE_URL =
+          import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
+        const res = await fetch(`${API_BASE_URL}/api/profiles/search`, {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            Accept: "application/json",
+          },
+        });
+        if (!res.ok) throw new Error("Failed to fetch filtered profiles");
+        const data = await res.json();
+
+        const profileIds = data.map((d: any) => d.id);
+        let photoVisibilities: Record<string, string> = {};
+        let interestsByProfile: Record<string, string[]> = {};
+
+        if (profileIds.length > 0) {
+          const { data: photoRows } = await supabase
+            .from("profile_photos_mapping")
+            .select("photo_url, visibility")
+            .in("profile_id", profileIds);
+          if (photoRows) {
+            photoRows.forEach((row) => {
+              photoVisibilities[row.photo_url] = row.visibility || "visible";
+            });
+          }
+
+          const { data: interestRows } = (await supabase
+            .from("profile_interests" as any)
+            .select("profile_id, interest")
+            .in("profile_id", profileIds)) as any;
+          if (interestRows) {
+            interestRows.forEach((row: any) => {
+              if (!interestsByProfile[row.profile_id])
+                interestsByProfile[row.profile_id] = [];
+              interestsByProfile[row.profile_id].push(row.interest);
+            });
+          }
+        }
+
+        const mapped: Match[] = data.map((dto: any) => {
+          const mainPhoto =
+            dto.photos && dto.photos.length > 0
+              ? dto.photos[0]
+              : dto.avatarUrl || "";
+          const gallery = (dto.photos || []).map((url: string) => ({
+            url,
+            blurred: photoVisibilities[url] === "blurred",
+          }));
+          if (gallery.length === 0 && mainPhoto)
+            gallery.push({ url: mainPhoto, blurred: false });
+          return {
+            id: dto.id,
+            name: dto.fullName || "Anonymous",
+            age: calculateAge(dto.dateOfBirth),
+            mood: dto.profession
+              ? `${dto.profession} based in ${dto.location || "India"}`
+              : "Looking for a lifetime connection",
+            photo: mainPhoto,
+            blurred: gallery[0]?.blurred || false,
+            gallery,
+            highlights: getHighlights(dto),
+            about: dto.bio || "No bio details provided yet.",
+            family: getFamilyDetails(dto),
+            details: getDetails(dto),
+            interests: interestsByProfile[dto.id] || [],
+            location: dto.location || "India",
+            verified: dto.kycStatus === "verified",
+            priorityBadge: dto.priorityBadge === true,
+          };
+        });
+        // Store in filteredMatches — NOT in matches (daily batch untouched).
+        setFilteredMatches(mapped);
+      } catch (err: any) {
+        console.error(err);
+        toast.error("Could not load filtered profiles.");
+        setFilteredMatches([]);
+      } finally {
+        setFilteredLoading(false);
+      }
+    };
+    fetchFiltered();
+  }, [isFiltered, session]);
+
+  // The list actually rendered: filtered results when active, daily batch otherwise.
+  // `matches` (daily batch) is NEVER mutated by filtered mode.
+  const activeMatches = filteredMatches !== null ? filteredMatches : matches;
+
+  const total = activeMatches.length;
+  const current = activeMatches[index];
   const done = index >= total;
   const interestedCount = useMemo(
     () => Object.values(decisions).filter((d) => d === "interested").length,
@@ -604,11 +709,13 @@ const DailyMatches = () => {
     <>
       <NavbarAuthenticated />
       <main className="min-h-screen bg-background relative overflow-x-hidden">
-        {loading ? (
+        {loading || filteredLoading ? (
           <div className="min-h-[80vh] flex flex-col justify-center items-center">
             <Loader2 className="w-10 h-10 animate-spin text-primary" />
             <p className="text-muted-foreground mt-4 font-serif text-lg">
-              Finding today's matches for you...
+              {filteredLoading
+                ? "Searching filtered profiles..."
+                : "Finding today's matches for you..."}
             </p>
           </div>
         ) : (
@@ -633,9 +740,22 @@ const DailyMatches = () => {
                     <span className="text-gradient-sunset">for today</span>
                   </h1>
                   <p className="mt-3 text-muted-foreground max-w-md">
-                    Five introductions, hand-picked. Take a moment to review
-                    thoughtfully — there is no rush, and no endless feed.
+                    {isFiltered
+                      ? "Showing filtered results from the full profile pool — your daily batch is unchanged."
+                      : "Five introductions, hand-picked. Take a moment to review thoughtfully — there is no rush, and no endless feed."}
                   </p>
+                  {isFiltered && (
+                    <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary-deep">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Filtered results ({activeMatches.length} found)
+                      <Link
+                        to="/today"
+                        className="ml-1 underline underline-offset-2 hover:text-primary transition-colors"
+                      >
+                        Clear filters
+                      </Link>
+                    </div>
+                  )}
                 </div>
                 <div className="md:col-span-5 flex md:justify-end">
                   <div className="w-full md:w-72 flex flex-col gap-3">
@@ -672,7 +792,7 @@ const DailyMatches = () => {
                       </div>
 
                       <div className="mt-3 flex gap-1.5">
-                        {matches.map((m, i) => {
+                        {activeMatches.map((m, i) => {
                           const state = decisions[m.id];
                           const active = i === index;
 
@@ -1126,32 +1246,53 @@ const DailyMatches = () => {
                   <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-sunset shadow-glow mb-6">
                     <Sparkles className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <h2 className="font-serif text-4xl">That's all for today</h2>
-                  <p className="mt-3 text-muted-foreground max-w-md mx-auto">
-                    You marked{" "}
-                    <span className="text-foreground font-medium">
-                      {interestedCount}
-                    </span>{" "}
-                    introduction{interestedCount === 1 ? "" : "s"} as
-                    interesting. We'll let you know if any feeling is mutual.
-                    Five new matches arrive tomorrow morning.
-                  </p>
-                  <div className="mt-8 flex items-center justify-center gap-3">
-                    {lastSkippedIndex !== null && (
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="rounded-full"
-                        onClick={handleUndoSkip}
-                      >
-                        <Undo2 className="h-4 w-4 mr-2 text-primary-deep" />
-                        Undo last skip
-                      </Button>
-                    )}
-                    <Button asChild className="rounded-full" size="lg">
-                      <Link to="/">Return home</Link>
-                    </Button>
-                  </div>
+                  {isFiltered ? (
+                    <>
+                      <h2 className="font-serif text-4xl">No more results</h2>
+                      <p className="mt-3 text-muted-foreground max-w-md mx-auto">
+                        {activeMatches.length === 0
+                          ? "No profiles matched your current filters. Try adjusting them."
+                          : `You reviewed all ${activeMatches.length} filtered result${activeMatches.length === 1 ? "" : "s"}. Your daily batch is untouched.`}
+                      </p>
+                      <div className="mt-8 flex items-center justify-center gap-3">
+                        <Button asChild variant="outline" className="rounded-full" size="lg">
+                          <Link to="/filters">Adjust filters</Link>
+                        </Button>
+                        <Button asChild className="rounded-full" size="lg">
+                          <Link to="/today">Back to daily batch</Link>
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <h2 className="font-serif text-4xl">That's all for today</h2>
+                      <p className="mt-3 text-muted-foreground max-w-md mx-auto">
+                        You marked{" "}
+                        <span className="text-foreground font-medium">
+                          {interestedCount}
+                        </span>{" "}
+                        introduction{interestedCount === 1 ? "" : "s"} as
+                        interesting. We'll let you know if any feeling is mutual.
+                        Five new matches arrive tomorrow morning.
+                      </p>
+                      <div className="mt-8 flex items-center justify-center gap-3">
+                        {lastSkippedIndex !== null && (
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            className="rounded-full"
+                            onClick={handleUndoSkip}
+                          >
+                            <Undo2 className="h-4 w-4 mr-2 text-primary-deep" />
+                            Undo last skip
+                          </Button>
+                        )}
+                        <Button asChild className="rounded-full" size="lg">
+                          <Link to="/">Return home</Link>
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </section>

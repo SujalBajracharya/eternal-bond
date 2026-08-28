@@ -1507,8 +1507,8 @@ export default function Filters() {
             <Button
               onClick={async () => {
                 await savePreferences("default");
-                toast.success("Constellation locked! Returning to matches.");
-                navigate("/today");
+                toast.success("Constellation locked! Showing filtered matches.");
+                navigate("/today?filtered=true");
               }}
               className="rounded-full bg-gradient-sunset px-6 text-white text-xs font-semibold h-9 shadow-soft hover:opacity-95"
             >

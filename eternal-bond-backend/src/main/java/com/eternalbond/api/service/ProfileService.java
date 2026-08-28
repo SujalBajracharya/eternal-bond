@@ -242,6 +242,55 @@ public class ProfileService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns up to {@value #DAILY_BATCH_SIZE} profiles matching the user's active preferences,
+     * searched from the full eligible candidate pool.
+     *
+     * <p><b>This method NEVER reads or writes the daily_match table.</b> The user's daily batch
+     * remains completely unchanged. Filtered results are a temporary search result only.
+     *
+     * <p>Eligibility rules are identical to those used for the daily batch:
+     * <ul>
+     *   <li>Excludes the user's own profile.</li>
+     *   <li>Excludes profiles the user has already swiped on (DB-level).</li>
+     *   <li>Applies the user's active {@link ProfilePreferences} in-memory.</li>
+     * </ul>
+     */
+    @Transactional(readOnly = true)
+    public List<ProfileDto> getFilteredMatches(String userId) {
+        Profile userProfile = profileRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Active profile not found"));
+
+        // Reuse the same broad eligibility query — excludes own profile + swiped profiles.
+        List<Profile> candidates = new ArrayList<>(profileRepository.findDailyMatchesForUser(
+                userId, userProfile.getLookingFor()));
+
+        // Apply active preferences filter (same logic as daily batch generation).
+        ProfilePreferences pref = profilePreferencesRepository
+                .findByProfileIdAndIsActiveTrue(userId)
+                .orElse(null);
+        if (pref != null) {
+            candidates = applyPreferencesFilter(candidates, pref);
+        }
+
+        // Respect priority badges in ordering.
+        Set<String> premiumCandidateIds = activePriorityProfileIds(userId, candidates);
+        candidates.sort(Comparator.comparing(
+            profile -> !premiumCandidateIds.contains(profile.getId())));
+
+        // Return up to 5 results — never fill with non-matching profiles.
+        List<Profile> result = candidates.stream()
+                .limit(DAILY_BATCH_SIZE)
+                .collect(Collectors.toList());
+
+        log.info("Filtered search for user={}: {} candidates -> {} results",
+                userId, candidates.size(), result.size());
+
+        return result.stream()
+                .map(profile -> mapToDto(profile, premiumCandidateIds.contains(profile.getId())))
+                .collect(Collectors.toList());
+    }
+
     // ── Private helpers ───────────────────────────────────────────────────────
 
     /** Reads an already-persisted batch from the DB and maps to DTOs. */

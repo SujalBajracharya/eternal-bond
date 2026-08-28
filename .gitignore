@@ -1,5 +1,6 @@
 # Logs
 logs
+**/logs
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,21 +8,34 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies & Build Outputs
 node_modules
 dist
 dist-ssr
-*.local
+target/
+**/target/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.DS_Store
+
+# Environment files
 .env
-.env.example
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# One-off scripts containing DB credentials
+fix_visibility.js
+verify_all.cjs
+
 

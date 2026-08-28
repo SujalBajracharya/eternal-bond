@@ -36,4 +36,16 @@ public class ProfileController {
     public ResponseEntity<List<ProfileDto>> getDailyRecommendations(@AuthenticationPrincipal String userId) {
         return ResponseEntity.ok(profileService.getDailyMatches(userId));
     }
+
+    /**
+     * Searches the full eligible candidate pool with the user's saved preferences.
+     * Returns up to 5 matching profiles.
+     * <p>
+     * This endpoint NEVER reads or writes the daily_match table. The user's daily
+     * batch of 5 profiles is completely unaffected.
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<ProfileDto>> getFilteredMatches(@AuthenticationPrincipal String userId) {
+        return ResponseEntity.ok(profileService.getFilteredMatches(userId));
+    }
 }
